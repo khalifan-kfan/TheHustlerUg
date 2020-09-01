@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+<group android:checkableBehavior="single">
+    <item android:id="@+id/edit_nav"
+        android:title="EDIT ME"
+        />
+    <item android:id="@+id/MyJobs"
+        android:title="MY JOBS"
+        />
+    <item android:id="@+id/List"
+        android:title="JOB HISTORY"
+        />
+    <item android:id="@+id/reviews"
+        android:title="REVIEWS"
+        />
+    <item android:id="@+id/logout"
+        android:title="LOGOUT"
+        />
+    <item android:id="@+id/settings"
+        android:title="Settings"
+        />
+
+</group>
+    <item android:title="Feedback">
+        <menu>
+            <item android:id="@+id/share"
+                android:title="Invite"
+                android:icon="@drawable/ic_add"
+                />
+            <item android:id="@+id/contact"
+                android:title="email us"
+                android:icon="@drawable/ic_msg"
+                />
+        </menu>
+
+    </item>
+
+</menu>

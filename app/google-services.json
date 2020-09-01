@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "305722892624",
+    "firebase_url": "https://trig-blog.firebaseio.com",
+    "project_id": "trig-blog",
+    "storage_bucket": "trig-blog.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:305722892624:android:e756933a93179d823d0c55",
+        "android_client_info": {
+          "package_name": "com.example.thehustler"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "305722892624-5hpjadijq8k9gq1ndb9l72in936tvjgm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.thehustler",
+            "certificate_hash": "fa62e3e86132681ba967a83fc2eec49333a4bb8b"
+          }
+        },
+        {
+          "client_id": "305722892624-75sr80oieru4d7kkmb13a48r5okj1rbc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvXXLHtc5t4kAziBaCzKkXWIe21KaF8Z4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "305722892624-75sr80oieru4d7kkmb13a48r5okj1rbc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

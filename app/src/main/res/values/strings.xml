@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">TheHustler</string>
+    <string name="login_icon">LogPic</string>
+    <string name="email_hint">email</string>
+    <string name="pass_hint">password</string>
+    <string name="button_login">LOGIN</string>
+    <string name="create_account">CREATE ACCOUNT</string>
+    <string name="welcome">WELCOME</string>
+    <string name="conformPassword">comform password</string>
+    <string name="passwordReg">password</string>
+    <string name="createaccount">CREATE ACCOUNT</string>
+    <string name="tologin">BACK TO LOGIN</string>
+
+    <string name="settings">Settings</string>
+    <string name="search">Search</string>
+    <string name="logout">Logout</string>
+    <string name="user">User DP</string>
+    <string name="Name_">NAME</string>
+    <string name="save">Save Account</string>
+    <string name="post">describe</string>
+    <string name="posting">POST</string>
+    <string name="Bottom_home_text">Home</string>
+    <string name="Notification">Notification</string>
+    <string name="likecount">0 likes</string>
+    <string name="Account">account</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="answers">Comments:</string>
+    <string name="ansHint">type answer here clearly</string>
+    <string name="answerscount">view coments..</string>
+    <string name="date">today..</string>
+    <string name="random">i love the way you peaple are all failing to answer this p2 question, its very asheming by the way</string>
+    <string name="del">Delete post</string>
+    <string name="lets">  Lets have it..</string>
+    <string name="title_activity_acount">My Account</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
+
+    <string name="counterComent">\</string>
+    <string name="off">Approve.... </string>
+    <string name="on">Disapprove...</string>
+
+    <string name="edit_txt">Hi</string>
+    <string name="cit">Chats</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="thruuser">Users</string>
+    <string name="thrupost">Posts</string>
+    <string name="thruwork">By work</string>
+    <string name="title_activity_serch">SerchActivity</string>
+    <string name="Serch">Seach through;</string>
+    <string name="edt">Edit Profile</string>
+    <string name="rvs">REVIEWS</string>
+    <string name="Approved">Approved</string>
+    <string name="Approvals">Approvals</string>
+    <string name="bio">~My Work</string>
+    <string name="sex1">Male</string>
+    <string name="sex2">Female</string>
+
+
+</resources>
