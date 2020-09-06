@@ -26,8 +26,8 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabTextColor="#000"
-            android:background="#fff" >
+            app:tabTextColor="#fff"
+            android:background="#000" >
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/tusers"
@@ -54,6 +54,7 @@
 
 
         <androidx.viewpager.widget.ViewPager
+            android:background="@color/myBlack"
             android:id="@+id/view_pager"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

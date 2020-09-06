@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/myBlack"
     tools:context=".Activities.ProfileActivity2">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -27,6 +28,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="@string/edt"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.447"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,6 +74,8 @@
             android:gravity="center"
             android:hint="Display name"
             android:inputType="textPersonName"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.523"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,6 +86,7 @@
             android:layout_width="330dp"
             android:layout_height="46dp"
             android:text="Save changes"
+            app:backgroundTint="@color/myBlack"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/worket"
             app:layout_constraintHorizontal_bias="0.0"
@@ -96,6 +102,8 @@
             android:ems="10"
             android:hint="other name"
             android:inputType="textPersonName"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
             app:layout_constraintEnd_toEndOf="@+id/user_name_edit"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/user_name_edit"
@@ -129,13 +137,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="@string/sex2" />
+                android:text="@string/sex2"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff" />
 
             <RadioButton
                 android:id="@+id/malerd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sex1" />
+                android:text="@string/sex1"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff" />
 
 
         </RadioGroup>
@@ -149,6 +161,8 @@
             android:hint="country"
             android:inputType="textPersonName"
             android:text="Name"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
             app:layout_constraintEnd_toEndOf="@+id/PersonName"
             app:layout_constraintHorizontal_bias="0.942"
             app:layout_constraintStart_toEndOf="@+id/radio"
@@ -165,6 +179,8 @@
             android:hint="city"
             android:inputType="textPersonName"
             android:text="Name"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
             app:layout_constraintEnd_toEndOf="@+id/PersonName"
             app:layout_constraintHorizontal_bias="0.888"
             app:layout_constraintStart_toEndOf="@+id/radio"
@@ -179,6 +195,8 @@
             android:gravity="start|top"
             android:hint="Describe your work"
             android:inputType="textMultiLine"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
             app:layout_constraintEnd_toEndOf="@+id/PhoneNumber"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/PhoneNumber"
@@ -192,6 +210,8 @@
             android:ems="10"
             android:hint="01/05/1999"
             android:inputType="date"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
             app:layout_constraintEnd_toEndOf="@+id/kla"
             app:layout_constraintStart_toStartOf="@+id/radio"
             app:layout_constraintTop_toBottomOf="@+id/kla" />
@@ -204,6 +224,8 @@
             android:ems="10"
             android:hint="+256703333333"
             android:inputType="number"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
             app:layout_constraintEnd_toEndOf="@+id/editTextDate_of_B"
             app:layout_constraintHorizontal_bias="0.875"
             app:layout_constraintStart_toStartOf="@+id/editTextDate_of_B"

@@ -2,6 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:padding="4dp"
+    android:background="@color/myBlack"
     android:id="@+id/ViewC"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -20,21 +22,21 @@
       android:id="@+id/chat_name"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
-      android:background="@drawable/rounded_rectangle"
+      android:layout_marginTop="20dp"
+      android:textColor="#ffffff"
       android:text="@string/Name_"
       android:textSize="24sp"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.348"
+      app:layout_constraintHorizontal_bias="0.299"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
   <de.hdodenhof.circleimageview.CircleImageView
       android:id="@+id/chatterImage"
-      android:layout_width="68dp"
-      android:layout_height="93dp"
+      android:layout_width="64dp"
+      android:layout_height="75dp"
       android:layout_marginTop="16dp"
-      android:src="@drawable/rounded_rectangle"
+      android:src="#fff"
       app:layout_constraintEnd_toStartOf="@+id/chat_name"
       app:layout_constraintHorizontal_bias="0.457"
       app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +46,7 @@
   <View
       android:layout_width="350dp"
       android:layout_height="1dp"
-      android:background="#000"
+      android:background="#fff"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/chatterImage" />
@@ -53,10 +55,11 @@
       android:id="@+id/new_date"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
+      android:layout_marginTop="8dp"
       android:text="TextView"
+      android:textColor="#ffffff"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.112"
+      app:layout_constraintHorizontal_bias="0.071"
       app:layout_constraintStart_toEndOf="@+id/chatterImage"
       app:layout_constraintTop_toBottomOf="@+id/chat_name" />
 
@@ -65,12 +68,14 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="8dp"
+      android:textColor="#ffffff"
       android:layout_marginLeft="8dp"
-      android:text="TextView"
+      android:layout_marginTop="20dp"
+      android:text="Name"
       android:textSize="24sp"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.152"
+      app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toEndOf="@+id/chat_name"
-      app:layout_constraintTop_toTopOf="@+id/chat_name" />
+      app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

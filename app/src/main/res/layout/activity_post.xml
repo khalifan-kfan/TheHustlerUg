@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll"
+    android:background="@color/myBlack"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.PostActivity"
@@ -17,15 +18,17 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView4"
+        android:background="@color/myBlack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="75dp">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@color/myBlack"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ffffff">
+           >
 
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -48,6 +51,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginLeft="4dp"
                 android:layout_marginTop="4dp"
+                android:textColor="#fff"
                 android:text="UserName"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 app:layout_constraintBottom_toBottomOf="@+id/datePost"
@@ -62,6 +66,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginLeft="4dp"
                 android:layout_marginTop="36dp"
+                android:textColor="#fff"
                 android:text="Post date"
                 app:layout_constraintEnd_toEndOf="@+id/Post_user"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -89,6 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/likecount"
+                android:textColor="#fff"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.097"
@@ -104,13 +110,14 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/answerscount"
-
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.195"
                 app:layout_constraintStart_toEndOf="@+id/postdescribe"
                 app:layout_constraintTop_toBottomOf="@+id/postdescribe"
-                app:layout_constraintVertical_bias="0.9" />
+                app:layout_constraintVertical_bias="0.9"
+                android:textColor="#fff"
+                />
 
             <ImageView
                 android:id="@+id/popimagedell"
@@ -147,6 +154,7 @@
                 android:id="@+id/postdescribe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="#fff"
                 android:layout_marginTop="16dp"
                 android:padding="10dp"
                 app:layout_constraintEnd_toEndOf="parent"

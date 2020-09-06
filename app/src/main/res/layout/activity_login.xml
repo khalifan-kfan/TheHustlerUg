@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@color/myBlack"
     tools:context=".Activities.LoginActivity">
 
   <ImageView
@@ -31,6 +31,8 @@
       android:ems="10"
       android:hint="@string/email_hint"
       android:inputType="textEmailAddress"
+      android:textColor="#fff"
+      android:textColorHint="#fff"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/imageLogo" />
@@ -44,9 +46,11 @@
       android:layout_marginTop="24dp"
       android:layout_marginEnd="8dp"
       android:layout_marginRight="8dp"
-      android:inputType="textVisiblePassword"
       android:ems="10"
       android:hint="@string/pass_hint"
+      android:inputType="textVisiblePassword"
+      android:textColor="#fff"
+      android:textColorHint="#fff"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/logEmail" />
@@ -57,7 +61,7 @@
       android:layout_height="46dp"
       android:layout_marginBottom="8dp"
       android:text="@string/welcome"
-      android:textColor="@color/cardview_dark_background"
+      android:textColor="#fff"
       android:textSize="36sp"
       app:layout_constraintBottom_toTopOf="@+id/imageLogo"
       app:layout_constraintEnd_toEndOf="parent"
@@ -74,6 +78,7 @@
       android:layout_marginEnd="24dp"
       android:layout_marginRight="24dp"
       android:background="@android:color/holo_blue_bright"
+      android:backgroundTint="@color/myBlack"
       android:text="@string/button_login"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.498"
@@ -90,6 +95,7 @@
       android:layout_marginEnd="24dp"
       android:layout_marginRight="24dp"
       android:background="#2196F3"
+      android:backgroundTint="@color/myBlack"
       android:text="@string/create_account"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.0"
