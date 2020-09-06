@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/myBlack">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circularUser"
+        android:layout_width="70dp"
+        android:layout_height="60dp"
+        android:src="@color/cardview_light_background" />
+
+
+    <TextView
+        android:id="@+id/gig_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="13dp"
+        android:layout_toEndOf="@+id/circularUser"
+        android:layout_toRightOf="@+id/circularUser"
+        android:text="Requested by"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@color/cardview_light_background" />
+
+    <TextView
+        android:id="@+id/gig_describe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/circularUser"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="9dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginTop="6dp"
+        android:textColor="#ffffff"
+        android:padding="10dp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="383dp"
+        android:layout_height="197dp"
+        android:layout_below="@+id/gig_describe"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="13dp"
+        app:srcCompat="@drawable/rounded_rectangle" />
+
+    <Button
+        android:id="@+id/accept_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="55dp"
+        android:layout_marginLeft="55dp"
+        android:layout_marginTop="2dp"
+        android:backgroundTint="@color/myBlack"
+        android:text="Accept" />
+
+    <Button
+        android:id="@+id/cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:backgroundTint="@color/myBlack"
+        android:layout_marginStart="97dp"
+        android:layout_marginLeft="97dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="57dp"
+        android:layout_marginRight="57dp"
+        android:layout_toEndOf="@+id/accept_btn"
+        android:layout_toRightOf="@+id/accept_btn"
+        android:text="Cancel " />
+
+</RelativeLayout>

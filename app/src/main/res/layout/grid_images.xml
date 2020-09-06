@@ -12,5 +12,5 @@
         android:scaleType="centerCrop"
         android:id="@+id/grid_image"
         android:layout_gravity="center"
-        android:src="@drawable/ic_place"/>
+        android:src="@drawable/rounded_rectangle"/>
     </FrameLayout>
