@@ -263,7 +263,7 @@ class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
     @NonNull
     @Override
-    public PostAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_posts,parent, false);
         context = parent.getContext();
         firestore = FirebaseFirestore.getInstance();
@@ -273,7 +273,7 @@ class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final PostAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
             holder.setIsRecyclable(false);
 

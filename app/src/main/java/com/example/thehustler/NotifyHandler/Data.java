@@ -3,7 +3,6 @@ package com.example.thehustler.NotifyHandler;
 public class Data {
     String title,message;
 
-
     public Data(String title, String message) {
         this.title = title;
         this.message = message;

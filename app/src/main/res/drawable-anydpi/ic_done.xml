@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="@color/common_google_signin_btn_text_dark_pressed">
+  <group android:scaleX="0.10619469"
+      android:scaleY="0.10619469"
+      android:translateY="2.946488">
+    <group android:translateY="141.67969">
+      <path android:pathData="M55,-19.890625Q55,-11.421875,49.1875,-5.703125Q43.375,-0,34.53125,-0L9,-0L9,-110L34.53125,-110Q43.453125,-110,49.21875,-104.28125Q55,-98.578125,55,-90.109375L55,-19.890625ZM45,-21.140625L45,-89Q45,-94.375,41.5625,-97.6875Q38.125,-101,32.671875,-101L19,-101L19,-9L32.109375,-9Q37.84375,-9,41.421875,-12.234375Q45,-15.484375,45,-21.140625Z"
+          android:fillColor="#000000"
+          android:fillAlpha="0.6"/>
+      <path android:pathData="M110,-8.15625Q109.5,0,101.84375,0L79.15625,0Q71.5,0,71,-8.15625L71,-59.84375Q71.5,-68,79.15625,-68L101.84375,-68Q109.5,-68,110,-59.84375L110,-8.15625ZM101,-8L101,-60L80,-60L80,-8L101,-8Z"
+          android:fillColor="#000000"
+          android:fillAlpha="0.6"/>
+      <path android:pathData="M165,0L156,0L156,-59L135,-58.625L135,0L126,0L126,-68L135,-68L135,-65.625Q140.45312,-66.34375,146.34375,-67.140625Q152.67188,-68,157,-68Q165,-68,165,-59.84375L165,0Z"
+          android:fillColor="#000000"
+          android:fillAlpha="0.6"/>
+      <path android:pathData="M218,-7.8125Q217.5,-0.25,209.84375,0L188.15625,0Q180.375,0,180,-8.15625L180,-59.84375Q180.375,-68,188.15625,-68L209.84375,-68Q217.625,-68,218,-59.84375L218,-35.296875L214.85938,-32L189,-32L189,-8L209,-8L209,-20L218,-20L218,-7.8125ZM209,-39L209,-60L189,-60L189,-39L209,-39Z"
+          android:fillColor="#000000"
+          android:fillAlpha="0.6"/>
+    </group>
+  </group>
+</vector>

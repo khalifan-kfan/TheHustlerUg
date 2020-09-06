@@ -46,7 +46,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @NonNull
     @Override
-    public NotificationAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notify_list,parent, false);
         context = parent.getContext();
         firestore = FirebaseFirestore.getInstance();
@@ -55,7 +55,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NotificationAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         String CurrtId = auth.getCurrentUser().getUid();
 

@@ -388,7 +388,7 @@ public class PostActivity extends AppCompatActivity {
                         postlist.remove(i);
                         users.remove(i);
 
-                        AppCompatActivity activity = PostActivity.this;
+                        AppCompatActivity activity = (AppCompatActivity)PostActivity.this;
                         Home_Fragment homeFragment = new Home_Fragment();
                         activity.getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, homeFragment).addToBackStack(null).commit();
 

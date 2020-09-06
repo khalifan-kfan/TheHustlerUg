@@ -59,6 +59,15 @@
     <string name="bio">~My Work</string>
     <string name="sex1">Male</string>
     <string name="sex2">Female</string>
+    <string name="newgig">Create A Gig</string>
+    <string name="dg">Direct gigs</string>
+    <string name="gig_desc">Describe your gig, available cash etc (add an image if required)</string>
+
+    <string-array name="main_gig_page">
+        <item>Open Gigs</item>
+        <item>Ongoing Gigs</item>
+        <item>  GigRequest and offers</item>
+    </string-array>
 
 
 </resources>

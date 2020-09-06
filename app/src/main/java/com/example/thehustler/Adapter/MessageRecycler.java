@@ -35,7 +35,7 @@ public class MessageRecycler extends RecyclerView.Adapter<MessageRecycler.Messag
 
     @NonNull
     @Override
-    public MessageRecycler.MessagesHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MessagesHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View chatCards;
 
         if(viewType == MY_MESSAGE){
@@ -58,7 +58,7 @@ public class MessageRecycler extends RecyclerView.Adapter<MessageRecycler.Messag
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MessageRecycler.MessagesHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MessagesHolder holder, int position) {
         holder.bindView(messages.get(position));
 
     }

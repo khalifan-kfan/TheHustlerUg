@@ -1,6 +1,5 @@
 package com.example.thehustler.Activities;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -51,7 +50,6 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AnotherUserAccount extends AppCompatActivity {
-
     private Button Ureview;
 
     private CircleImageView YourImage;

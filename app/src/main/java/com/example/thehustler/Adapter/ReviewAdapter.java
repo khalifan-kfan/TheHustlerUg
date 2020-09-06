@@ -45,7 +45,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 
     @NonNull
     @Override
-    public ReviewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rewiew_list,parent, false);
         context = parent.getContext();
 
@@ -54,7 +54,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReviewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         String CurrtId = auth.getCurrentUser().getUid();
         final String Uid = review_list.get(position).getReviewerId();

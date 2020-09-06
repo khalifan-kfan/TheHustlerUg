@@ -34,7 +34,7 @@ public class ImageAdp  extends RecyclerView.Adapter<ImageAdp.Slider> {
     public Slider onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_images,parent, false);
         context = parent.getContext();
-        return new ImageAdp.Slider(view);
+        return new Slider(view);
     }
 
     @Override
