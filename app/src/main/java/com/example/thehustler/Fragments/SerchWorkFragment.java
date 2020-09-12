@@ -255,8 +255,6 @@ class WorkAdapter  extends RecyclerView.Adapter<WorkAdapter.ViewHolder> {
         holder.setUser(Name,Name2,wk,Image_uri);
 
 
-
-
     }
 
     @Override

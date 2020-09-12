@@ -57,11 +57,11 @@ public class Create_Gig_Fragment extends Fragment {
     private StorageReference storageReference;
     private String myId;
 
-    private static final String ARG_PARAM2 = "RequestType";
-    private static final String ARG_PARAM1 = "Name";
+    private static final String IDDD = "RequestType";
+    private static final String NAME = "Name";
 
 
-    private String mParam2;
+    private String iddd;
 
     private Uri ImageUri;
     private String Name;
@@ -70,11 +70,11 @@ public class Create_Gig_Fragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static Create_Gig_Fragment newInstance(String pram1, String param2) {
+    public static Create_Gig_Fragment newInstance(String iddd, String name) {
         Create_Gig_Fragment fragment = new Create_Gig_Fragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1,pram1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(IDDD,iddd);
+        args.putString(NAME, name);
         fragment.setArguments(args);
         return fragment;
     }
@@ -83,8 +83,8 @@ public class Create_Gig_Fragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam2 = getArguments().getString(ARG_PARAM2);
-            Name = getArguments().getString(ARG_PARAM1);
+            iddd = getArguments().getString(IDDD);
+            Name = getArguments().getString(NAME);
         }
     }
 
@@ -102,7 +102,7 @@ public class Create_Gig_Fragment extends Fragment {
         auth =FirebaseAuth.getInstance();
         myId = auth.getCurrentUser().getUid();
 
-        if(mParam2.equals("open")){
+        if(iddd.equals("open")){
             reqType.setText("Creating open Gig");
         }else{
             reqType.setText("Direct gig to;"+Name);
@@ -111,10 +111,10 @@ public class Create_Gig_Fragment extends Fragment {
         SendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mParam2.equals("open")){
+                if(iddd.equals("open")){
                     PostPublicGig();
                 }else{
-                    String  userid = mParam2;
+                    String  userid = iddd;
                     SendtoPerson(userid);
                 }
             }

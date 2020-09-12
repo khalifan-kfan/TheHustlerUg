@@ -61,7 +61,7 @@ public class MainGigFragment extends Fragment {
         create_opengig.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment newFragment = Create_Gig_Fragment.newInstance(null,"open");
+                Fragment newFragment = Create_Gig_Fragment.newInstance("open",null);
                 FragmentTransaction transaction =getFragmentManager().beginTransaction();
                 // Replace whatever is in the fragment_container view with this fragment,
                 // and add the transaction to the back stack if needed

@@ -385,6 +385,7 @@ public class PostActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String ans =Answer.getText().toString();
                 if(!ans.isEmpty()){
+                    Answer.setText("");
                     Map<String, Object> ansMap = new HashMap<>();
                     ansMap.put("answer",ans);
                     ansMap.put("user_id",currentUserId);
