@@ -62,7 +62,6 @@ public class CommentsRecyclerAdaptor extends RecyclerView.Adapter<CommentsRecycl
 
         final String Name = usersList.get(position).getName().get(0);
         holder.name.setText(Name);
-
         if(CurrtUser.equals(user_id)){
             holder.name.setEnabled(false);
         }

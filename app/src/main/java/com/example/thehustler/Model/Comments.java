@@ -1,8 +1,10 @@
 package com.example.thehustler.Model;
 
+import com.example.thehustler.classes.UserId;
+
 import java.util.Date;
 
-public class Comments {
+public class Comments extends UserId {
     private String answer, user_id;
     private Date timestamp;
 

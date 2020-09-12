@@ -27,9 +27,6 @@
         <activity android:name=".Activities.PostActivity" />
         <activity android:name=".Activities.AnotherUserAccount" />
         <activity
-            android:name=".Activities.CommentActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".Activities.InforSettings"
             android:windowSoftInputMode="adjustPan" />
         <activity

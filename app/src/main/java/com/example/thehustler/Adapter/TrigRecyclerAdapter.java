@@ -29,7 +29,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.thehustler.Activities.AnotherUserAccount;
-import com.example.thehustler.Activities.CommentActivity;
+
 import com.example.thehustler.Activities.PostActivity;
 import com.example.thehustler.Model.Blogpost;
 import com.example.thehustler.Model.Users;
@@ -280,9 +280,9 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<TrigRecyclerAdapte
         holder.answersbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent answerintent =  new Intent(context, CommentActivity.class);
-                answerintent.putExtra("post_Id",post_Id);
-                answerintent.putExtra("postownerId",user_id);
+                Intent answerintent =  new Intent(context, PostActivity.class);
+                answerintent.putExtra("blogPostId",post_Id);
+                answerintent.putExtra("UserId",user_id);
                 context.startActivities(new Intent[]{answerintent});
 
             }

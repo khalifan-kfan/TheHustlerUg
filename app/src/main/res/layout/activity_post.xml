@@ -1,179 +1,241 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll"
     android:background="@color/myBlack"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".Activities.PostActivity"
     android:orientation="horizontal">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_post"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@color/colorPrimary"
-        android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"/>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView4"
-        android:background="@color/myBlack"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="75dp">
+        app:layout_scrollFlags="scroll|exitUntilCollapsed"
+        android:background="@color/myBlack"
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_post_"
+            app:title="Post Comments"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"/>
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+
+            android:fitsSystemWindows="true"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.cardview.widget.CardView
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:layout_collapseMode="pin"
+                android:id="@+id/cardView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:background="#fff"
+                android:padding="5dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/myBlack"
+                    android:padding="4dp">
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:background="@color/myBlack"
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/circularUser"
+                        android:layout_width="51dp"
+                        android:layout_height="51dp"
+                        android:layout_marginTop="4dp"
+                        android:src="@drawable/ic_person"
+                        app:civ_border_color="#FF000000"
+                        app:civ_border_width="2dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/Post_user"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="9dp"
+                        android:layout_marginLeft="9dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_toEndOf="@+id/circularUser"
+                        android:layout_toRightOf="@+id/circularUser"
+                        android:text="UserName"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textColor="#FDFAFA"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/datePost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/Post_user"
+                        android:layout_marginStart="9dp"
+                        android:layout_marginLeft="9dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_toEndOf="@+id/circularUser"
+                        android:layout_toRightOf="@+id/circularUser"
+                        android:text="Post date"
+                        android:textColor="#ffffff" />
+
+
+                    <ImageView
+                        android:id="@+id/likeuserz2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/postdescribe"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginStart="17dp"
+                        android:layout_marginLeft="17dp"
+                        android:layout_marginTop="5dp"
+                        android:src="@drawable/ic_fava" />
+
+
+                    <TextView
+                        android:id="@+id/likescount23"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/likeuserz2"
+                        android:layout_alignStart="@+id/likeuserz2"
+                        android:layout_alignLeft="@+id/likeuserz2"
+                        android:layout_marginStart="-1dp"
+                        android:layout_marginLeft="-1dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="4dp"
+                        android:text="@string/likecount"
+                        android:textColor="#ffffff" />
+
+                    <TextView
+                        android:id="@+id/Comentcount2"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/commentCountR"
+                        android:layout_alignStart="@+id/commentCountR"
+                        android:layout_alignLeft="@+id/commentCountR"
+                        android:layout_marginStart="-23dp"
+                        android:layout_marginLeft="-23dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="comments"
+                        android:textColor="#ffffff" />
+
+                    <ImageView
+                        android:id="@+id/popimagedell"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:enabled="false"
+                        android:src="@drawable/ic_del"
+                        android:visibility="invisible" />
+
+                    <TextView
+                        android:id="@+id/commentCountR"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/postdescribe"
+                        android:layout_marginStart="73dp"
+                        android:layout_marginLeft="73dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_toEndOf="@+id/likeuserz2"
+                        android:layout_toRightOf="@+id/likeuserz2"
+                        android:text='' />
+
+                    <TextView
+                        android:id="@+id/postdescribe"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/pageview"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="4dp"
+                        android:padding="10dp"
+                        android:textColor="#ffffff" />
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/pageview"
+                        android:layout_width="406dp"
+                        android:layout_height="334dp"
+                        android:layout_below="@+id/datePost"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginEnd="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="8dp"
+                        android:padding="8dp">
+
+                    </androidx.viewpager2.widget.ViewPager2>
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/answersrecyclerview"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/sendbtn"
+        app:fabSize="auto"
+        android:layout_gravity="bottom|end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/myBlack"
+        android:src="@drawable/ic_send" />
+    <LinearLayout
+        android:id="@+id/l_o"
+        android:layout_marginTop="2dp"
+        android:layout_gravity="bottom"
+        android:layout_width="290dp"
+        android:layout_height="45dp"
+        >
+        <EditText
+            android:id="@+id/answersET"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-           >
-
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/circularUser"
-                android:layout_width="51dp"
-                android:layout_height="51dp"
-                android:layout_marginTop="4dp"
-                android:src="@drawable/ic_person"
-                app:civ_border_color="#FF000000"
-                app:civ_border_width="2dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.016"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/Post_user"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="4dp"
-                android:textColor="#fff"
-                android:text="UserName"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                app:layout_constraintBottom_toBottomOf="@+id/datePost"
-                app:layout_constraintStart_toEndOf="@+id/circularUser"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <TextView
-                android:id="@+id/datePost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="36dp"
-                android:textColor="#fff"
-                android:text="Post date"
-                app:layout_constraintEnd_toEndOf="@+id/Post_user"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/circularUser"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <ImageView
-                android:id="@+id/likeuserz2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/ic_fava"
-
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/postdescribe"
-                app:layout_constraintHorizontal_bias="0.255"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/postdescribe"
-                app:layout_constraintVertical_bias="1.0" />
-
-            <TextView
-                android:id="@+id/likescount23"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/likecount"
-                android:textColor="#fff"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.097"
-                app:layout_constraintStart_toEndOf="@+id/likeuserz2"
-                app:layout_constraintTop_toBottomOf="@+id/postdescribe"
-                app:layout_constraintVertical_bias="0.821" />
-
-            <TextView
-                android:id="@+id/Comentcount2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/answerscount"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.195"
-                app:layout_constraintStart_toEndOf="@+id/postdescribe"
-                app:layout_constraintTop_toBottomOf="@+id/postdescribe"
-                app:layout_constraintVertical_bias="0.9"
-                android:textColor="#fff"
-                />
-
-            <ImageView
-                android:id="@+id/popimagedell"
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="48dp"
-                android:layout_marginRight="48dp"
-                android:enabled="false"
-                android:src="@drawable/ic_del"
-                android:visibility="invisible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/Post_user"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <TextView
-                android:id="@+id/commentCountR"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="56dp"
-                android:layout_marginLeft="56dp"
-                android:layout_marginTop="28dp"
-                android:text=''
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/postdescribe"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/likescount23"
-                app:layout_constraintTop_toBottomOf="@+id/postdescribe"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <TextView
-                android:id="@+id/postdescribe"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#fff"
-                android:layout_marginTop="16dp"
-                android:padding="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pageview" />
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/pageview"
-                android:layout_width="0dp"
-                android:layout_height="270dp"
-                android:layout_marginTop="24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/circularUser" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/myBlack"
+            android:textColorHint="@color/myBlack"
+            android:background="@drawable/conner_et"
+            android:hint="Comment here"
+            android:inputType="textMultiLine" />
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

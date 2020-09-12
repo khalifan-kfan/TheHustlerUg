@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -29,9 +31,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.thehustler.Adapter.CommentsRecyclerAdaptor;
 import  com.example.thehustler.Adapter.ImageAdp;
 import  com.example.thehustler.Fragments.Home_Fragment;
 import  com.example.thehustler.Model.Blogpost;
+import com.example.thehustler.Model.Comments;
 import  com.example.thehustler.Model.Users;
 import com.example.thehustler.NotifyHandler.NotSender;
 import com.example.thehustler.R;
@@ -39,6 +43,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -47,6 +53,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -79,26 +86,40 @@ public class PostActivity extends AppCompatActivity {
     private  String blogPostId;
 
 
+    private EditText Answer;
+    private FloatingActionButton Sendbtn;
+    private RecyclerView Answerslists;
+    private List<Comments> answers_list;
+    private  List<Users> user_list;
+    private CommentsRecyclerAdaptor commentsRecyclerAdaptor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
-        final Toolbar tb = findViewById(R.id.toolbar_post);
+        final Toolbar tb = findViewById(R.id.toolbar_post_);
         setSupportActionBar(tb);
-        tb.setTitle("Post");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        //tb
+        //tb.setTitle("Comments");
 
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
-
         final String currentUserId = auth.getCurrentUser().getUid();
         Intent intent = getIntent();
         userId = intent.getStringExtra("UserId");
         blogPostId = intent.getStringExtra("blogPostId");
         //final String blogPostId = getArguments().getString("blogPostId");
         //final String userId = getArguments().getString("userId");
+
+
+        Answerslists = findViewById(R.id.answersrecyclerview);
+        Answer= findViewById(R.id.answersET);
+        Sendbtn = findViewById(R.id.sendbtn);
 
         userProfileImageView =findViewById(R.id.circularUser);
         userNameView = findViewById(R.id.Post_user);
@@ -112,12 +133,13 @@ public class PostActivity extends AppCompatActivity {
         likeCounter =findViewById(R.id.likescount23);
 
 
+
+
         if(userId.equals(currentUserId)) {
             popbut.setEnabled(true);
             popbut.setVisibility(View.VISIBLE);
             userProfileImageView.setEnabled(false);
         }
-
         userProfileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,15 +150,7 @@ public class PostActivity extends AppCompatActivity {
         });
 
 
-        commentsView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent commentIntent = new Intent(PostActivity.this, CommentActivity.class);
-                commentIntent.putExtra("post_Id", blogPostId);
-                commentIntent.putExtra("postownerId",userId);
-                startActivity(commentIntent);
-            }
-        });
+        commentsView.setText("comments");
 
 
         firestore.collection("Posts/"+blogPostId+"/Answers").addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -195,45 +209,43 @@ public class PostActivity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (!userId.equals(currentUserId)) {
-                                                final String status = "like";
-                                                Map<String, Object> mylikeMap = new HashMap<>();
-                                                mylikeMap.put("status",status);
-                                                mylikeMap.put("notId",currentUserId);
-                                                mylikeMap.put("timestamp", FieldValue.serverTimestamp());
-                                                mylikeMap.put("postId",blogPostId);
-                                                firestore.collection("Users/"+userId+"/NotificationBox")
-                                                        .document(currentUserId).set(mylikeMap)
-                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                if(!task.isSuccessful()){
-                                                                    Toast.makeText(PostActivity.this, "did not properly liked", Toast.LENGTH_SHORT).show();
-                                                                }
-                                                                //send notification now
-                                                                firestore.collection("Users").document(userId)
-                                                                        .collection("Tokens")
-                                                                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                                                            @Override
-                                                                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                                                                for (DocumentChange doc : value.getDocumentChanges()) {
-                                                                                    if (doc.getType() == DocumentChange.Type.ADDED) {
-                                                                                        String token = doc.getDocument().getString("token");
-                                                                                        NotSender
-                                                                                                .sendNotifications(PostActivity.this,token
-                                                                                                        ,status,"New Like Alert");
+                                                    final String status = "like";
+                                                    Map<String, Object> mylikeMap = new HashMap<>();
+                                                    mylikeMap.put("status",status);
+                                                    mylikeMap.put("notId",currentUserId);
+                                                    mylikeMap.put("timestamp", FieldValue.serverTimestamp());
+                                                    mylikeMap.put("postId",blogPostId);
+                                                    firestore.collection("Users/"+userId+"/NotificationBox")
+                                                            .document(currentUserId).set(mylikeMap)
+                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    if(!task.isSuccessful()){
+                                                                        Toast.makeText(PostActivity.this, "did not properly liked", Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                    //send notification now
+                                                                    firestore.collection("Users").document(userId)
+                                                                            .collection("Tokens")
+                                                                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                                                                @Override
+                                                                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                                                                    for (DocumentChange doc : value.getDocumentChanges()) {
+                                                                                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                                                                                            String token = doc.getDocument().getString("token");
+                                                                                            NotSender
+                                                                                                    .sendNotifications(PostActivity.this,token
+                                                                                                            ,status,"New Like Alert");
+                                                                                        }
                                                                                     }
+
                                                                                 }
+                                                                            });
 
-                                                                            }
-                                                                        });
+                                                                    NotSender.Updatetoken();
 
-                                                                NotSender.Updatetoken();
-
-
-
-                                                            }
-                                                        });
-                                            }
+                                                                }
+                                                            });
+                                                }
                                             }
                                         });
 
@@ -328,14 +340,108 @@ public class PostActivity extends AppCompatActivity {
             public void onClick(View v) {
                 pop(userId, blog, user,0);
 
+            }
+        });
 
+        // recycler view fire base list
+        answers_list =new ArrayList<>();
+        user_list = new ArrayList<>();
+        commentsRecyclerAdaptor =  new CommentsRecyclerAdaptor(answers_list,user_list);
+        Answerslists.setHasFixedSize(true);
+        Answerslists.setLayoutManager(new LinearLayoutManager(PostActivity.this));
+        Answerslists.setAdapter(commentsRecyclerAdaptor);
+        firestore.collection("Posts/"+blogPostId+"/Answers").orderBy("timestamp", Query.Direction.ASCENDING)
+                .addSnapshotListener(PostActivity.this, new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                        if (!queryDocumentSnapshots.isEmpty()) {
+
+                            for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                                if (doc.getType() == DocumentChange.Type.ADDED) {
+                                    String commentsID = doc.getDocument().getId();
+                                    final Comments comments = doc.getDocument().toObject(Comments.class).withID(commentsID);
+                                    String Commentuser_id = doc.getDocument().getString("user_id");
+                                    firestore.collection("Users").document(Commentuser_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                Users users = task.getResult().toObject(Users.class);
+
+                                                user_list.add(users);
+                                                answers_list.add(comments);
+
+                                                commentsRecyclerAdaptor.notifyDataSetChanged();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                });
+        Sendbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String ans =Answer.getText().toString();
+                if(!ans.isEmpty()){
+                    Map<String, Object> ansMap = new HashMap<>();
+                    ansMap.put("answer",ans);
+                    ansMap.put("user_id",currentUserId);
+                    ansMap.put("timestamp", FieldValue.serverTimestamp());
+                    firestore.collection("Posts/"+blogPostId+"/Answers").add(ansMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                            if(task.isSuccessful()){
+                                Answer.setText("");
+                                final String Status ="Comment";
+                                Map<String, Object> myansMap = new HashMap<>();
+                                myansMap.put("status", Status);
+                                myansMap.put("notId",currentUserId);
+                                myansMap.put("timestamp", FieldValue.serverTimestamp());
+                                myansMap.put("postId",blogPostId);
+                                firestore.collection("Users/"+userId+"/NotificationBox")
+                                        .document(currentUserId)
+                                        .set(myansMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(!task.isSuccessful()) {
+                                            Toast.makeText(PostActivity.this, "did not properly save", Toast.LENGTH_SHORT).show();
+                                        }
+                                        //send notification now
+                                        firestore.collection("Users").document(userId)
+                                                .collection("Tokens")
+                                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                                        for (DocumentChange doc : value.getDocumentChanges()) {
+                                                            if (doc.getType() == DocumentChange.Type.ADDED) {
+                                                                String token = doc.getDocument().getString("token");
+                                                                NotSender
+                                                                        .sendNotifications(PostActivity.this,token
+                                                                                ,Status,"New comment Alert");
+                                                            }
+                                                        }
+
+                                                    }
+                                                });
+                                        NotSender.Updatetoken();
+                                    }
+                                });
+                            }else {
+                                Toast.makeText(PostActivity.this, "did not save post", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
             }
         });
 
     }
+
     private void setBlogData(List<String> blogImageUrl, List<String> blogImageThumbUrl) {
 
-       blogImageView.setAdapter( new ImageAdp(blogImageUrl,blogImageThumbUrl,blogImageView));
+        blogImageView.setAdapter( new ImageAdp(blogImageUrl,blogImageThumbUrl,blogImageView));
 
         blogImageView.setClipToPadding(false);
         blogImageView.setClipChildren(false);
@@ -357,9 +463,9 @@ public class PostActivity extends AppCompatActivity {
 
 
         // Glide.with(this)
-         //       .load(blogImageUrl)
-           //     .thumbnail(Glide.with(this).load(blogImageThumbUrl))
-             //   .into(blogImageView);
+        //       .load(blogImageUrl)
+        //     .thumbnail(Glide.with(this).load(blogImageThumbUrl))
+        //   .into(blogImageView);
 
 
     }

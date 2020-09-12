@@ -29,8 +29,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.thehustler.Activities.AnotherUserAccount;
-import com.example.thehustler.Activities.CommentActivity;
-import com.example.thehustler.Activities.MainActivity;
+
 import com.example.thehustler.Activities.PostActivity;
 import com.example.thehustler.Adapter.ImageAdp;
 import com.example.thehustler.Adapter.TrigRecyclerAdapter;
@@ -469,9 +468,9 @@ class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             holder.answersbtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent answerintent =  new Intent(context, CommentActivity.class);
-                    answerintent.putExtra("post_Id",post_Id);
-                    answerintent.putExtra("postownerId",user_id);
+                    Intent answerintent =  new Intent(context, PostActivity.class);
+                    answerintent.putExtra("blogPostId",post_Id);
+                    answerintent.putExtra("UserId",user_id);
                     context.startActivities(new Intent[]{answerintent});
 
                 }
