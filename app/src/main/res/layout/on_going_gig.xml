@@ -89,6 +89,7 @@
         android:layout_marginEnd="13dp"
         android:layout_marginRight="13dp"
         android:src="@drawable/rounded_rectangle" />
+
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="108dp"
@@ -96,9 +97,9 @@
         android:layout_below="@+id/imageView"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="160dp"
-        android:layout_marginLeft="160dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="134dp"
+        android:layout_marginLeft="134dp"
+        android:layout_marginTop="10dp"
         android:src="@drawable/ic_done" />
 
     <ImageView

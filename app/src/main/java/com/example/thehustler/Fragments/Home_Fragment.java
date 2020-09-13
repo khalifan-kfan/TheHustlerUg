@@ -132,7 +132,6 @@ public class Home_Fragment extends Fragment {
                       if (loadFirst) {
                         usersList.add(users);
                         Postlist.add(blogpost);
-
                       } else {
                         usersList.add(0, users);
                         Postlist.add(0, blogpost);

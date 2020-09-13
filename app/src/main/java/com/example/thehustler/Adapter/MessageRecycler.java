@@ -31,8 +31,6 @@ public class MessageRecycler extends RecyclerView.Adapter<MessageRecycler.Messag
         messages = new ArrayList<>();
     }
 
-
-
     @NonNull
     @Override
     public MessagesHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

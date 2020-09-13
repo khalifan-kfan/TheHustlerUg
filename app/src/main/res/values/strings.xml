@@ -23,7 +23,7 @@
     <string name="Notification">Notification</string>
     <string name="likecount">0 likes</string>
     <string name="Account">account</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="answers">Comments:</string>
     <string name="ansHint">type answer here clearly</string>
@@ -62,11 +62,13 @@
     <string name="newgig">Create A Gig</string>
     <string name="dg">Direct gigs</string>
     <string name="gig_desc">Describe your gig, available cash etc (add an image if required)</string>
+    <string name="CreatingopenGig">Creating open Gig</string>
+    <string name="directto">Direct gig to;</string>
 
     <string-array name="main_gig_page">
         <item>Open Gigs</item>
         <item>Ongoing Gigs</item>
-        <item>  GigRequest and offers</item>
+        <item> GigRequest and offers</item>
     </string-array>
 
 

@@ -103,8 +103,8 @@
         android:layout_marginLeft="0dp"
         android:layout_marginEnd="0dp"
         android:layout_marginRight="0dp"
-        android:entries="@array/main_gig_page"
+        android:background="@color/colorAccent"
 
-        />
+        android:entries="@array/main_gig_page" />
 
 </RelativeLayout>

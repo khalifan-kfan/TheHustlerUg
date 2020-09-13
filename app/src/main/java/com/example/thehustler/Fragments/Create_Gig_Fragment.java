@@ -103,9 +103,9 @@ public class Create_Gig_Fragment extends Fragment {
         myId = auth.getCurrentUser().getUid();
 
         if(iddd.equals("open")){
-            reqType.setText("Creating open Gig");
+            reqType.setText(R.string.CreatingopenGig);
         }else{
-            reqType.setText("Direct gig to;"+Name);
+            reqType.setText(getString(R.string.directto)+ Name);
         }
 
         SendBtn.setOnClickListener(new View.OnClickListener() {
@@ -181,6 +181,10 @@ public class Create_Gig_Fragment extends Fragment {
                                         GigMap.put("gig_description",description);
                                         GigMap.put("gig_date", FieldValue.serverTimestamp());
                                         GigMap.put("gig_image",downloadUri[0]);
+                                        GigMap.put("from_id",myId);
+                                        GigMap.put("to_id",null);
+                                        GigMap.put("status","open");
+                                        GigMap.put("end_time",null);
                                         firestore.collection("Gigs").document(myId).set(GigMap)
                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
@@ -215,6 +219,10 @@ public class Create_Gig_Fragment extends Fragment {
                 GigMap.put("gig_description",description);
                 GigMap.put("gig_date", FieldValue.serverTimestamp());
                 GigMap.put("gig_image",null);
+                GigMap.put("from_id",myId);
+                GigMap.put("to_id",null);
+                GigMap.put("status","open");
+                GigMap.put("end_time",null);
                 firestore.collection("Gigs").document(myId).set(GigMap)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -278,7 +286,8 @@ public class Create_Gig_Fragment extends Fragment {
                                         GigMap.put("gig_image",downloadUri[0]);
                                         GigMap.put("to_id",userid);
                                         GigMap.put("from_id",myId);
-
+                                        GigMap.put("status","pending");
+                                        GigMap.put("end_time",null);
                                         firestore.collection("Users").document(myId).collection("Gigs")
                                                 .document(userid)
                                                 .set(GigMap)
@@ -366,6 +375,8 @@ public class Create_Gig_Fragment extends Fragment {
                 GigMap.put("gig_image",null);
                 GigMap.put("to_id",userid);
                 GigMap.put("from_id",myId);
+                GigMap.put("status","pending");
+                GigMap.put("end_time",null);
                 firestore.collection("Users").document(myId)
                         .collection("Gigs").document(userid)
                         .set(GigMap)
@@ -461,6 +472,7 @@ public class Create_Gig_Fragment extends Fragment {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == Activity.RESULT_OK) {
                 ImageUri = result.getUri();
+                myimage.setVisibility(View.VISIBLE);
                 myimage.setImageURI(ImageUri);
 
             }else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
