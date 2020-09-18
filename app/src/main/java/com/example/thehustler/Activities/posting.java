@@ -153,7 +153,8 @@ public class posting extends AppCompatActivity {
                         postMapn.put("description", description);
                         postMapn.put("user_id", UserId);
                         postMapn.put("timeStamp", FieldValue.serverTimestamp());
-                        firestore.collection("Posts").add(postMapn).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        firestore.collection("Posts").add(postMapn).addOnCompleteListener(
+                                new OnCompleteListener<DocumentReference>()  {
                             @Override
                             public void onComplete(@NonNull Task<DocumentReference> task) {
                                 if (task.isSuccessful()) {
@@ -246,7 +247,8 @@ public class posting extends AppCompatActivity {
                             postMap.put("description",description);
                             postMap.put("user_id",UserId);
                             postMap.put("timeStamp", FieldValue.serverTimestamp());
-                            firestore.collection("Posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            firestore.collection("Posts").add(postMap).addOnCompleteListener(
+                                    new OnCompleteListener<DocumentReference>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentReference> task) {
                                     if (task.isSuccessful()) {

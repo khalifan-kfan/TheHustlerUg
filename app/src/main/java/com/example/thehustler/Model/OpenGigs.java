@@ -15,22 +15,32 @@ public class OpenGigs extends UserId {
     private String from_id;
     private String  status;
     private String  end_time;
+    private String  ref_id;
 
 
     @ServerTimestamp
     private  String  gig_date;
     private String gig_image;
 
-    public OpenGigs(String gig_description, String to_id, String from_id, String status, String end_time, String gig_image) {
+    public OpenGigs(String gig_description, String to_id, String from_id, String status, String end_time, String gig_image,String ref_id) {
         this.gig_description = gig_description;
         this.to_id = to_id;
         this.from_id = from_id;
         this.status = status;
         this.end_time = end_time;
         this.gig_image = gig_image;
+        this.ref_id = ref_id;
     }
 
     public OpenGigs() {
+    }
+
+    public String getRef_id() {
+        return ref_id;
+    }
+
+    public void setRef_id(String ref_id) {
+        this.ref_id = ref_id;
     }
 
     public String getTo_id() {

@@ -256,7 +256,7 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<TrigRecyclerAdapte
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (!user_id.equals(CurrentUser)) {
-                                                    firestore.collection("Users/" + user_id + "/NotificationBox")
+                                                    firestore.collection("Users/"+user_id+"/NotificationBox")
                                                             .document(CurrentUser).delete()
                                                             .addOnFailureListener(new OnFailureListener() {
                                                                 @Override
@@ -332,7 +332,6 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<TrigRecyclerAdapte
             postOwnerName = v.findViewById(R.id.Post_user);
             ownerimage =v.findViewById(R.id.circularUser);
             postdate = v.findViewById(R.id.datePost);
-
         }
         public void setdescriptiontext(String text){
             description = v.findViewById(R.id.postdescribe);

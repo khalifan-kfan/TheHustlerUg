@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -44,6 +45,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 
 public class Create_Gig_Fragment extends Fragment {
@@ -105,7 +107,7 @@ public class Create_Gig_Fragment extends Fragment {
         if(iddd.equals("open")){
             reqType.setText(R.string.CreatingopenGig);
         }else{
-            reqType.setText(getString(R.string.directto)+ Name);
+            reqType.setText(getString(R.string.directto,Name));
         }
 
         SendBtn.setOnClickListener(new View.OnClickListener() {
@@ -185,10 +187,11 @@ public class Create_Gig_Fragment extends Fragment {
                                         GigMap.put("to_id",null);
                                         GigMap.put("status","open");
                                         GigMap.put("end_time",null);
-                                        firestore.collection("Gigs").document(myId).set(GigMap)
-                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        GigMap.put("ref_id",null);
+                                        firestore.collection("Gigs").add(GigMap)
+                                                .addOnCompleteListener(new OnCompleteListener<DocumentReference>()  {
                                                     @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                    public void onComplete(@NonNull  Task<DocumentReference> task) {
                                                         if (task.isSuccessful()) {
                                                             Toast.makeText(getContext(), "gig added", Toast.LENGTH_LONG).show();
                                                             progressBar.setVisibility(View.INVISIBLE);
@@ -223,10 +226,11 @@ public class Create_Gig_Fragment extends Fragment {
                 GigMap.put("to_id",null);
                 GigMap.put("status","open");
                 GigMap.put("end_time",null);
-                firestore.collection("Gigs").document(myId).set(GigMap)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                GigMap.put("ref_id",null);
+                firestore.collection("Gigs").add(GigMap)
+                        .addOnCompleteListener(new  OnCompleteListener<DocumentReference>()  {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
+                            public void onComplete(@NonNull  Task<DocumentReference> task) {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(getContext(), "gig added", Toast.LENGTH_LONG).show();
                                     progressBar.setVisibility(View.INVISIBLE);
@@ -255,6 +259,7 @@ public class Create_Gig_Fragment extends Fragment {
 
     private void SendtoPerson(final String userid) {
 
+        final String randomID = UUID.randomUUID().toString();
         final String description = post_desc.getText().toString();
         if (!TextUtils.isEmpty(description)) {
             progressBar.setVisibility(View.VISIBLE);
@@ -288,15 +293,19 @@ public class Create_Gig_Fragment extends Fragment {
                                         GigMap.put("from_id",myId);
                                         GigMap.put("status","pending");
                                         GigMap.put("end_time",null);
+                                        GigMap.put("ref_id",randomID+myId+userid);
                                         firestore.collection("Users").document(myId).collection("Gigs")
-                                                .document(userid)
+                                                .document(randomID+myId+userid)
                                                 .set(GigMap)
                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                    public void onComplete(@NonNull  Task<Void> task) {
                                                         if (task.isSuccessful()) {
-                                                            firestore.collection("Users").document(userid).collection("Gigs")
-                                                                    .document(myId).set(GigMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                                                            firestore.collection("Users").document(userid)
+                                                                    .collection("Gigs")
+                                                                    .document(randomID+myId+userid)
+                                                                    .set(GigMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
                                                                     if(task.isSuccessful()) {
@@ -377,16 +386,17 @@ public class Create_Gig_Fragment extends Fragment {
                 GigMap.put("from_id",myId);
                 GigMap.put("status","pending");
                 GigMap.put("end_time",null);
+                GigMap.put("ref_id",randomID+myId+userid);
                 firestore.collection("Users").document(myId)
-                        .collection("Gigs").document(userid)
+                        .collection("Gigs").document(randomID+myId+userid)
                         .set(GigMap)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-
                                     firestore.collection("Users").document(userid).collection("Gigs")
-                                            .document(myId).set(GigMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            .document(randomID+myId+userid)
+                                            .set(GigMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()) {

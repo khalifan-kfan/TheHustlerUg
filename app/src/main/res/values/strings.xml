@@ -63,7 +63,11 @@
     <string name="dg">Direct gigs</string>
     <string name="gig_desc">Describe your gig, available cash etc (add an image if required)</string>
     <string name="CreatingopenGig">Creating open Gig</string>
-    <string name="directto">Direct gig to;</string>
+    <string name="directto">Direct gig to; %1$s</string>
+    <string name="Postedby">Posted by; %1$s</string>
+    <string name="Sentby">Sent by; %1$s</string>
+    <string name="byyou">Post by You.</string>
+    <string name="ended">Ended on;</string>
 
     <string-array name="main_gig_page">
         <item>Open Gigs</item>

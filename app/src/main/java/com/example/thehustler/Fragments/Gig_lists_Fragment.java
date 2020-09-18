@@ -1,10 +1,14 @@
 package com.example.thehustler.Fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,32 +16,43 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
+
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.thehustler.Adapter.TrigRecyclerAdapter;
-import com.example.thehustler.Model.Blogpost;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import com.example.thehustler.Model.OpenGigs;
 import com.example.thehustler.Model.Users;
+import com.example.thehustler.NotifyHandler.NotSender;
 import com.example.thehustler.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+
 
 
 public class Gig_lists_Fragment extends Fragment {
@@ -504,16 +519,16 @@ public class Gig_lists_Fragment extends Fragment {
 
 }
 class OpenGigsAdapter extends RecyclerView.Adapter<OpenGigsAdapter.ViewHolder>{
-
     List<OpenGigs> gigsList;
     List<Users> usersList;
     public Context context;
     private FirebaseAuth auth;
-
+    private  FirebaseFirestore firestore;
+    private String  myid;
+    SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss a, dd-MM-yy");
     public OpenGigsAdapter(List<OpenGigs> gigs_lists, List<Users> usersListl) {
-       gigsList= gigs_lists;
-       usersList = usersListl;
-
+        gigsList= gigs_lists;
+        usersList = usersListl;
     }
 
     @NonNull
@@ -522,29 +537,143 @@ class OpenGigsAdapter extends RecyclerView.Adapter<OpenGigsAdapter.ViewHolder>{
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.open_gigs,parent, false);
         context = parent.getContext();
         auth =FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        myid = auth.getCurrentUser().getUid();
+        String  gig_image = gigsList.get(position).getGig_image();
+        final String from_id=gigsList.get(position).getFrom_id();
+        String  gig_date = gigsList.get(position).getGig_date();
+        String gig_desk = gigsList.get(position).getGig_description();
+        final String gigId = gigsList.get(position).Userid;
+
+        String name = usersList.get(position).getName().get(0);
+        String userImage_thumb = usersList.get(position).getThumb();
+        String userImage = usersList.get(position).getImage();
+        holder.setOwner(name,userImage_thumb,userImage,from_id);
+        holder.setGig(gig_desk,gig_date,gig_image);
+
+
+       // holder.section.setlon
+
+        holder.star.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firestore.collection("Gigs/"+gigId+"/Interests").document(myid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (!task.getResult().exists()) {
+                                Map<String, Object> likeMap = new HashMap<>();
+                                likeMap.put("timestamp", FieldValue.serverTimestamp());
+                                firestore.collection("Gigs/"+gigId+"/Interests").document(myid).set(likeMap)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (!myid.equals(myid)) {
+                                                    final String status = "Interests";
+                                                    Map<String, Object> mylikeMap = new HashMap<>();
+                                                    mylikeMap.put("status", status);
+                                                    mylikeMap.put("notId", myid);
+                                                    mylikeMap.put("timestamp", FieldValue.serverTimestamp());
+                                                    mylikeMap.put("postId", from_id);
+                                                    firestore.collection("Users/"+from_id+"/NotificationBox").document(myid).set(mylikeMap)
+                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    if (!task.isSuccessful()) {
+                                                                        Toast.makeText(context, "did not properly liked", Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                    //send notification now
+                                                                    firestore.collection("Users").document(from_id)
+                                                                            .collection("Tokens")
+                                                                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                                                                @Override
+                                                                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                                                                    for (DocumentChange doc : value.getDocumentChanges()) {
+                                                                                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                                                                                            String token = doc.getDocument().getString("token");
+                                                                                            NotSender
+                                                                                                    .sendNotifications(context,token
+                                                                                                            ,status,"New Interest Alert");
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                    NotSender.Updatetoken();
+                                                                }
+                                                            });
+                                                }
+                                            }
+                                        });
+                            } else {
+                                firestore.collection("Gigs/"+gigId+"/Interests").document(myid).delete()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (!from_id.equals(myid)) {
+                                                    firestore.collection("Users/"+from_id+"/NotificationBox")
+                                                            .document(myid).delete()
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Toast.makeText(context, "did not delete properly" + e, Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+                                                }
+                                            }
+                                        });
+                            }
+                        }else {
+                            Toast.makeText(context, "your offline", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
 
 
 
+        //get favorites
+        firestore.collection("Gigs/"+gigId+"/Interests").document(myid).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(documentSnapshot.exists()){
+                    holder.star.setImageDrawable(context.getDrawable(R.drawable.ic_favestar));
+                }else{
+                    holder.star.setImageDrawable(context.getDrawable(R.drawable.ic_n_Istar));
+                }
+            }
+        });
+        //likes count
+        firestore.collection("Gigs/"+gigId+"/Interests").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if(!queryDocumentSnapshots.isEmpty()){
+                    int count = queryDocumentSnapshots.size();
+                    holder.updateCount(count);
+                }else{
+                    holder.updateCount(0);
+                }
+            }
+        });
     }
-
     @Override
     public int getItemCount() {
         return gigsList.size();
     }
 
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         CircleImageView user;
         TextView byName,post_date,description,interests;
         ImageView star,descImage;
         View v;
-
+        RelativeLayout section;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             v = itemView;
@@ -556,71 +685,393 @@ class OpenGigsAdapter extends RecyclerView.Adapter<OpenGigsAdapter.ViewHolder>{
             descImage = v.findViewById(R.id.imageView);
             star = v.findViewById(R.id.imageView_interest);//check
             //onclick//notify
+            section = v.findViewById(R.id.rl_section);
+        }
+
+        private void setOwner(String name, String userImage_thumb, String userImage,String from_id) {
+
+            if(from_id.equals(myid)){
+                byName.setText(R.string.byyou);
+            }else {
+                byName.setText(context.getString(R.string.Postedby,name));
+            }
+            RequestOptions placeholderOP = new RequestOptions();
+            placeholderOP.placeholder(R.drawable.ic_person);
+            Glide.with(context).applyDefaultRequestOptions(placeholderOP).load(userImage).thumbnail(Glide.with(context).load(userImage_thumb))
+                    .into(user);
+        }
+
+        public void setGig(String gig_desk, String gig_date, String gig_image) {
+            description.setText(gig_desk);
+            if( gig_date != null) {
+                post_date.setText(format.format(gig_date));
+            }else{
+                post_date.setText(format.format(new Date()));
+            }
+
+            if(gig_image !=null){
+                RequestOptions placeholderOP = new RequestOptions();
+                placeholderOP.placeholder(R.drawable.rounded_rectangle);
+                Glide.with(context).applyDefaultRequestOptions(placeholderOP).load(gig_image)
+                        .into(user);
+            }else{
+                descImage.setVisibility(View.GONE);
+                descImage.setEnabled(false);
+            }
+        }
+
+        public void updateCount(int count) {
+            if (count > 0)
+                interests.setText(Integer.toString(count));
+            else
+                interests.setText("");
+        }
+    }
+}
+
+class HistoryAdaptor extends RecyclerView.Adapter<HistoryAdaptor.ViewHolder> {
+    List<OpenGigs> gigsList;
+    List<Users> usersList;
+    public Context context;
+    private FirebaseAuth auth;
+    private FirebaseFirestore firestore;
+    private String myid;
+    SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss a, dd-MM-yy");
+
+    public HistoryAdaptor(List<OpenGigs> gigs_lists, List<Users> usersListl) {
+        gigsList = gigs_lists;
+        usersList = usersListl;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.on_going_gig, parent, false);
+        context = parent.getContext();
+        auth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        myid = auth.getCurrentUser().getUid();
+        String gig_image = gigsList.get(position).getGig_image();
+        final String from_id = gigsList.get(position).getFrom_id();
+        String gig_date = gigsList.get(position).getEnd_time();
+        String gig_desk = gigsList.get(position).getGig_description();
+        final String gigId = gigsList.get(position).Userid;
+        String name = usersList.get(position).getName().get(0);
+        String userImage_thumb = usersList.get(position).getThumb();
+        String userImage = usersList.get(position).getImage();
+        holder.setOwner(name, userImage_thumb, userImage, from_id);
+        holder.setGig(gig_desk, gig_date, gig_image);
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return 0;
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        CircleImageView user;
+        TextView name, date, end_time, desc;
+        ImageView Done, cancel, decImage,reviewCheck;
+        View v;
+        RelativeLayout rl;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            v = itemView;
+            end_time = v.findViewById(R.id.st);
+            user = v.findViewById(R.id.userCir);//onclick
+            name = v.findViewById(R.id.by_name);//onClick
+            date = v.findViewById(R.id.start_date);
+            desc = v.findViewById(R.id.gig_describe);
+            decImage = v.findViewById(R.id.imageView);//counter , onclick
+            cancel = v.findViewById(R.id.imageView3);
+            Done = v.findViewById(R.id.imageView2);//check
+            //onclick//notify
+            rl = v.findViewById(R.id.mylay);
+            reviewCheck = v.findViewById(R.id.Review__);
+        }
+
+        public void setGig(String gig_desk, String gig_date, String gig_image) {
+            end_time.setText(R.string.ended);
+            desc.setText(gig_desk);
+            if (gig_date != null) {
+                date.setText(format.format(gig_date));
+            } else {
+                date.setText(format.format(new Date()));
+            }
+            if (gig_image != null) {
+                RequestOptions placeholderOP = new RequestOptions();
+                placeholderOP.placeholder(R.drawable.rounded_rectangle);
+                Glide.with(context).applyDefaultRequestOptions(placeholderOP).load(gig_image)
+                        .into(user);
+            } else {
+                decImage.setVisibility(View.GONE);
+                decImage.setEnabled(false);
+            }
+
+
+        }
+
+        public void setOwner(String Name, String userImage_thumb, String userImage, String from_id) {
+            if(from_id.equals(myid)){
+                name.setText(R.string.byyou);
+            }else {
+                name.setText(context.getString(R.string.Sentby,Name));
+            }
+            RequestOptions placeholderOP = new RequestOptions();
+            placeholderOP.placeholder(R.drawable.ic_person);
+            Glide.with(context).applyDefaultRequestOptions(placeholderOP).load(userImage).thumbnail(Glide.with(context).load(userImage_thumb))
+                    .into(user);
+
+        }
+    }
+}
+class OngoingAdaptor extends RecyclerView.Adapter<OngoingAdaptor.ViewHolder> {
+    List<OpenGigs> gigsList;
+    List<Users> usersList;
+    public Context context;
+    private FirebaseAuth auth;
+    private  FirebaseFirestore firestore;
+    private String  myid;
+    SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss a, dd-MM-yy");
+
+    public OngoingAdaptor(List<OpenGigs> gigs_lists, List<Users> usersListl) {
+        gigsList= gigs_lists;
+        usersList = usersListl;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.on_going_gig,parent, false);
+        context = parent.getContext();
+        auth =FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        myid = auth.getCurrentUser().getUid();
+        String  gig_image = gigsList.get(position).getGig_image();
+        final String from_id=gigsList.get(position).getFrom_id();
+        final String  gig_date = gigsList.get(position).getGig_date();
+        String gig_desk = gigsList.get(position).getGig_description();
+        final String gigId = gigsList.get(position).Userid;
+        String name = usersList.get(position).getName().get(0);
+        String userImage_thumb = usersList.get(position).getThumb();
+        String userImage = usersList.get(position).getImage();
+        final String ref = gigsList.get(position).getRef_id();
+
+        holder.setOwner(name,userImage_thumb,userImage,from_id);
+        holder.setGig(gig_desk,gig_date,gig_image);
+
+        holder.user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        holder.Done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Build an AlertDialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Finishing gig");
+                builder.setMessage("Are you really done?");
+
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do something when user clicked the Yes button
+                        // Set the TextView visibility GONE
+                        firestore.collection("Users").document(myid).collection("Gigs")
+                                .document(gigId)
+                                .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                firestore.collection("Users")
+                                       .document(from_id).collection("Gigs")
+                                        .document(ref)
+                                        .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                       // send him a notification
+                                    }
+                                });
+
+
+
+
+                                gigsList.remove(position);
+                                usersList.remove(position);
+                                notifyItemRemoved(position);
+                            }
+                        });
+                        //dialog.dismiss();
+
+                    }
+                });
+
+                // Set the alert dialog no button click listener
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do something when No button clicked
+                        Toast.makeText(context,
+                                "No Button Clicked",Toast.LENGTH_SHORT).show();
+                        //dialog.dismiss();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                // Display the alert dialog on interface
+                dialog.show();
+
+
+
+            }
+        });
+
+        holder.cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Build an AlertDialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Delete gig");
+                builder.setMessage("confirm to delete?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        //dialog.dismiss();
+                    }
+                });
+
+                // Set the alert dialog no button click listener
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do something when No button clicked
+                        Toast.makeText(context,
+                                "No Button Clicked",Toast.LENGTH_SHORT).show();
+                        //dialog.dismiss();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                // Display the alert dialog on interface
+                dialog.show();
+            }
+        });
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return gigsList.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        CircleImageView user;
+        TextView name,date,end_time,desc;
+        ImageView Done,cancel,decImage;
+        View v;
+        RelativeLayout rl;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            v = itemView;
+            end_time = v.findViewById(R.id.st);
+            user = v.findViewById(R.id.userCir);//onclick
+            name = v.findViewById(R.id.by_name);//onClick
+            date = v.findViewById(R.id.start_date);
+            desc= v.findViewById(R.id.gig_describe);
+            decImage = v.findViewById(R.id.imageView);//counter , onclick
+            cancel = v.findViewById(R.id.imageView3);
+            Done= v.findViewById(R.id.imageView2);//check
+            //onclick//notify
+            rl = v.findViewById(R.id.mylay);
+        }
+
+        private void setOwner(String Name, String userImage_thumb, String userImage,String from_id) {
+            if(from_id.equals(myid)){
+                name.setText(R.string.byyou);
+            }else {
+                name.setText(context.getString(R.string.Sentby,Name));
+            }
+            RequestOptions placeholderOP = new RequestOptions();
+            placeholderOP.placeholder(R.drawable.ic_person);
+            Glide.with(context).applyDefaultRequestOptions(placeholderOP).load(userImage).thumbnail(Glide.with(context).load(userImage_thumb))
+                    .into(user);
+        }
+
+        public void setGig(String gig_desk, String gig_date, String gig_image) {
+            desc.setText(gig_desk);
+            if( gig_date != null) {
+                date.setText(format.format(gig_date));
+            }else{
+                date.setText(format.format(new Date()));
+            }
+            if(gig_image !=null){
+                RequestOptions placeholderOP = new RequestOptions();
+                placeholderOP.placeholder(R.drawable.rounded_rectangle);
+                Glide.with(context).applyDefaultRequestOptions(placeholderOP).load(gig_image)
+                        .into(user);
+            }else{
+                decImage.setVisibility(View.GONE);
+                decImage.setEnabled(false);
+            }
         }
     }
 }
 
 
+class RequestAdaptor extends RecyclerView.Adapter<RequestAdaptor.ViewHolder> {
+    List<OpenGigs> gigsList;
+    List<Users> usersList;
+    public Context context;
+    private FirebaseAuth auth;
+    private  FirebaseFirestore firestore;
+    private String  myid;
+    SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss a, dd-MM-yy");
 
-class HistoryAdaptor extends RecyclerView.Adapter {
-    public HistoryAdaptor(List<OpenGigs> gigs_lists, List<Users> usersListl) {
-
-    }
-
-    @NonNull
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return 0;
-    }
-}
-class OngoingAdaptor extends RecyclerView.Adapter {
-    public OngoingAdaptor(List<OpenGigs> gigs_lists, List<Users> usersListl) {
-
-    }
-
-    @NonNull
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return 0;
-    }
-}
-class RequestAdaptor extends RecyclerView.Adapter {
     public RequestAdaptor(List<OpenGigs> gigs_lists, List<Users> usersListl) {
+        gigsList= gigs_lists;
+        usersList = usersListl;
     }
-
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.open_gigs,parent, false);
+        context = parent.getContext();
+        auth =FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+        return new ViewHolder(view);
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return gigsList.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+        }
     }
 }
