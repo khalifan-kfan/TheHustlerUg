@@ -116,8 +116,13 @@ public class Create_Gig_Fragment extends Fragment {
                 if(iddd.equals("open")){
                     PostPublicGig();
                 }else{
-                    String  userid = iddd;
-                    SendtoPerson(userid);
+                    if(!iddd.equals(myId)) {
+                        String userid = iddd;
+                        SendtoPerson(userid);
+                    }else{
+                        Toast.makeText(getContext(), "go back!" +
+                                "you cant create a gig for you self" , Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -439,7 +444,6 @@ public class Create_Gig_Fragment extends Fragment {
 
                                                             });
                                                 }
-
 
                                                 Toast.makeText(getContext(), "gig added", Toast.LENGTH_LONG).show();
                                                 progressBar.setVisibility(View.INVISIBLE);

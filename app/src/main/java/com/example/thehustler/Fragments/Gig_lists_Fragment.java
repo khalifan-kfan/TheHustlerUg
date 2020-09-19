@@ -1,7 +1,10 @@
 package com.example.thehustler.Fragments;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -18,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +29,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import com.example.thehustler.Activities.AnotherUserAccount;
 import com.example.thehustler.Model.OpenGigs;
 import com.example.thehustler.Model.Users;
 import com.example.thehustler.NotifyHandler.NotSender;
@@ -73,6 +78,8 @@ public class Gig_lists_Fragment extends Fragment {
     private RequestAdaptor adaptorR_Q;
     private HistoryAdaptor historyAdaptor;
     private  OngoingAdaptor ongoingAdaptor;
+      public ProgressBar bar;
+
 
     public Gig_lists_Fragment() {
         // Required empty public constructor
@@ -105,6 +112,8 @@ public class Gig_lists_Fragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         myId = auth.getCurrentUser().getUid();
+       bar = v.findViewById(R.id.progressBar);
+
 
         //Statuses,,,
 
@@ -182,8 +191,15 @@ public class Gig_lists_Fragment extends Fragment {
                             String gigID = doc.getDocument().getId();
 
                             final OpenGigs openGigs = doc.getDocument().toObject(OpenGigs.class).withID(gigID);
-                            String bloguser_id = doc.getDocument().getString("from_id");
-                            firestore.collection("Users").document(bloguser_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            String from_id = doc.getDocument().getString("from_id");
+                            String to_id =doc.getDocument().getString("to_id");
+                            String sendId;
+                            if(from_id.equals(myId)){
+                                sendId = to_id;
+                            }else {
+                                sendId = from_id;
+                            }
+                            firestore.collection("Users").document(sendId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if (task.isSuccessful()) {
@@ -253,8 +269,15 @@ public class Gig_lists_Fragment extends Fragment {
                             String gigID = doc.getDocument().getId();
 
                             final OpenGigs openGigs = doc.getDocument().toObject(OpenGigs.class).withID(gigID);
-                            String bloguser_id = doc.getDocument().getString("from_id");
-                            firestore.collection("Users").document(bloguser_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            String from_id = doc.getDocument().getString("from_id");
+                            String to_id =doc.getDocument().getString("to_id");
+                            String sendId;
+                            if(from_id.equals(myId)){
+                                sendId = to_id;
+                            }else {
+                                sendId = from_id;
+                            }
+                            firestore.collection("Users").document(sendId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if (task.isSuccessful()) {
@@ -326,8 +349,15 @@ public class Gig_lists_Fragment extends Fragment {
                           String gigID = doc.getDocument().getId();
 
                           final OpenGigs openGigs = doc.getDocument().toObject(OpenGigs.class).withID(gigID);
-                          String bloguser_id = doc.getDocument().getString("from_id");
-                          firestore.collection("Users").document(bloguser_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                          String from_id = doc.getDocument().getString("from_id");
+                          String to_id =doc.getDocument().getString("to_id");
+                          String sendId;
+                          if(from_id.equals(myId)){
+                              sendId = to_id;
+                          }else {
+                              sendId = from_id;
+                          }
+                          firestore.collection("Users").document(sendId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                               @Override
                               public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                   if (task.isSuccessful()) {
@@ -377,8 +407,15 @@ public class Gig_lists_Fragment extends Fragment {
                             String gigID = doc.getDocument().getId();
 
                             final OpenGigs openGigs = doc.getDocument().toObject(OpenGigs.class).withID(gigID);
-                            String bloguser_id = doc.getDocument().getString("from_id");
-                            firestore.collection("Users").document(bloguser_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            String from_id = doc.getDocument().getString("from_id");
+                            String to_id =doc.getDocument().getString("to_id");
+                            String sendId;
+                            if(from_id.equals(myId)){
+                                sendId = to_id;
+                            }else {
+                                sendId = from_id;
+                            }
+                            firestore.collection("Users").document(sendId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if (task.isSuccessful()) {
@@ -518,6 +555,13 @@ public class Gig_lists_Fragment extends Fragment {
 
 
 }
+
+
+
+
+
+
+
 class OpenGigsAdapter extends RecyclerView.Adapter<OpenGigsAdapter.ViewHolder>{
     List<OpenGigs> gigsList;
     List<Users> usersList;
@@ -840,6 +884,7 @@ class OngoingAdaptor extends RecyclerView.Adapter<OngoingAdaptor.ViewHolder> {
     public Context context;
     private FirebaseAuth auth;
     private  FirebaseFirestore firestore;
+     Gig_lists_Fragment fragment;
     private String  myid;
     SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss a, dd-MM-yy");
 
@@ -859,10 +904,13 @@ class OngoingAdaptor extends RecyclerView.Adapter<OngoingAdaptor.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position){
+
+
         myid = auth.getCurrentUser().getUid();
         String  gig_image = gigsList.get(position).getGig_image();
         final String from_id=gigsList.get(position).getFrom_id();
+        final String to_id = gigsList.get(position).getTo_id();
         final String  gig_date = gigsList.get(position).getGig_date();
         String gig_desk = gigsList.get(position).getGig_description();
         final String gigId = gigsList.get(position).Userid;
@@ -874,10 +922,16 @@ class OngoingAdaptor extends RecyclerView.Adapter<OngoingAdaptor.ViewHolder> {
         holder.setOwner(name,userImage_thumb,userImage,from_id);
         holder.setGig(gig_desk,gig_date,gig_image);
 
+        if(to_id.equals(myid)){
+         holder.Done.setEnabled(false);
+         holder.Done.setVisibility(View.GONE);
+        }
         holder.user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent thereAccount = new Intent(context, AnotherUserAccount.class);
+                thereAccount.putExtra("UserId",from_id);
+                context.startActivity(thereAccount);
             }
         });
 
@@ -885,59 +939,93 @@ class OngoingAdaptor extends RecyclerView.Adapter<OngoingAdaptor.ViewHolder> {
             @Override
             public void onClick(View v) {
                 // Build an AlertDialog
+                // should only occur if i sent the gig
+                if(from_id.equals(myid)){
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Finishing gig");
                 builder.setMessage("Are you really done?");
-
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Do something when user clicked the Yes button
-                        // Set the TextView visibility GONE
+                        dialog.dismiss();
+                        fragment.bar.setVisibility(View.VISIBLE);
+                        final Map<String, Object> GigMap = new HashMap<>();
+                        GigMap.put("end_time", FieldValue.serverTimestamp());
+                        GigMap.put("status", "done");
                         firestore.collection("Users").document(myid).collection("Gigs")
-                                .document(gigId)
-                                .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                .document(gigId).update(GigMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onSuccess(Void aVoid) {
-                                firestore.collection("Users")
-                                       .document(from_id).collection("Gigs")
-                                        .document(ref)
-                                        .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                       // send him a notification
-                                    }
-                                });
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    firestore.collection("Users")
+                                            .document(to_id).collection("Gigs")
+                                            .document(ref).update(GigMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            fragment.bar.setVisibility(View.INVISIBLE);
+                                            gigsList.remove(position);
+                                            usersList.remove(position);
+                                            notifyItemRemoved(position);
 
+                                            final String status = "Done Gig";
+                                            Map<String, Object> mylikeMap = new HashMap<>();
+                                            mylikeMap.put("status", status);
+                                            mylikeMap.put("notId", myid);
+                                            mylikeMap.put("timestamp", FieldValue.serverTimestamp());
+                                            mylikeMap.put("postId",null);
+                                            firestore.collection("Users/"+to_id+"/NotificationBox")
+                                                    .document(myid).set(mylikeMap)
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (!task.isSuccessful()) {
+                                                                Toast.makeText(context, "did not notify",
+                                                                        Toast.LENGTH_SHORT).show();
+                                                            } else {
+                                                                firestore.collection("Users").document(to_id)
+                                                                        .collection("Tokens")
+                                                                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                                                            @Override
+                                                                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                                                                for (DocumentChange doc : value.getDocumentChanges()) {
+                                                                                    if (doc.getType() == DocumentChange.Type.ADDED) {
+                                                                                        String token = doc.getDocument().getString("token");
+                                                                                        NotSender
+                                                                                                .sendNotifications(context, token
+                                                                                                        , status, "Done Gig Alert");
+                                                                                    }
+                                                                                }
 
+                                                                            }
+                                                                        });
 
+                                                                NotSender.Updatetoken();
+                                                            }
+                                                        }
 
-                                gigsList.remove(position);
-                                usersList.remove(position);
-                                notifyItemRemoved(position);
+                                                    });
+
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(context, "something went wrong, try again", Toast.LENGTH_SHORT).show();
+                                    fragment.bar.setVisibility(View.INVISIBLE);
+                                }
                             }
                         });
-                        //dialog.dismiss();
 
                     }
                 });
-
-                // Set the alert dialog no button click listener
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // Do something when No button clicked
-                        Toast.makeText(context,
-                                "No Button Clicked",Toast.LENGTH_SHORT).show();
-                        //dialog.dismiss();
+                        dialog.dismiss();
                     }
                 });
                 AlertDialog dialog = builder.create();
-                // Display the alert dialog on interface
                 dialog.show();
-
-
-
+            }
             }
         });
 
@@ -945,29 +1033,92 @@ class OngoingAdaptor extends RecyclerView.Adapter<OngoingAdaptor.ViewHolder> {
             @Override
             public void onClick(View v) {
                 // Build an AlertDialog
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Delete gig");
                 builder.setMessage("confirm to delete?");
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        fragment.bar.setVisibility(View.VISIBLE);
+                        firestore.collection("Users").document(myid).collection("Gigs")
+                                .document(gigId)
+                                .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                final String send_id;
+                                if (from_id.equals(myid)){
+                                    send_id = to_id;
+                                }else send_id = from_id;
 
-                        //dialog.dismiss();
+                                firestore.collection("Users")
+                                        .document(send_id).collection("Gigs")
+                                        .document(ref)
+                                        .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        fragment.bar.setVisibility(View.INVISIBLE);
+                                        //not
+                                        final String status = "Canceled Gig";
+                                        Map<String, Object> mylikeMap = new HashMap<>();
+                                        mylikeMap.put("status", status);
+                                        mylikeMap.put("notId", myid);
+                                        mylikeMap.put("timestamp", FieldValue.serverTimestamp());
+                                        mylikeMap.put("postId",null);
+                                        firestore.collection("Users/"+send_id+"/NotificationBox")
+                                                .document(myid).set(mylikeMap)
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (!task.isSuccessful()) {
+                                                            Toast.makeText(context, "did not notify",
+                                                                    Toast.LENGTH_SHORT).show();
+                                                        } else {
+                                                            firestore.collection("Users").document(send_id)
+                                                                    .collection("Tokens")
+                                                                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                                                        @Override
+                                                                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                                                            for (DocumentChange doc : value.getDocumentChanges()) {
+                                                                                if (doc.getType() == DocumentChange.Type.ADDED) {
+                                                                                    String token = doc.getDocument().getString("token");
+                                                                                    NotSender
+                                                                                            .sendNotifications(context, token
+                                                                                                    , status, "Canceled Gig Alert");
+                                                                                }
+                                                                            }
+
+                                                                        }
+                                                                    });
+
+                                                            NotSender.Updatetoken();
+                                                        }
+                                                    }
+
+                                                });
+
+                                    }
+                                });
+
+                                gigsList.remove(position);
+                                usersList.remove(position);
+                                notifyItemRemoved(position);
+                            }
+                        });
+
+
                     }
                 });
-
                 // Set the alert dialog no button click listener
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // Do something when No button clicked
-                        Toast.makeText(context,
-                                "No Button Clicked",Toast.LENGTH_SHORT).show();
-                        //dialog.dismiss();
+
+                        dialog.dismiss();
                     }
                 });
                 AlertDialog dialog = builder.create();
-                // Display the alert dialog on interface
                 dialog.show();
             }
         });
@@ -1003,7 +1154,7 @@ class OngoingAdaptor extends RecyclerView.Adapter<OngoingAdaptor.ViewHolder> {
 
         private void setOwner(String Name, String userImage_thumb, String userImage,String from_id) {
             if(from_id.equals(myid)){
-                name.setText(R.string.byyou);
+                name.setText(context.getString(R.string.workingOn,Name));
             }else {
                 name.setText(context.getString(R.string.Sentby,Name));
             }

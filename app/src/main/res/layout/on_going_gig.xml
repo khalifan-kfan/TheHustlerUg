@@ -18,19 +18,23 @@
 
         <TextView
             android:id="@+id/by_name"
-            android:layout_width="wrap_content"
+            android:layout_width="255dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="14dp"
-            android:layout_marginLeft="14dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="9dp"
+            android:layout_marginEnd="9dp"
+            android:layout_marginRight="9dp"
+            android:layout_toStartOf="@+id/imageView3"
+            android:layout_toLeftOf="@+id/imageView3"
             android:layout_toEndOf="@+id/userCir"
             android:layout_toRightOf="@+id/userCir"
             android:padding="5dp"
             android:text="By name"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="#fff"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/userCir"
@@ -112,18 +116,14 @@
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="56dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginStart="354dp"
-            android:layout_marginLeft="354dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="1dp"
-            android:layout_marginRight="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginRight="7dp"
             android:src="@drawable/ic_cancel" />
 
         <TextView

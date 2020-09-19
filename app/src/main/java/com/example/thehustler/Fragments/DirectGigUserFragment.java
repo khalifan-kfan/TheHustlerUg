@@ -237,11 +237,7 @@ class SelectedUser  extends RecyclerView.Adapter<SelectedUser.ViewHolder> {
         final String CurrentUser = auth.getCurrentUser().getUid();
 
         final String id = users_lists.get(position).Userid;
-        if(id.equals(CurrentUser)){
-            holder.section.setEnabled(false);
-            holder.dp.setEnabled(false);
 
-        }
         String Image_uri = users_lists.get(position).getImage();
         Name =users_lists.get(position).getName().get(0);
          Name2 = users_lists.get(position).getName().get(1);
@@ -257,9 +253,15 @@ class SelectedUser  extends RecyclerView.Adapter<SelectedUser.ViewHolder> {
         holder.dp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(id.equals(CurrentUser)){
+                   Toast.makeText(context,
+                            "you cant create a gig for you self" , Toast.LENGTH_LONG).show();
+
+                } else{
                 Intent thereAccount = new Intent(context, AnotherUserAccount.class);
                 thereAccount.putExtra("UserId",id);
                 context.startActivity(thereAccount);
+                }
             }
         });
 

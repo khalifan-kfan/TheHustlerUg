@@ -68,6 +68,7 @@
     <string name="Sentby">Sent by; %1$s</string>
     <string name="byyou">Post by You.</string>
     <string name="ended">Ended on;</string>
+    <string name="workingOn">%1$s is on your Gig</string>
 
     <string-array name="main_gig_page">
         <item>Open Gigs</item>
