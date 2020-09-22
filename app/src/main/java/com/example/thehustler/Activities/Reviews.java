@@ -167,12 +167,11 @@ public class Reviews extends AppCompatActivity {
                     final String rv = review.getText().toString();
                     if (!rv.isEmpty()) {
 
-
                         Map<String, Object> ansMap = new HashMap<>();
                         ansMap.put("reviewText", rv);
                         ansMap.put("reviewerId", currentUID);
                         ansMap.put("reviewdate", FieldValue.serverTimestamp());
-                        firestore.collection("Users/" + userId + "/Reviews")
+                        firestore.collection("Users/"+userId+"/Reviews")
                                 .add(ansMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentReference> task) {
@@ -184,7 +183,7 @@ public class Reviews extends AppCompatActivity {
                                     myansMap.put("notId", currentUID);
                                     myansMap.put("timestamp", FieldValue.serverTimestamp());
                                     myansMap.put("postId", null);
-                                    firestore.collection("Users/" + userId + "/NotificationBox")
+                                    firestore.collection("Users/"+userId+"/NotificationBox")
                                             .document(currentUID)
                                             .set(myansMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -212,11 +211,6 @@ public class Reviews extends AppCompatActivity {
                                                     });
 
                                             NotSender.Updatetoken();
-
-
-
-
-
 
                                             sendin.setVisibility(View.INVISIBLE);
                                         }

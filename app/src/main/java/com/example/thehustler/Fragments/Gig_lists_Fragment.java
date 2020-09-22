@@ -780,6 +780,8 @@ class HistoryAdaptor extends RecyclerView.Adapter<HistoryAdaptor.ViewHolder> {
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
     private String myid;
+    String  check_id;
+    Gig_lists_Fragment fragment;
     SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss a, dd-MM-yy");
 
     public HistoryAdaptor(List<OpenGigs> gigs_lists, List<Users> usersListl) {
@@ -799,31 +801,111 @@ class HistoryAdaptor extends RecyclerView.Adapter<HistoryAdaptor.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+        holder.setIsRecyclable(false);
+        holder.reviewCheck.setVisibility(View.VISIBLE);
+        holder.reviewCheck.setEnabled(true);
+        holder.Done.setVisibility(View.GONE);
+        holder.Done.setEnabled(false);
+
+
         myid = auth.getCurrentUser().getUid();
         String gig_image = gigsList.get(position).getGig_image();
         final String from_id = gigsList.get(position).getFrom_id();
         String gig_date = gigsList.get(position).getEnd_time();
+        final String ref_id = gigsList.get(position).getRef_id();
+        final String to_id = gigsList.get(position).getTo_id();
         String gig_desk = gigsList.get(position).getGig_description();
         final String gigId = gigsList.get(position).Userid;
-        String name = usersList.get(position).getName().get(0);
+        final String name = usersList.get(position).getName().get(0);
         String userImage_thumb = usersList.get(position).getThumb();
         String userImage = usersList.get(position).getImage();
         holder.setOwner(name, userImage_thumb, userImage, from_id);
         holder.setGig(gig_desk, gig_date, gig_image);
+        String send_id;
+
+       if(from_id.equals(myid)){
+           send_id = to_id;
+           check_id = myid;
+       }else {//am the to_id
+           check_id = from_id;
+           send_id = myid;
+       }
+       //check for review
+        firestore.collection("Users/"+send_id+"/Reviews")
+                .whereEqualTo("reviewerId",check_id).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(value.isEmpty()){
+
+                    if(from_id.equals(myid)) {
+                        holder.reviewCheck.setText(context.getString(R.string.please_review, name));
+                    }else
+                        holder.reviewCheck.setText(context.getString(R.string.checkme, name));
+
+                }else{
+                    if(from_id.equals(myid)) {
+                        holder.reviewCheck.setText(R.string.reviewed);
+                    }else
+                        holder.reviewCheck.setText(R.string.reviewed);
+
+                }
+            }
+        });
+
+        holder.cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Build an AlertDialog
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Delete gig record");
+                builder.setMessage("confirm to delete?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        fragment.bar.setVisibility(View.VISIBLE);
+                        firestore.collection("Users").document(myid).collection("Gigs")
+                                .document(gigId)
+                                .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                gigsList.remove(position);
+                                usersList.remove(position);
+                                notifyItemRemoved(position);
+                            }
+                        });
+
+
+                    }
+                });
+                // Set the alert dialog no button click listener
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return gigsList.size();
     }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         CircleImageView user;
-        TextView name, date, end_time, desc;
-        ImageView Done, cancel, decImage,reviewCheck;
+        TextView name, date, end_time, desc,reviewCheck;
+        ImageView Done, cancel, decImage;
         View v;
         RelativeLayout rl;
 
@@ -866,7 +948,7 @@ class HistoryAdaptor extends RecyclerView.Adapter<HistoryAdaptor.ViewHolder> {
 
         public void setOwner(String Name, String userImage_thumb, String userImage, String from_id) {
             if(from_id.equals(myid)){
-                name.setText(R.string.byyou);
+                name.setText(context.getString(R.string.byyou,Name));
             }else {
                 name.setText(context.getString(R.string.Sentby,Name));
             }
@@ -874,10 +956,11 @@ class HistoryAdaptor extends RecyclerView.Adapter<HistoryAdaptor.ViewHolder> {
             placeholderOP.placeholder(R.drawable.ic_person);
             Glide.with(context).applyDefaultRequestOptions(placeholderOP).load(userImage).thumbnail(Glide.with(context).load(userImage_thumb))
                     .into(user);
-
         }
     }
 }
+
+
 class OngoingAdaptor extends RecyclerView.Adapter<OngoingAdaptor.ViewHolder> {
     List<OpenGigs> gigsList;
     List<Users> usersList;
@@ -929,8 +1012,12 @@ class OngoingAdaptor extends RecyclerView.Adapter<OngoingAdaptor.ViewHolder> {
         holder.user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final String send_id;
+                if (from_id.equals(myid)){
+                    send_id = to_id;
+                }else send_id = from_id;
                 Intent thereAccount = new Intent(context, AnotherUserAccount.class);
-                thereAccount.putExtra("UserId",from_id);
+                thereAccount.putExtra("UserId",send_id);
                 context.startActivity(thereAccount);
             }
         });
