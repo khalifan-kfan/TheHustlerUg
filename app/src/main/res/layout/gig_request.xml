@@ -45,6 +45,7 @@
         android:layout_width="383dp"
         android:layout_height="197dp"
         android:layout_below="@+id/gig_describe"
+        android:scaleType="centerCrop"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"
@@ -63,8 +64,8 @@
         android:layout_below="@+id/imageView"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="55dp"
-        android:layout_marginLeft="55dp"
+        android:layout_marginStart="57dp"
+        android:layout_marginLeft="57dp"
         android:layout_marginTop="2dp"
         android:backgroundTint="@color/myBlack"
         android:text="Accept" />
@@ -76,14 +77,10 @@
         android:layout_below="@+id/imageView"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:backgroundTint="@color/myBlack"
-        android:layout_marginStart="97dp"
-        android:layout_marginLeft="97dp"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="57dp"
         android:layout_marginRight="57dp"
-        android:layout_toEndOf="@+id/accept_btn"
-        android:layout_toRightOf="@+id/accept_btn"
+        android:backgroundTint="@color/myBlack"
         android:text="Cancel " />
 
 </RelativeLayout>

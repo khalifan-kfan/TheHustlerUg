@@ -66,12 +66,14 @@
     <string name="directto">Direct gig to; %1$s</string>
     <string name="Postedby">Posted by; %1$s</string>
     <string name="Sentby">Sent by; %1$s</string>
+    <string name="Requestedby">Requested by; %1$s</string>
     <string name="byyou">By You to:%1$s</string>
     <string name="ended">Ended on;</string>
     <string name="workingOn">%1$s is on your Gig</string>
     <string name="please_review">Please review %1$s</string>
     <string name="checkme">%1$s Has not reviewd you yet</string>
     <string name="reviewed">Finished ad reviewed</string>
+    <string name="youRequsted">You Requested, %1$s</string>
 
     <string-array name="main_gig_page">
         <item>Open Gigs</item>

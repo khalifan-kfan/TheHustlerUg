@@ -298,6 +298,7 @@ public class Create_Gig_Fragment extends Fragment {
                                         GigMap.put("from_id",myId);
                                         GigMap.put("status","pending");
                                         GigMap.put("end_time",null);
+                                        GigMap.put("start_time",null);
                                         GigMap.put("ref_id",randomID+myId+userid);
                                         firestore.collection("Users").document(myId).collection("Gigs")
                                                 .document(randomID+myId+userid)
@@ -391,6 +392,7 @@ public class Create_Gig_Fragment extends Fragment {
                 GigMap.put("from_id",myId);
                 GigMap.put("status","pending");
                 GigMap.put("end_time",null);
+                GigMap.put("start_time",null);
                 GigMap.put("ref_id",randomID+myId+userid);
                 firestore.collection("Users").document(myId)
                         .collection("Gigs").document(randomID+myId+userid)

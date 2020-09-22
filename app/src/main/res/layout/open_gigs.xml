@@ -85,6 +85,7 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="383dp"
+            android:scaleType="centerCrop"
             android:layout_height="197dp"
             android:layout_below="@+id/gig_describe"
             android:layout_alignParentStart="true"
