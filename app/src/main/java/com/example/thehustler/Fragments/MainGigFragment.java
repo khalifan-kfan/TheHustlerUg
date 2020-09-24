@@ -77,8 +77,6 @@ public class MainGigFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position){
                     case 0:
-
-
                         // Toast.makeText(getContext(),"open gigs",Toast.LENGTH_LONG).show();
                         break;
                     case 1:

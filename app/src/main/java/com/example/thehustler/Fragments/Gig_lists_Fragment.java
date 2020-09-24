@@ -309,7 +309,6 @@ public class Gig_lists_Fragment extends Fragment {
 
 
     }
-
     private void getRequests(ViewGroup container) {
         final String currentStatus ="pending";
         adaptorR_Q = new RequestAdaptor(gigs_lists,usersListl);
@@ -388,7 +387,6 @@ public class Gig_lists_Fragment extends Fragment {
       });
 
     }
-
     private void More(final String currentStatus) {
         Query next = firestore.collection("Users").document(myId)
                 .collection("Gigs")
@@ -445,7 +443,6 @@ public class Gig_lists_Fragment extends Fragment {
 
 
     }
-
     private void getOpenGigs(ViewGroup container) {
         adapterO_G = new OpenGigsAdapter(gigs_lists,usersListl);
         views.setLayoutManager(new LinearLayoutManager(container.getContext()));
@@ -555,13 +552,7 @@ public class Gig_lists_Fragment extends Fragment {
 
     }
 
-
 }
-
-
-
-
-
 
 
 class OpenGigsAdapter extends RecyclerView.Adapter<OpenGigsAdapter.ViewHolder>{

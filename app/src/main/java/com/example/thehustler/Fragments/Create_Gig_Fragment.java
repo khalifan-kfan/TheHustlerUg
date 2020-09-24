@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -201,6 +202,7 @@ public class Create_Gig_Fragment extends Fragment {
                                                             Toast.makeText(getContext(), "gig added", Toast.LENGTH_LONG).show();
                                                             progressBar.setVisibility(View.INVISIBLE);
                                                             //send to open gigs fragment list
+                                                            toOpenGig();
 
                                                         } else {
                                                             progressBar.setVisibility(View.INVISIBLE);
@@ -240,7 +242,7 @@ public class Create_Gig_Fragment extends Fragment {
                                     Toast.makeText(getContext(), "gig added", Toast.LENGTH_LONG).show();
                                     progressBar.setVisibility(View.INVISIBLE);
                                     //send to open gigs fragment list
-
+                                    toOpenGig();
                                 } else {
                                     progressBar.setVisibility(View.INVISIBLE);
                                     String error = task.getException().getMessage();
@@ -356,7 +358,9 @@ public class Create_Gig_Fragment extends Fragment {
 
                                                                         Toast.makeText(getContext(), "gig added", Toast.LENGTH_LONG).show();
                                                                         progressBar.setVisibility(View.INVISIBLE);
-                                                                        //send to open gigs fragment list
+                                                                        //send to direct fragment list
+                                                                       toDirectGig();
+
                                                                     }
 
 
@@ -449,7 +453,9 @@ public class Create_Gig_Fragment extends Fragment {
 
                                                 Toast.makeText(getContext(), "gig added", Toast.LENGTH_LONG).show();
                                                 progressBar.setVisibility(View.INVISIBLE);
-                                                //send to open gigs fragment list
+                                                //send to direct fragment list
+
+                                             toDirectGig();
                                             }
 
 
@@ -478,6 +484,21 @@ public class Create_Gig_Fragment extends Fragment {
 
 
 
+    }
+
+    private void toDirectGig() {
+        Fragment frag = Gig_lists_Fragment.newInstance("pending");
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.Gigs_container,frag);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+    private void toOpenGig() {
+        Fragment frag = Gig_lists_Fragment.newInstance("open");
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.Gigs_container,frag);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @Override
