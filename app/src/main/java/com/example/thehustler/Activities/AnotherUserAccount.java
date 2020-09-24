@@ -53,7 +53,7 @@ public class AnotherUserAccount extends AppCompatActivity {
     private Button Ureview;
 
     private CircleImageView YourImage;
-    private TextView Yourname,approval,approvedCounter,ApprovalCounter;
+    private TextView Yourname,approval,approvedCounter,ApprovalCounter,gigCount;
     private TextView name2,sex,city,country,work;
     FirebaseAuth auth;
     FirebaseFirestore firestore;
@@ -62,6 +62,8 @@ public class AnotherUserAccount extends AppCompatActivity {
     private ImageView textme;
     AnotherUserRecycler myRecycler;
     private  String CurrentUser;
+    private DocumentSnapshot lastVisible;
+    private Boolean loadFirst= true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,7 @@ public class AnotherUserAccount extends AppCompatActivity {
         city =findViewById(R.id.uCity);
         country =findViewById(R.id.uCountry);
         work =findViewById(R.id.uwork);
+        gigCount=findViewById(R.id.textView4);
 
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
@@ -145,24 +148,65 @@ public class AnotherUserAccount extends AppCompatActivity {
                 }
             }
         });
+       yourposts.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
 
+                Boolean atBottom = !recyclerView.canScrollVertically(-1);
+                if (atBottom) {
+                    LoadmorePosts();
+                }
 
-
-
-
-        Query accountQuery = firestore.collection("Posts").whereEqualTo("user_id", userId);
+            }
+        });
+        Query accountQuery = firestore.collection("Posts")
+                .whereEqualTo("user_id", userId)
+                .limit(4);
         accountQuery.addSnapshotListener( new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
-                    if (doc.getType() == DocumentChange.Type.ADDED) {
-                        String postID = doc.getDocument().getId();
-                        Blogpost blogPost = doc.getDocument().toObject(Blogpost.class).withID(postID);
-                        userBlogList.add(blogPost);
-                      myRecycler.notifyDataSetChanged();
-
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    if (loadFirst) {
+                        lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                        userBlogList.clear();
+                        //usersList.clear();
                     }
+                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                            String postID = doc.getDocument().getId();
+                            Blogpost blogPost = doc.getDocument().toObject(Blogpost.class).withID(postID);
+
+                            if (loadFirst) {
+                               // usersList.add(users);
+                                 userBlogList.add(blogPost);
+                            } else {
+                               // usersList.add(0, users);
+                                userBlogList.add(0, blogPost);
+                            }
+                           // userBlogList.add(blogPost);
+                            myRecycler.notifyDataSetChanged();
+                        }
+                    }
+                    loadFirst = false;
+                }else {
+                    Toast.makeText(AnotherUserAccount.this, "nothing here", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        firestore.collection("Users/"+userId+"/Gigs")
+                .whereEqualTo("status","done")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(!value.isEmpty()){
+                    int count = value.size();
+                    gigCount.setText(Integer.toString(count));
+                }else{
+                    gigCount.setText(0);
                 }
             }
         });
@@ -175,7 +219,7 @@ public class AnotherUserAccount extends AppCompatActivity {
                   ApprovalCounter.setText(Integer.toString(count));
 
                 }else{
-                  ApprovalCounter.setText("none");
+                  ApprovalCounter.setText(0);
                 }
 
             }
@@ -199,7 +243,6 @@ public class AnotherUserAccount extends AppCompatActivity {
 
         //getting approvals
         firestore.collection("Users/"+CurrentUser+"/Approved").document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if(documentSnapshot.exists()){
@@ -325,7 +368,33 @@ public class AnotherUserAccount extends AppCompatActivity {
 
     }
 
+    private void LoadmorePosts() {
+        Query Nextquery =  firestore.collection("Posts")
+                .whereEqualTo("user_id", userId)
+                .limit(4);
+        Nextquery.addSnapshotListener( new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    lastVisible = queryDocumentSnapshots.getDocuments()
+                            .get(queryDocumentSnapshots.size() - 1);
 
+                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                            String postID = doc.getDocument().getId();
+                            final Blogpost blogpost = doc.getDocument().toObject(Blogpost.class).withID(postID);
+                           // String bloguser_id = doc.getDocument().getString("user_id");
+                                       // usersList.add(users);
+                            userBlogList.add(blogpost);
+                            myRecycler.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+        });
+
+    }
 
 
 }

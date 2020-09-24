@@ -15,9 +15,12 @@
             android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="70dp"
+            android:background="@color/myBlack"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
+
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbarAccount"
@@ -30,228 +33,266 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/card_account"
             android:layout_width="411dp"
-            android:layout_height="365dp"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appBar">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:background="@color/myBlack"
-                android:padding="4dp"
+            <RelativeLayout
                 android:id="@+id/constCsard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/myBlack"
+                android:padding="4dp"
 
                 >
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/toolfaceAnother"
-                    android:layout_width="104dp"
-                    android:layout_height="84dp"
-                    android:layout_marginTop="12dp"
-                    android:src="@drawable/ic_person"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_width="86dp"
+                    android:layout_height="80dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginTop="4dp"
+                    android:src="@drawable/ic_person" />
 
                 <TextView
                     android:id="@+id/your_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/toolfaceAnother"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_toEndOf="@+id/toolfaceAnother"
+                    android:layout_toRightOf="@+id/toolfaceAnother"
                     android:text="@string/Name_"
                     android:textColor="#ffffff"
                     android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toStartOf="@+id/Approvaltv"
-                    app:layout_constraintHorizontal_bias="0.042"
-                    app:layout_constraintStart_toEndOf="@+id/toolfaceAnother"
-                    app:layout_constraintTop_toTopOf="@+id/toolfaceAnother" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/Approvaltv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:layout_marginTop="4dp"
-                    android:layout_marginEnd="16dp"
-
-                    android:layout_marginRight="16dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginRight="4dp"
                     android:background="#23221F"
                     android:textColor="#EEEFE4"
                     android:textStyle="italic"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toEndOf="@+id/toolfaceAnother"
-                    app:layout_constraintTop_toTopOf="@+id/your_name"
                     tools:text="@string/off" />
 
                 <TextView
                     android:id="@+id/apprs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_below="@+id/apd2"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginRight="4dp"
                     android:text="@string/Approved"
                     android:textColor="#ffffff"
                     android:textSize="12sp"
-                    android:textStyle="italic"
-                    app:layout_constraintBottom_toBottomOf="@+id/apprscounter"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/apprscounter" />
+                    android:textStyle="italic" />
 
                 <TextView
                     android:id="@+id/apprscounter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/apd2"
                     android:layout_marginStart="148dp"
                     android:layout_marginLeft="148dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="7dp"
+                    android:layout_marginRight="7dp"
+                    android:layout_toStartOf="@+id/apd2"
+                    android:layout_toLeftOf="@+id/apd2"
                     android:textColor="#ffffff"
                     android:textSize="12sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toStartOf="@+id/apprs"
-                    app:layout_constraintStart_toEndOf="@+id/sec_name"
-                    app:layout_constraintTop_toBottomOf="@+id/Approvaltv" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/appd1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_alignTop="@+id/apprs"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="9dp"
+                    android:layout_marginRight="9dp"
+                    android:layout_toStartOf="@+id/apprs"
+                    android:layout_toLeftOf="@+id/apprs"
                     android:textColor="#ffffff"
-                    android:textStyle="italic"
-                    app:layout_constraintEnd_toStartOf="@+id/apd2"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/apprscounter"
-                    app:layout_constraintTop_toBottomOf="@+id/apprscounter" />
+                    android:textStyle="italic" />
 
                 <TextView
                     android:id="@+id/apd2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_below="@+id/Approvaltv"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginRight="4dp"
                     android:text="@string/Approvals"
                     android:textColor="#ffffff"
                     android:textSize="12sp"
-                    android:textStyle="italic"
-                    app:layout_constraintBottom_toBottomOf="@+id/appd1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="@+id/apprs"
-                    app:layout_constraintTop_toBottomOf="@+id/apprs" />
+                    android:textStyle="italic" />
 
                 <ImageView
                     android:id="@+id/textMe"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:src="@drawable/ic_msg"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.081"
-                    app:layout_constraintStart_toStartOf="@+id/apd2"
-                    app:layout_constraintTop_toBottomOf="@+id/apd2" />
+                    android:layout_alignTop="@+id/uwork"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="-20dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_toEndOf="@+id/uwork"
+                    android:layout_toRightOf="@+id/uwork"
+                    android:src="@drawable/ic_msg" />
 
                 <TextView
                     android:id="@+id/sec_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/your_name"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_toEndOf="@+id/toolfaceAnother"
+                    android:layout_toRightOf="@+id/toolfaceAnother"
                     android:text="TextView"
                     android:textColor="#ffffff"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="@+id/your_name"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/your_name"
-                    app:layout_constraintTop_toBottomOf="@+id/your_name" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/uCity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_below="@+id/toolfaceAnother"
+                    android:layout_alignStart="@+id/textView5"
+                    android:layout_alignLeft="@+id/textView5"
+                    android:layout_marginStart="-6dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="2dp"
                     android:text="TextView"
-                    android:textColor="#ffffff"
-                    app:layout_constraintEnd_toEndOf="@+id/toolfaceAnother"
-                    app:layout_constraintHorizontal_bias="0.432"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/toolfaceAnother" />
-
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bio"
-                    android:textColor="#ffffff"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="@+id/uCountry"
-                    app:layout_constraintStart_toStartOf="@+id/uCountry"
-                    app:layout_constraintTop_toBottomOf="@+id/uCountry" />
+                    android:textColor="#ffffff" />
 
                 <TextView
                     android:id="@+id/uCountry"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/uCity"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="4dp"
                     android:text="TextView"
-                    android:textColor="#ffffff"
-                    app:layout_constraintEnd_toEndOf="@+id/uCity"
-                    app:layout_constraintStart_toStartOf="@+id/uCity"
-                    app:layout_constraintTop_toBottomOf="@+id/uCity" />
+                    android:textColor="#ffffff" />
 
                 <TextView
                     android:id="@+id/uSex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/sec_name"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_toEndOf="@+id/toolfaceAnother"
+                    android:layout_toRightOf="@+id/toolfaceAnother"
                     android:text="TextView"
-                    android:textColor="#ffffff"
-                    app:layout_constraintEnd_toEndOf="@+id/sec_name"
-                    app:layout_constraintStart_toStartOf="@+id/sec_name"
-                    app:layout_constraintTop_toBottomOf="@+id/sec_name" />
+                    android:textColor="#ffffff" />
 
                 <TextView
                     android:id="@+id/uwork"
-                    android:layout_width="320dp"
-                    android:layout_height="122dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_width="358dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView5"
+                    android:layout_alignStart="@+id/textView5"
+                    android:layout_alignLeft="@+id/textView5"
+                    android:layout_marginStart="-6dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="1dp"
                     android:text="TextView"
-                    android:textColor="#ffffff"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/textView5"
-                    app:layout_constraintTop_toBottomOf="@+id/textView5" />
+                    android:textColor="#ffffff" />
 
                 <View
                     android:id="@+id/view2"
                     android:layout_width="390dp"
                     android:layout_height="1dp"
-                    android:layout_marginTop="24dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.476"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/uwork" />
+                    android:layout_below="@+id/uwork"
+                    android:layout_marginTop="8dp" />
 
                 <Button
                     android:id="@+id/Ureview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_below="@+id/view2"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginStart="155dp"
+                    android:layout_marginLeft="155dp"
+                    android:layout_marginTop="2dp"
                     android:text="@string/rvs"
-                    app:backgroundTint="@color/myBlack"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/view2"
-                    app:layout_constraintHorizontal_bias="0.501"
-                    app:layout_constraintStart_toStartOf="@+id/view2"
-                    app:layout_constraintTop_toBottomOf="@+id/view2"
-                    app:layout_constraintVertical_bias="1.0" />
+                    app:backgroundTint="@color/myBlack" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/uCountry"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginStart="11dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/bio"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="27dp"
+                    tools:layout_editor_absoluteY="216dp" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/apprs"
+                    android:layout_alignEnd="@+id/apprs"
+                    android:layout_alignRight="@+id/apprs"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginRight="0dp"
+                    android:text="@string/gigscont"
+                    android:textColor="#FAF9F9"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/appd1"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginEnd="7dp"
+                    android:layout_marginRight="7dp"
+                    android:layout_toStartOf="@+id/textView3"
+                    android:layout_toLeftOf="@+id/textView3" />
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </RelativeLayout>
 
         </androidx.cardview.widget.CardView>
 
@@ -263,8 +304,9 @@
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/card_account" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
