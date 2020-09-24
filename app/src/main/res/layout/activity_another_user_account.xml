@@ -112,8 +112,8 @@
                     android:layout_marginStart="148dp"
                     android:layout_marginLeft="148dp"
                     android:layout_marginTop="3dp"
-                    android:layout_marginEnd="7dp"
-                    android:layout_marginRight="7dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginRight="2dp"
                     android:layout_toStartOf="@+id/apd2"
                     android:layout_toLeftOf="@+id/apd2"
                     android:textColor="#ffffff"
@@ -126,8 +126,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/apprs"
                     android:layout_marginTop="2dp"
-                    android:layout_marginEnd="9dp"
-                    android:layout_marginRight="9dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginRight="2dp"
                     android:layout_toStartOf="@+id/apprs"
                     android:layout_toLeftOf="@+id/apprs"
                     android:textColor="#ffffff"
@@ -286,10 +286,11 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/appd1"
                     android:layout_marginTop="1dp"
-                    android:layout_marginEnd="7dp"
-                    android:layout_marginRight="7dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginRight="2dp"
                     android:layout_toStartOf="@+id/textView3"
-                    android:layout_toLeftOf="@+id/textView3" />
+                    android:layout_toLeftOf="@+id/textView3"
+                    android:textColor="#EDEDED" />
 
 
             </RelativeLayout>

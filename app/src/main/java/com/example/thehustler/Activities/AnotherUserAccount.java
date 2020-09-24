@@ -65,6 +65,8 @@ public class AnotherUserAccount extends AppCompatActivity {
     private DocumentSnapshot lastVisible;
     private Boolean loadFirst= true;
 
+    //menu for start job, block, report, photos (may be)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,6 +164,7 @@ public class AnotherUserAccount extends AppCompatActivity {
         });
         Query accountQuery = firestore.collection("Posts")
                 .whereEqualTo("user_id", userId)
+                .orderBy("timeStamp", Query.Direction.DESCENDING)
                 .limit(4);
         accountQuery.addSnapshotListener( new EventListener<QuerySnapshot>() {
             @Override
@@ -199,6 +202,7 @@ public class AnotherUserAccount extends AppCompatActivity {
 
         firestore.collection("Users/"+userId+"/Gigs")
                 .whereEqualTo("status","done")
+                .whereEqualTo("to_id",userId)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -371,6 +375,8 @@ public class AnotherUserAccount extends AppCompatActivity {
     private void LoadmorePosts() {
         Query Nextquery =  firestore.collection("Posts")
                 .whereEqualTo("user_id", userId)
+                .orderBy("timeStamp", Query.Direction.DESCENDING)
+                .startAfter(lastVisible)
                 .limit(4);
         Nextquery.addSnapshotListener( new EventListener<QuerySnapshot>() {
             @Override

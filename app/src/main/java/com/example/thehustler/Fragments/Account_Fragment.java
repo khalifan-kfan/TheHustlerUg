@@ -42,11 +42,7 @@ import javax.annotation.Nullable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Account_Fragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class Account_Fragment extends Fragment {
 
 
@@ -58,6 +54,7 @@ public class Account_Fragment extends Fragment {
 
     private  String currentID;
     private DocumentSnapshot lastVisible;
+    private TextView gigCount;
 
     private Button Review,edit;
 
@@ -68,44 +65,9 @@ public class Account_Fragment extends Fragment {
 
     private Boolean loadFirst= true;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public Account_Fragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Account_Fragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Account_Fragment newInstance(String param1, String param2) {
-        Account_Fragment fragment = new Account_Fragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -127,6 +89,7 @@ public class Account_Fragment extends Fragment {
         edit = view.findViewById(R.id.edit_);
         aprd= view.findViewById(R.id.approvedNumber);
         aprl=view.findViewById(R.id.approvalnumber);
+        gigCount = view.findViewById(R.id.finGigs);
 
 
         auth = FirebaseAuth.getInstance();
@@ -142,9 +105,18 @@ public class Account_Fragment extends Fragment {
         postsView.setAdapter(mypostsAdapter);
 
         currentID= auth.getCurrentUser().getUid();
+        postsView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
 
+                Boolean atBottom = !recyclerView.canScrollVertically(-1);
+                if (atBottom) {
+                    LoadmorePosts();
+                }
 
-
+            }
+        });
 
         firestore.collection("Users/"+currentID+"/Approvals").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -159,6 +131,20 @@ public class Account_Fragment extends Fragment {
 
             }
         });
+        firestore.collection("Users/"+currentID+"/Gigs")
+                .whereEqualTo("status","done")
+                .whereEqualTo("to_id",currentID)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@androidx.annotation.Nullable QuerySnapshot value, @androidx.annotation.Nullable FirebaseFirestoreException error) {
+                        if(!value.isEmpty()){
+                            int count = value.size();
+                            gigCount.setText(Integer.toString(count));
+                        }else{
+                            gigCount.setText(0);
+                        }
+                    }
+                });
 
         firestore.collection("Users/"+currentID+"/Approved").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -235,29 +221,37 @@ public class Account_Fragment extends Fragment {
         if (auth.getCurrentUser() != null) {
 
             Query Firstquery = firestore.collection("Posts")
-                    .whereEqualTo("user_id", currentID);
-            //.orderBy("timeStamp", Query.Direction.DESCENDING).limit(3);
+                    .whereEqualTo("user_id", currentID)
+            .orderBy("timeStamp", Query.Direction.DESCENDING).limit(4);
             Firstquery.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
                     if(e==null) {
                         if (!queryDocumentSnapshots.isEmpty()) {
-
+                            if (loadFirst) {
+                                lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                                Postlist.clear();
+                                //usersList.clear();
+                            }
                             for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                                 if (doc.getType() == DocumentChange.Type.ADDED) {
-
                                     String postID = doc.getDocument().getId();
                                     Blogpost blogPost = doc.getDocument().toObject(Blogpost.class).withID(postID);
-                                    Postlist.add(blogPost);
+                                    if (loadFirst) {
+                                        // usersList.add(users);
+                                        Postlist.add(blogPost);
+                                    } else {
+                                        // usersList.add(0, users);
+                                        Postlist.add(0, blogPost);
+                                    }
                                     mypostsAdapter.notifyDataSetChanged();
-
                                 }
                             }
+                            loadFirst = false;
                         } else {
                             Toast.makeText(getContext(), "nothing here", Toast.LENGTH_LONG).show();
                         }
-
                     }else {
                         Toast.makeText(getContext(),"error:"+e,Toast.LENGTH_LONG).show();
                     }
@@ -267,55 +261,39 @@ public class Account_Fragment extends Fragment {
         }
 
     }
-/*
+
     public void LoadmorePosts() {
         if (auth.getCurrentUser() != null) {
-
-            Query Nextquery = firestore.collection("Posts")
-                    .whereEqualTo("user_id", currentID)
+            Query Nextquery =  firestore.collection("Posts")
+                    .whereEqualTo("user_id",currentID)
                     .orderBy("timeStamp", Query.Direction.DESCENDING)
                     .startAfter(lastVisible)
-                    .limit(3);
-
+                    .limit(4);
             Nextquery.addSnapshotListener( new EventListener<QuerySnapshot>() {
                 @Override
-                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
                     if (!queryDocumentSnapshots.isEmpty()) {
-
-
                         lastVisible = queryDocumentSnapshots.getDocuments()
                                 .get(queryDocumentSnapshots.size() - 1);
 
                         for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
                             if (doc.getType() == DocumentChange.Type.ADDED) {
-
                                 String postID = doc.getDocument().getId();
                                 final Blogpost blogpost = doc.getDocument().toObject(Blogpost.class).withID(postID);
-                                String bloguser_id = doc.getDocument().getString("user_id");
-                                firestore.collection("Users").document(bloguser_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            Users users = task.getResult().toObject(Users.class);
-
-
-                                            Postlist.add(blogpost);
-
-
-                                            mypostsAdapter.notifyDataSetChanged();
-                                        }
-
-                                    }
-                                });
+                                // String bloguser_id = doc.getDocument().getString("user_id");
+                                // usersList.add(users);
+                                Postlist.add(blogpost);
+                                mypostsAdapter.notifyDataSetChanged();
                             }
                         }
                     }
                 }
             });
-            // registration.remove();
+
+
         }
     }
 
- */
+
 }

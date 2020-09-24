@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:background="@color/myBlack"
     android:layout_height="match_parent"
-    tools:context=".Fragments.Account_Fragment">>
+    tools:context=".Fragments.Account_Fragment">
 
-    <!-- TODO: Update blank fragment layout -->
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -16,7 +16,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/accountcard"
                 android:layout_width="0dp"
-                android:layout_height="379dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="4dp"
@@ -117,8 +117,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginRight="4dp"
                         android:textColor="#ffffff"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -134,14 +134,14 @@
                         android:layout_marginStart="136dp"
                         android:layout_marginLeft="136dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginRight="4dp"
                         android:textColor="#ffffff"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@+id/textView2"
                         app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toEndOf="@+id/sex"
+
                         app:layout_constraintTop_toBottomOf="@+id/approvalnumber" />
 
                     <View
@@ -158,7 +158,7 @@
                     <TextView
                         android:id="@+id/Mywork"
                         android:layout_width="272dp"
-                        android:layout_height="120dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="TextView"
                         android:textColor="#ffffff"
@@ -231,6 +231,29 @@
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/myname"
                         app:layout_constraintTop_toBottomOf="@+id/myname" />
+
+                    <TextView
+                        android:id="@+id/finGigs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginRight="4dp"
+                        android:text="@string/gigscont"
+                        android:textColor="#EDECEC"
+                        app:layout_constraintEnd_toEndOf="@+id/textView2"
+                        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+                    <TextView
+                        android:id="@+id/finCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginRight="4dp"
+                        android:textColor="#F3F0F0"
+                        app:layout_constraintEnd_toStartOf="@+id/finGigs"
+                        app:layout_constraintTop_toBottomOf="@+id/approvedNumber" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>

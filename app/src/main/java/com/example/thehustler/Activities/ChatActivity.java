@@ -63,6 +63,10 @@ public class ChatActivity extends AppCompatActivity {
     private String MyuserId;
     private String RecieverUId;
 
+    //menu here
+    // for jobs open,blocking,reporting,reviews
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
