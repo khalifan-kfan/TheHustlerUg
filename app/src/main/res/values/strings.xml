@@ -75,6 +75,7 @@
     <string name="reviewed">Finished ad reviewed</string>
     <string name="youRequsted">You Requested, %1$s</string>
     <string name="gigscont">Fin Gigs</string>
+    <string name="ato">Auto locate?</string>
 
     <string-array name="main_gig_page">
         <item>Open Gigs</item>

@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.JobsActivity"></activity>
+        <activity android:name=".Activities.JobsActivity"/>
         <activity android:name=".Activities.ProfileActivity2" />
         <activity android:name=".Activities.Reviews" />
         <activity
@@ -69,6 +69,7 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+        <service android:name=".Services.LocationService"/>
     </application>
 
 </manifest>

@@ -7,12 +7,17 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.app.IntentService;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.ResultReceiver;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.View;
@@ -22,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
@@ -31,6 +37,12 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.thehustler.R;
+import com.example.thehustler.Services.LocationService;
+import com.example.thehustler.Services.finalss;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -66,19 +78,22 @@ public class InforSettings extends AppCompatActivity {
 
     private ImageView userImage;
     private Uri ImageUri = null;
-    private EditText name,name2,country,city,Number,work,DOB;
+    private EditText name, name2, country, city, Number, work, DOB;
     private Button save;
     private ProgressBar savin;
     private String user_id;
-    private  Boolean isChanged = false;
-
+    private Boolean isChanged = false;
+    private TextView autoLocate;
     private RadioGroup radios;
     private RadioButton SEX;
     private StorageReference storageReference;
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
+    private ResultReceiver resultReceiver;
+    public static final int CODE_PEMISSION_LOCATION = 61;
+    TextView code;
 
-    private String sex;
+    private String sex, country_code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +105,7 @@ public class InforSettings extends AppCompatActivity {
         getSupportActionBar().setTitle("User Settings");
 
         radios = findViewById(R.id.radio);
+        resultReceiver = new AddressReciever(new Handler());
 
         name2 = findViewById(R.id.editTextTextPersonName);
         country = findViewById(R.id.editTextTextPersonName2);
@@ -97,9 +113,11 @@ public class InforSettings extends AppCompatActivity {
         Number = findViewById(R.id.editTextNumber);
         DOB = findViewById(R.id.editTextDate);
         work = findViewById(R.id.editTextTextMultiLine);
-        
+
+        code = findViewById(R.id.textView6);
+        code.setText("+!!");
         auth = FirebaseAuth.getInstance();
-       user_id = auth.getCurrentUser().getUid();
+        user_id = auth.getCurrentUser().getUid();
         storageReference = FirebaseStorage.getInstance().getReference();
         firestore = FirebaseFirestore.getInstance();
 
@@ -107,7 +125,20 @@ public class InforSettings extends AppCompatActivity {
         save = findViewById(R.id.buttonsave);
         name = findViewById(R.id.user_name);
         savin = findViewById(R.id.saveProgress);
+        autoLocate = findViewById(R.id.locate);
 
+        autoLocate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (ContextCompat.checkSelfPermission(
+                        getApplicationContext(), permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED  ) {
+                    ActivityCompat.requestPermissions(InforSettings.this, new String[]{permission.ACCESS_FINE_LOCATION}, CODE_PEMISSION_LOCATION);
+                } else {
+                    getlocation();
+                }
+            }
+        });
 
 
         save.setOnClickListener(new View.OnClickListener() {
@@ -123,66 +154,41 @@ public class InforSettings extends AppCompatActivity {
                     if (isChanged) {
                         user_id = auth.getCurrentUser().getUid();
                         final Uri[] downloadUri = new Uri[1];
-                        final StorageReference Image_path = storageReference.child("profile_Images").child(user_id+".jpg");
-                       Image_path.putFile(ImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                           @Override
-                           public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                               if (task.isSuccessful()) {
-                                   Task<Uri> task_uri = task.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                                       @Override
-                                       public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                           if (!task.isSuccessful()) {
-                                               throw task.getException();
-                                           }
-                                           return Image_path.getDownloadUrl();
-                                       }
-                                   }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                       @Override
-                                       public void onComplete(@NonNull Task<Uri> task) {
-                                           if (task.isSuccessful()) {
-                                               downloadUri[0] = task.getResult();
-                                               String dur = downloadUri[0].toString();
-                                               putthumb(dur);
-                                           }
-                                       }
-                                   });
+                        final StorageReference Image_path = storageReference.child("profile_Images").child(user_id + ".jpg");
+                        Image_path.putFile(ImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    Task<Uri> task_uri = task.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                        @Override
+                                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                            if (!task.isSuccessful()) {
+                                                throw task.getException();
+                                            }
+                                            return Image_path.getDownloadUrl();
+                                        }
+                                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Uri> task) {
+                                            if (task.isSuccessful()) {
+                                                downloadUri[0] = task.getResult();
+                                                String dur = downloadUri[0].toString();
+                                                putthumb(dur);
+                                            }
+                                        }
+                                    });
 
-                               }else {
-                                   save.setEnabled(true);
-                                   savin.setVisibility(View.INVISIBLE);
-                                   String error = task.getException().getMessage();
-                                   Toast.makeText(InforSettings.this, "Firestore error:" + error, Toast.LENGTH_LONG).show();
-                               }
-                           }
+                                } else {
+                                    save.setEnabled(true);
+                                    savin.setVisibility(View.INVISIBLE);
+                                    String error = task.getException().getMessage();
+                                    Toast.makeText(InforSettings.this, "Firestore error:" + error, Toast.LENGTH_LONG).show();
+                                }
+                            }
 
-                       });
+                        });
 
                     }
-                    /*else {
-                        WriteBatch batch = firestore.batch();
-                        DocumentReference userRef = firestore.collection("Users").document(user_id);
-                        batch.update(userRef, "name1", name.getText().toString());
-                        batch.update(userRef, "name1", name.getText().toString());
-                        batch.update(userRef,"name2",name2.getText().toString());
-                        batch.update(userRef,"Created", FieldValue.serverTimestamp());
-                        batch.update(userRef,"country",country.getText().toString());
-                        batch.update(userRef,"city",city.getText().toString());
-                        batch.update(userRef,"tele",Number.getText().toString());
-                        batch.update(userRef,"work",work.getText().toString());
-                        batch.update(userRef,"dob",DOB.getText().toString());
-                        batch.update(userRef,"sex",sex);
-
-                        // Commit the batch
-                        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(InforSettings.this, "Succes batch update", Toast.LENGTH_LONG).show();
-                                Intent tomain = new Intent(InforSettings.this, MainActivity.class);
-                                startActivity(tomain);
-                            }
-                        });
-                        UpdateUser(name.getText().toString(), "");
-                    }*/
                 } else {
                     Toast.makeText(InforSettings.this, "All fields are required to be completed", Toast.LENGTH_LONG).show();
                     savin.setVisibility(View.INVISIBLE);
@@ -197,11 +203,10 @@ public class InforSettings extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (ContextCompat.checkSelfPermission(InforSettings.this, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(InforSettings.this, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ) {
                         ActivityCompat.requestPermissions(InforSettings.this, new String[]{permission.READ_EXTERNAL_STORAGE}, 1);
 
-                    }
-                    else {
+                    } else {
                         ImageCropping();
                     }
 
@@ -211,6 +216,55 @@ public class InforSettings extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CODE_PEMISSION_LOCATION && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getlocation();
+            } else {
+                Toast.makeText(InforSettings.this, "permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void getlocation() {
+        savin.setVisibility(View.VISIBLE);
+        LocationRequest lq = new LocationRequest();
+        lq.setInterval(10000);
+        lq.setFastestInterval(1000);
+        lq.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+
+            return;
+        }
+        LocationServices.getFusedLocationProviderClient(InforSettings.this)
+                .requestLocationUpdates(lq, new LocationCallback() {
+
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        super.onLocationResult(locationResult);
+                        LocationServices.getFusedLocationProviderClient(InforSettings.this)
+                                .removeLocationUpdates(this);
+                        if(locationResult != null && locationResult.getLocations().size()>0){
+                          int LatestLocationIndex = locationResult.getLocations().size() - 1;
+                          double lat =locationResult.getLocations().get(LatestLocationIndex).getLatitude();
+                          double longi = locationResult.getLocations().get(LatestLocationIndex).getLongitude();
+
+                          Location location = new Location("providerN/A");
+                          location.setLongitude(longi);
+                          location.setLatitude(lat);
+                          fetchLontudeAddress(location);
+                        }else {
+                            savin.setVisibility(View.INVISIBLE);
+                        }
+
+                    }
+                }, Looper.getMainLooper());
+
     }
 
     private void putthumb(final String dur) {
@@ -247,7 +301,7 @@ public class InforSettings extends AppCompatActivity {
                         InforMap.put("created", FieldValue.serverTimestamp());
                         InforMap.put("country",country.getText().toString());
                         InforMap.put("city",city.getText().toString());
-                        InforMap.put("tele",Number.getText().toString());
+                        InforMap.put("tele",country_code+Number.getText().toString());
                         InforMap.put("work",work.getText().toString());
                         InforMap.put("dob",DOB.getText().toString());
                         InforMap.put("sex",sex);
@@ -315,13 +369,18 @@ public class InforSettings extends AppCompatActivity {
             return false;
         }else if (TextUtils.isEmpty(city.getText().toString())){
             city.setHintTextColor(Integer.parseInt("#FF634f"));
+            Toast.makeText(InforSettings.this, "Click auto locate..",
+                    Toast.LENGTH_SHORT).show();
             return false;
         }else if(TextUtils.isEmpty(country.getText().toString())){
             country.setHintTextColor(Integer.parseInt("#FF634f"));
+            Toast.makeText(InforSettings.this, "Click auto locate..",
+                    Toast.LENGTH_SHORT).show();
             return false;
-        }else if(TextUtils.isEmpty(Number.getText().toString())||(Number.getText().toString().length())<10 ){
+        }else if(TextUtils.isEmpty(Number.getText().toString())||(Number.getText().toString().length())<9
+        || country_code ==null){
             Number.setHintTextColor(Integer.parseInt("#FF634f"));
-            Toast.makeText(InforSettings.this, "enter a full phone number",
+            Toast.makeText(InforSettings.this, "enter a full phone number,and turn on location to get country code",
                     Toast.LENGTH_SHORT).show();
             return false;
         }else  if(ImageUri == null){
@@ -359,5 +418,36 @@ public class InforSettings extends AppCompatActivity {
         }
 
 
+    }
+    private void  fetchLontudeAddress(Location location){
+        Intent intent = new Intent(this, LocationService.class);
+        intent.putExtra(finalss.RECEIVER,resultReceiver);
+        intent.putExtra(finalss.LOCATION_DATA_EXTRA,location);
+        startService(intent);
+    }
+
+
+    private class  AddressReciever extends ResultReceiver{
+        public AddressReciever(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            super.onReceiveResult(resultCode, resultData);
+            if(resultCode == 1){
+               ArrayList<String> getlocality = new ArrayList<>();
+               getlocality = resultData.getStringArrayList(finalss.RESULT_DATA_KEY);
+               country.setText(getlocality.get(0));
+              city.setText(getlocality.get(1));
+              country_code = getlocality.get(2);
+              code.setText(country_code);
+              country.setEnabled(false);
+              city.setEnabled(false);
+            }else {
+                Toast.makeText(InforSettings.this,resultData.getString(finalss.RESULT_ERROR),Toast.LENGTH_SHORT).show();
+            }
+            savin.setVisibility(View.INVISIBLE);
+        }
     }
 }
