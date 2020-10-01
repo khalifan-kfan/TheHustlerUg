@@ -296,10 +296,10 @@ public class AnotherUserAccount extends AppCompatActivity {
                                                                     mylikeMap.put("notId",CurrentUser);
                                                                     mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                                     mylikeMap.put("postId",null);
-                                                                    firestore.collection("Users/"+userId+"/NotificationBox").document(CurrentUser).set(mylikeMap)
-                                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    firestore.collection("Users/"+userId+"/NotificationBox").add(mylikeMap)
+                                                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                                                 @Override
-                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                public void onComplete(@NonNull Task<DocumentReference> task) {
                                                                                     if(!task.isSuccessful()){
                                                                                         Toast.makeText(AnotherUserAccount.this, "did not properly liked", Toast.LENGTH_SHORT).show();
                                                                                     }

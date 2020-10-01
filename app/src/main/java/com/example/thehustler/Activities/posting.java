@@ -148,6 +148,7 @@ public class posting extends AppCompatActivity {
                         storethumb(description);
                     } else {
                         Map<String, Object> postMapn = new HashMap<>();
+                        postMapn.put("re_postId",null);
                         postMapn.put("image_url", null);
                         postMapn.put("post_image_thumb", null);
                         postMapn.put("description", description);
@@ -158,11 +159,32 @@ public class posting extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<DocumentReference> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(posting.this, "post added", Toast.LENGTH_LONG).show();
-                                    Intent mainIntent = new Intent(posting.this, MainActivity.class);
-                                    startActivity(mainIntent);
-                                    finish();
+                                    final String post_id = task.getResult().getId();
+                                    Map<String, Object> mypostMapn = new HashMap<>();
+                                    mypostMapn.put("post_id",post_id);
+                                    mypostMapn.put("author","original");
+                                    mypostMapn.put("timeStamp", FieldValue.serverTimestamp());
+                                    firestore.collection("Users").document(UserId).collection("Posts")
+                                            .add(mypostMapn).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                                            if(task.isSuccessful()) {
+                                                Toast.makeText(posting.this, "post added", Toast.LENGTH_LONG).show();
+                                                Intent mainIntent = new Intent(posting.this, MainActivity.class);
+                                                startActivity(mainIntent);
+                                                finish();
+                                            }else{
+                                                postin.setVisibility(View.INVISIBLE);
+                                                firestore.collection("Posts").document(post_id).delete();
+                                                String error = task.getException().getMessage();
+                                                Toast.makeText(posting.this, "Firestore error:" + error, Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
                                 } else {
+                                    postin.setVisibility(View.INVISIBLE);
+                                    String error = task.getException().getMessage();
+                                    Toast.makeText(posting.this, "Firestore error:" + error, Toast.LENGTH_LONG).show();
                                 }
                                 postin.setVisibility(View.INVISIBLE);
                             }
@@ -242,6 +264,7 @@ public class posting extends AppCompatActivity {
 
                         if(photoUri.isEmpty() && !duris.isEmpty()) {
                             Map<String, Object> postMap = new HashMap<>();
+                            postMap.put("re_postId",null);
                             postMap.put("image_url",duris);
                             postMap.put("post_image_thumb",thumbs);
                             postMap.put("description",description);
@@ -252,10 +275,28 @@ public class posting extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentReference> task) {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(posting.this, "post added", Toast.LENGTH_LONG).show();
-                                        Intent mainIntent = new Intent(posting.this, MainActivity.class);
-                                        startActivity(mainIntent);
-                                        finish();
+                                        final String post_id = task.getResult().getId();
+                                        Map<String, Object> mypostMapn = new HashMap<>();
+                                        mypostMapn.put("post_id",post_id);
+                                        mypostMapn.put("author","original");
+                                        mypostMapn.put("timeStamp", FieldValue.serverTimestamp());
+                                        firestore.collection("Users").document(UserId).collection("Posts")
+                                                .add(mypostMapn).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                if(task.isSuccessful()) {
+                                                    Toast.makeText(posting.this, "post added", Toast.LENGTH_LONG).show();
+                                                    Intent mainIntent = new Intent(posting.this, MainActivity.class);
+                                                    startActivity(mainIntent);
+                                                    finish();
+                                                }else{
+                                                    postin.setVisibility(View.INVISIBLE);
+                                                    firestore.collection("Posts").document(post_id).delete();
+                                                    String error = task.getException().getMessage();
+                                                    Toast.makeText(posting.this, "Firestore error:" + error, Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        });
                                     } else {
                                         postin.setVisibility(View.INVISIBLE);
                                         String error = task.getException().getMessage();

@@ -216,10 +216,10 @@ public class PostActivity extends AppCompatActivity {
                                                     mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                     mylikeMap.put("postId",blogPostId);
                                                     firestore.collection("Users/"+userId+"/NotificationBox")
-                                                            .document(currentUserId).set(mylikeMap)
-                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            .add(mylikeMap)
+                                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                                 @Override
-                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                public void onComplete(@NonNull Task<DocumentReference> task) {
                                                                     if(!task.isSuccessful()){
                                                                         Toast.makeText(PostActivity.this, "did not properly liked", Toast.LENGTH_SHORT).show();
                                                                     }
@@ -251,22 +251,7 @@ public class PostActivity extends AppCompatActivity {
 
 
                             } else {
-                                firestore.collection("Posts/"+blogPostId+"/likes").document(currentUserId).delete()
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (!userId.equals(currentUserId)) {
-                                                    firestore.collection("Users/" + userId + "/NotificationBox")
-                                                            .document(currentUserId).delete()
-                                                            .addOnFailureListener(new OnFailureListener() {
-                                                                @Override
-                                                                public void onFailure(@NonNull Exception e) {
-                                                                    Toast.makeText(PostActivity.this, "did not delete properly" + e, Toast.LENGTH_SHORT).show();
-                                                                }
-                                                            });
-                                                }
-                                            }
-                                        });
+                                firestore.collection("Posts/"+blogPostId+"/likes").document(currentUserId).delete();
                             }
                         }else {
                             Toast.makeText(PostActivity.this, "your offline", Toast.LENGTH_SHORT).show();
@@ -402,10 +387,9 @@ public class PostActivity extends AppCompatActivity {
                                 myansMap.put("timestamp", FieldValue.serverTimestamp());
                                 myansMap.put("postId",blogPostId);
                                 firestore.collection("Users/"+userId+"/NotificationBox")
-                                        .document(currentUserId)
-                                        .set(myansMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        .add(myansMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
+                                    public void onComplete(@NonNull Task<DocumentReference> task) {
                                         if(!task.isSuccessful()) {
                                             Toast.makeText(PostActivity.this, "did not properly save", Toast.LENGTH_SHORT).show();
                                         }

@@ -76,6 +76,9 @@
     <string name="youRequsted">You Requested, %1$s</string>
     <string name="gigscont">Fin Gigs</string>
     <string name="ato">Auto locate?</string>
+    <string name="re_post">RE-POST</string>
+    <string name="just_re_post">Just re-post</string>
+    <string name="with_edit">With Edit</string>
 
     <string-array name="main_gig_page">
         <item>Open Gigs</item>

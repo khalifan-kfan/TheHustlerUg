@@ -30,7 +30,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.thehustler.Activities.AnotherUserAccount;
 
+import com.example.thehustler.Activities.MainActivity;
 import com.example.thehustler.Activities.PostActivity;
+import com.example.thehustler.Activities.posting;
+import com.example.thehustler.Fragments.BottomSheetDialog;
 import com.example.thehustler.Model.Blogpost;
 import com.example.thehustler.Model.Users;
 import com.example.thehustler.NotifyHandler.NotSender;
@@ -41,6 +44,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
@@ -48,6 +52,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,14 +63,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.text.format.DateFormat.format;
 
-public class TrigRecyclerAdapter extends RecyclerView.Adapter<TrigRecyclerAdapter.ViewHolder> {
+public class TrigRecyclerAdapter extends RecyclerView.Adapter<TrigRecyclerAdapter.ViewHolder> implements BottomSheetDialog.BottomSheetListner {
 
     List<Blogpost> Postlist;
     List<Users> usersList;
     public Context context;
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
-
 
 
     public TrigRecyclerAdapter(List<Blogpost> Postlist, List<Users>usersList){
@@ -87,7 +91,6 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<TrigRecyclerAdapte
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         holder.setIsRecyclable(false);
-
         String desc_data = Postlist.get(position).getDescription();
         holder.setdescriptiontext(desc_data);
 
@@ -157,11 +160,20 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<TrigRecyclerAdapte
            if(!value.isEmpty()){
                int count = value.size();
                holder.commentCount(count);
-
            }else{
             holder.commentCount(0);
            }
-
+            }
+        });
+        firestore.collection("Posts/"+post_Id+"/Reposts").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(!value.isEmpty()){
+                    int count = value.size();
+                    holder.repostCounter(count);
+                }else{
+                    holder.repostCounter(0);
+                }
             }
         });
 
@@ -178,6 +190,21 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<TrigRecyclerAdapte
                 }
             }
         });
+
+        firestore.collection("Posts/"+post_Id+"/Reposts").whereEqualTo("repost_id",CurrentUser)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if(value.isEmpty()){
+                            holder.repost.setImageResource(R.drawable.ic_repost);
+                        }else{
+                                holder.repost.setImageResource(R.drawable.ic_repost_no);
+
+                        }
+                    }
+                });
+
 /*
         holder.phots.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,10 +243,10 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<TrigRecyclerAdapte
                                                     mylikeMap.put("notId", CurrentUser);
                                                     mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                     mylikeMap.put("postId", post_Id);
-                                                    firestore.collection("Users/"+user_id+"/NotificationBox").document(CurrentUser).set(mylikeMap)
-                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    firestore.collection("Users/"+user_id+"/NotificationBox").add(mylikeMap)
+                                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                                 @Override
-                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                public void onComplete(@NonNull Task<DocumentReference> task) {
                                                                     if (!task.isSuccessful()) {
                                                                         Toast.makeText(context, "did not properly liked", Toast.LENGTH_SHORT).show();
                                                                     }
@@ -287,6 +314,15 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<TrigRecyclerAdapte
 
             }
         });
+
+        holder.repost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheetDialog bottomSheetDialog = BottomSheetDialog.newInstance(post_Id);
+                bottomSheetDialog.show(((MainActivity)context).getSupportFragmentManager(), "bottom Sheet");
+            }
+        });
+
         holder.popbut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -310,6 +346,115 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<TrigRecyclerAdapte
         return Postlist.size();
     }
 
+    @Override
+    public void onButtonClicked(int k, final String PostID) {
+        final String currentId = auth.getCurrentUser().getUid();
+        //do somthing according to text
+        if(k==1){//edit
+
+
+        }else if(k==2){
+        //just
+            HashMap<String,Object> repost = new HashMap<>();
+            repost.put("repost_Id",currentId);
+            repost.put("repost_time", FieldValue.serverTimestamp());
+
+            firestore.collection("Posts")
+                    .document(PostID).collection("Reposts").
+                    add(repost).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentReference> task) {
+                    if(task.isSuccessful()){
+                        firestore.collection("Posts").document(PostID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if(task.isSuccessful()){
+                                final String posterId = (String) task.getResult().get("user_id");
+                                Map<String, Object> postMapn = new HashMap<>();
+                                postMapn.put("re_postId",currentId);
+                                postMapn.put("image_url",task.getResult().get("image_url"));
+                                postMapn.put("post_image_thumb",task.getResult().get("post_image_thumb"));
+                                postMapn.put("description",task.getResult().get("description"));
+                                postMapn.put("user_id",posterId);
+                                postMapn.put("timeStamp", FieldValue.serverTimestamp());
+                                firestore.collection("Posts").add(postMapn).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                                        final String newPostID = task.getResult().getId();
+                                        Map<String, Object> mypostMapn = new HashMap<>();
+                                        mypostMapn.put("post_id",PostID);
+                                        mypostMapn.put("author","re-post");
+                                        mypostMapn.put("timeStamp", FieldValue.serverTimestamp());
+                                        firestore.collection("Users").document(currentId).collection("Posts")
+                                                .add(mypostMapn).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                if(task.isSuccessful()) {
+                                                    if (!posterId.equals(currentId)) {
+                                                        final String status = "like";
+                                                        Map<String, Object> mylikeMap = new HashMap<>();
+                                                        mylikeMap.put("status", status);
+                                                        mylikeMap.put("notId", currentId);
+                                                        mylikeMap.put("timestamp", FieldValue.serverTimestamp());
+                                                        mylikeMap.put("postId", PostID);
+                                                        firestore.collection("Users/"+posterId+"/NotificationBox").add(mylikeMap)
+                                                                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                                        if (!task.isSuccessful()) {
+                                                                            Toast.makeText(context, "did not properly liked", Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                        //send notification now
+                                                                        firestore.collection("Users").document(posterId)
+                                                                                .collection("Tokens")
+                                                                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                                                                    @Override
+                                                                                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                                                                        for (DocumentChange doc : value.getDocumentChanges()) {
+                                                                                            if (doc.getType() == DocumentChange.Type.ADDED) {
+                                                                                                String token = doc.getDocument().getString("token");
+                                                                                                NotSender
+                                                                                                        .sendNotifications(context,token
+                                                                                                                ,status,"New Re-post Alert");
+                                                                                            }
+                                                                                        }
+
+                                                                                    }
+                                                                                });
+
+                                                                        NotSender.Updatetoken();
+
+                                                                    }
+                                                                });
+                                                    }
+
+
+                                                }else{
+                                                    firestore.collection("Posts").document(newPostID).delete();
+                                                    String error = task.getException().getMessage();
+                                                    Toast.makeText(context, "Firestore error:" + error, Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+
+
+                            }else {
+
+                            }
+                            }
+                        });
+
+                    }else{
+                        Toast.makeText(context,"dint repost, something went wrong",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+        }
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView description;
         private View v;
@@ -319,7 +464,8 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<TrigRecyclerAdapte
         private CircleImageView ownerimage;
         private CardView cardView;
         private ViewPager2 phots;
-
+        private TextView repostCounter;
+        private ImageView repost;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -332,6 +478,8 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<TrigRecyclerAdapte
             postOwnerName = v.findViewById(R.id.Post_user);
             ownerimage =v.findViewById(R.id.circularUser);
             postdate = v.findViewById(R.id.datePost);
+            repost = v.findViewById(R.id.imageView4);
+            repostCounter = v.findViewById(R.id.repostCount);
         }
         public void setdescriptiontext(String text){
             description = v.findViewById(R.id.postdescribe);
@@ -395,7 +543,7 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<TrigRecyclerAdapte
         if(count>0)
             commentcounter.setText(Integer.toString(count));
         else
-            commentcounter.setText(" ");
+            commentcounter.setText(0);
 
         }
 
@@ -422,6 +570,12 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<TrigRecyclerAdapte
             notifyItemRemoved(position);
         }
 
+        public void repostCounter(int count) {
+            if(count>0)
+              repostCounter.setText(Integer.toString(count));
+            else
+                repostCounter.setText(0);
+        }
     }
     public void goToBlogPostFragment(String post_Id, String user_id) {
 

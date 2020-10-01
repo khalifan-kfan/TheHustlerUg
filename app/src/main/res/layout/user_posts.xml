@@ -120,17 +120,17 @@
 
             <TextView
                 android:id="@+id/Comentcount2"
-                android:layout_width="44dp"
-                android:layout_height="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
                 android:layout_marginBottom="8dp"
                 android:text="0"
                 android:textColor="#ffffff"
                 app:layout_constraintBottom_toBottomOf="@+id/view4"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/repostCount"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/comentbtn"
-                app:layout_constraintTop_toBottomOf="@+id/view3"
+                app:layout_constraintTop_toTopOf="@+id/comentbtn"
                 app:layout_constraintVertical_bias="1.0" />
 
             <ImageView
@@ -186,6 +186,33 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view3" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="24dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/ic_repost_no"
+                app:layout_constraintEnd_toStartOf="@+id/repostCount"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/Comentcount2"
+                app:layout_constraintTop_toTopOf="@+id/Comentcount2" />
+
+            <TextView
+                android:id="@+id/repostCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="196dp"
+                android:layout_marginRight="196dp"
+                android:text="0"
+                android:textColor="@color/mywhite"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/imageView4"
+                app:layout_constraintVertical_bias="0.0" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

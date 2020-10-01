@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/myBlack"
+    android:gravity="center_horizontal"
+    >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/re_post"
+        android:textSize="22sp"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@color/mywhite"
+        />
+    <TextView
+        android:id="@+id/easy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/just_re_post"
+        android:textSize="22sp"
+        android:textColor="@color/mywhite"
+        android:padding="4dp" />
+    <view
+        android:layout_width="300dp"
+        android:layout_height="1dp"
+        android:background="@color/mywhite"
+        />
+    <TextView
+        android:id="@+id/edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/with_edit"
+        android:textSize="22sp"
+        android:padding="4dp"
+        android:textColor="@color/mywhite"
+        />
+</LinearLayout>

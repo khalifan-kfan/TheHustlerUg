@@ -44,6 +44,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
@@ -404,10 +405,11 @@ class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
                                                         mylikeMap.put("notId", CurrentUser);
                                                         mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                         mylikeMap.put("postId", post_Id);
-                                                        firestore.collection("Users/"+user_id+"/NotificationBox").document(CurrentUser).set(mylikeMap)
-                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        firestore.collection("Users/"+user_id+"/NotificationBox")
+                                                                .add(mylikeMap)
+                                                                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                                     @Override
-                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                    public void onComplete(@NonNull Task<DocumentReference> task) {
                                                                         if (!task.isSuccessful()) {
                                                                             Toast.makeText(context, "did not properly liked", Toast.LENGTH_SHORT).show();
                                                                         }
@@ -439,22 +441,8 @@ class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
 
                                 } else {
-                                    firestore.collection("Posts/"+post_Id+"/likes").document(CurrentUser).delete()
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (!user_id.equals(CurrentUser)) {
-                                                        firestore.collection("Users/" + user_id + "/NotificationBox")
-                                                                .document(CurrentUser).delete()
-                                                                .addOnFailureListener(new OnFailureListener() {
-                                                                    @Override
-                                                                    public void onFailure(@NonNull Exception e) {
-                                                                        Toast.makeText(context, "did not delete properly" + e, Toast.LENGTH_SHORT).show();
-                                                                    }
-                                                                });
-                                                    }
-                                                }
-                                            });
+                                    firestore.collection("Posts/"+post_Id+"/likes").document(CurrentUser).delete();
+
                                 }
                             }else {
                                 Toast.makeText(context, "your offline", Toast.LENGTH_SHORT).show();

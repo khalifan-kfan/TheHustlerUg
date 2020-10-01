@@ -42,6 +42,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
@@ -617,10 +618,11 @@ class OpenGigsAdapter extends RecyclerView.Adapter<OpenGigsAdapter.ViewHolder>{
                                                     mylikeMap.put("notId", myid);
                                                     mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                     mylikeMap.put("postId", from_id);
-                                                    firestore.collection("Users/"+from_id+"/NotificationBox").document(myid).set(mylikeMap)
-                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    firestore.collection("Users/"+from_id+"/NotificationBox")
+                                                            .add(mylikeMap)
+                                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                                 @Override
-                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                public void onComplete(@NonNull Task<DocumentReference> task) {
                                                                     if (!task.isSuccessful()) {
                                                                         Toast.makeText(context, "did not properly liked", Toast.LENGTH_SHORT).show();
                                                                     }
@@ -647,22 +649,7 @@ class OpenGigsAdapter extends RecyclerView.Adapter<OpenGigsAdapter.ViewHolder>{
                                             }
                                         });
                             } else {
-                                firestore.collection("Gigs/"+gigId+"/Interests").document(myid).delete()
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (!from_id.equals(myid)) {
-                                                    firestore.collection("Users/"+from_id+"/NotificationBox")
-                                                            .document(myid).delete()
-                                                            .addOnFailureListener(new OnFailureListener() {
-                                                                @Override
-                                                                public void onFailure(@NonNull Exception e) {
-                                                                    Toast.makeText(context, "did not delete properly" + e, Toast.LENGTH_SHORT).show();
-                                                                }
-                                                            });
-                                                }
-                                            }
-                                        });
+                                firestore.collection("Gigs/"+gigId+"/Interests").document(myid).delete();
                             }
                         }else {
                             Toast.makeText(context, "your offline", Toast.LENGTH_SHORT).show();
@@ -1055,10 +1042,10 @@ class OngoingAdaptor extends RecyclerView.Adapter<OngoingAdaptor.ViewHolder> {
                                             mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                             mylikeMap.put("postId",null);
                                             firestore.collection("Users/"+from_id+"/NotificationBox")
-                                                    .document(myid).set(mylikeMap)
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    .add(mylikeMap)
+                                                    .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                         @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                        public void onComplete(@NonNull Task<DocumentReference> task) {
                                                             if (!task.isSuccessful()) {
                                                                 Toast.makeText(context, "did not notify",
                                                                         Toast.LENGTH_SHORT).show();
@@ -1147,10 +1134,10 @@ class OngoingAdaptor extends RecyclerView.Adapter<OngoingAdaptor.ViewHolder> {
                                         mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                         mylikeMap.put("postId",null);
                                         firestore.collection("Users/"+send_id+"/NotificationBox")
-                                                .document(myid).set(mylikeMap)
-                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                .add(mylikeMap)
+                                                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                     @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                    public void onComplete(@NonNull Task<DocumentReference> task) {
                                                         if (!task.isSuccessful()) {
                                                             Toast.makeText(context, "did not notify",
                                                                     Toast.LENGTH_SHORT).show();
@@ -1354,10 +1341,10 @@ class RequestAdaptor extends RecyclerView.Adapter<RequestAdaptor.ViewHolder> {
                                    mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                    mylikeMap.put("postId",null);
                                    firestore.collection("Users/"+from_id+"/NotificationBox")
-                                           .document(myid).set(mylikeMap)
-                                           .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                           .add(mylikeMap)
+                                           .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                @Override
-                                               public void onComplete(@NonNull Task<Void> task) {
+                                               public void onComplete(@NonNull Task<DocumentReference> task) {
                                                    if (!task.isSuccessful()) {
                                                        Toast.makeText(context, "did not notify",
                                                                Toast.LENGTH_SHORT).show();
@@ -1426,10 +1413,10 @@ class RequestAdaptor extends RecyclerView.Adapter<RequestAdaptor.ViewHolder> {
                                 mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                 mylikeMap.put("postId",null);
                                 firestore.collection("Users/"+send_id+"/NotificationBox")
-                                        .document(myid).set(mylikeMap)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        .add(mylikeMap)
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                             @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
+                                            public void onComplete(@NonNull Task<DocumentReference> task) {
                                                 if (!task.isSuccessful()) {
                                                     Toast.makeText(context, "did not notify",
                                                             Toast.LENGTH_SHORT).show();

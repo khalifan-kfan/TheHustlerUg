@@ -32,6 +32,7 @@ import com.example.thehustler.NotifyHandler.NotSender;
 import com.example.thehustler.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
@@ -188,10 +189,11 @@ public class AnotherUserRecycler extends RecyclerView.Adapter<AnotherUserRecycle
                                                     mylikeMap.put("notId", CurrentUser);
                                                     mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                     mylikeMap.put("postId", post_Id);
-                                                    firestore.collection("Users/"+user_id+"/NotificationBox").document(CurrentUser).set(mylikeMap)
-                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    firestore.collection("Users/"+user_id+"/NotificationBox")
+                                                            .add(mylikeMap)
+                                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                                 @Override
-                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                public void onComplete(@NonNull Task<DocumentReference> task) {
                                                                     if (!task.isSuccessful()) {
                                                                         Toast.makeText(context, "did not properly liked", Toast.LENGTH_SHORT).show();
                                                                     }
@@ -226,22 +228,8 @@ public class AnotherUserRecycler extends RecyclerView.Adapter<AnotherUserRecycle
 
 
                             } else {
-                                firestore.collection("Posts/"+post_Id+"/likes").document(CurrentUser).delete()
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (!user_id.equals(CurrentUser)) {
-                                                    firestore.collection("Users/" + user_id + "/NotificationBox")
-                                                            .document(CurrentUser).delete()
-                                                            .addOnFailureListener(new OnFailureListener() {
-                                                                @Override
-                                                                public void onFailure(@NonNull Exception e) {
-                                                                    Toast.makeText(context, "did not delete properly" + e, Toast.LENGTH_SHORT).show();
-                                                                }
-                                                            });
-                                                }
-                                            }
-                                        });
+                                firestore.collection("Posts/"+post_Id+"/likes").document(CurrentUser).delete();
+
                             }
                         }else {
                             Toast.makeText(context, "your offline", Toast.LENGTH_SHORT).show();

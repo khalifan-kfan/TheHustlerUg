@@ -324,10 +324,10 @@ public class Create_Gig_Fragment extends Fragment {
                                                                             mylikeMap.put("notId", myId);
                                                                             mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                                             mylikeMap.put("postId", null);
-                                                                            firestore.collection("Users/" + userid + "/NotificationBox").document(myId).set(mylikeMap)
-                                                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                            firestore.collection("Users/" + userid + "/NotificationBox").add(mylikeMap)
+                                                                                    .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                                                         @Override
-                                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                                        public void onComplete(@NonNull Task<DocumentReference> task) {
                                                                                             if (!task.isSuccessful()) {
                                                                                                 Toast.makeText(getContext(), "did not notify",
                                                                                                         Toast.LENGTH_SHORT).show();
@@ -419,10 +419,10 @@ public class Create_Gig_Fragment extends Fragment {
                                                     mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                     mylikeMap.put("postId", myId);
                                                     firestore.collection("Users/"+userid+"/NotificationBox")
-                                                            .document(myId).set(mylikeMap)
-                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            .add(mylikeMap)
+                                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                                 @Override
-                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                public void onComplete(@NonNull Task<DocumentReference> task) {
                                                                     if (!task.isSuccessful()) {
                                                                         Toast.makeText(getContext(), "did not notify",
                                                                                 Toast.LENGTH_SHORT).show();

@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Blogpost extends postId {
-    public String user_id,description;
+    public String user_id,description,re_postId;
     public Date timeStamp;
     List<String>image_url,post_image_thumb;
 
@@ -32,18 +32,22 @@ public class Blogpost extends postId {
 
     }
 
-    public Blogpost(String user_id, String description, Date timeStamp,List<String> image_url, List<String> post_image_thumb) {
+    public Blogpost(String user_id, String description, Date timeStamp,List<String> image_url, List<String> post_image_thumb,String re_postId) {
         this.user_id = user_id;
-
+        this.re_postId = re_postId;
         this.description = description;
         this.image_url = image_url;
         this.post_image_thumb = post_image_thumb;
         this.timeStamp = timeStamp;
     }
 
+    public String getRe_postId() {
+        return re_postId;
+    }
 
-
-
+    public void setRe_postId(String re_postId) {
+        this.re_postId = re_postId;
+    }
 
     public String getDescription() {
         return description;

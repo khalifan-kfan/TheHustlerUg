@@ -184,10 +184,10 @@ public class Reviews extends AppCompatActivity {
                                     myansMap.put("timestamp", FieldValue.serverTimestamp());
                                     myansMap.put("postId", null);
                                     firestore.collection("Users/"+userId+"/NotificationBox")
-                                            .document(currentUID)
-                                            .set(myansMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                                            .add(myansMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                         @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
+                                        public void onComplete(@NonNull Task<DocumentReference> task) {
                                             if (!task.isSuccessful()) {
                                                 Toast.makeText(Reviews.this, "did not properly save", Toast.LENGTH_SHORT).show();
                                                 //sendin.setVisibility(View.INVISIBLE);
