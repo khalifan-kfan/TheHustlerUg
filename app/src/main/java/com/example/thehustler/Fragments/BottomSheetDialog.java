@@ -17,11 +17,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.List;
 
+import retrofit2.http.POST;
+
 public class BottomSheetDialog extends BottomSheetDialogFragment {
     private String postID;
     private BottomSheetListner listner;
     private static final String  POSITION ="postion";
-
+    private int position;
+    private static final String  POSTID ="postId";
 
 
     public BottomSheetDialog(){
@@ -29,11 +32,11 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
 
     }
 
-    public static BottomSheetDialog newInstance(String postionInt) {
+    public static BottomSheetDialog newInstance(String postId,int position) {
         Bundle args = new Bundle();
         BottomSheetDialog fragment = new BottomSheetDialog();
-
-       args.putString(POSITION,postionInt);
+        args.putString(POSTID,postId);
+       args.putInt(POSITION,position);
         fragment.setArguments(args);
         return fragment;
     }
@@ -42,7 +45,8 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-           postID  = getArguments().getString(POSITION);
+           postID  = getArguments().getString(POSTID);
+           position = getArguments().getInt(POSITION);
         }
     }
 
@@ -55,14 +59,14 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listner.onButtonClicked(1,postID);
+                listner.onButtonClicked(1,postID,position);
                 dismiss();
             }
         });
         just.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listner.onButtonClicked(2,postID);
+                listner.onButtonClicked(2,postID,position);
                 dismiss();
             }
         });
@@ -70,7 +74,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     public interface  BottomSheetListner{
-        void onButtonClicked(int k,String  postID);
+        void onButtonClicked(int k,String  postID,int postion);
     }
 
     @Override

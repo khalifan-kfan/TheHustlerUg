@@ -7,8 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/myBlack"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    >
 
     <androidx.cardview.widget.CardView
         android:padding="4dp"
@@ -78,6 +78,21 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pageview" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardRepost"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/postdescribe">
+
+
+
+
+            </androidx.cardview.widget.CardView>
+
+
 
             <ImageView
                 android:id="@+id/likeuserz2"
@@ -174,14 +189,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/postdescribe" />
+                app:layout_constraintTop_toBottomOf="@+id/cardRepost" />
 
             <View
                 android:id="@+id/view4"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_gravity="bottom"
-
                 android:layout_marginTop="40dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -219,4 +233,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

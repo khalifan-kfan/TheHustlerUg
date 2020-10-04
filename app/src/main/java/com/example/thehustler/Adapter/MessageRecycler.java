@@ -43,7 +43,6 @@ public class MessageRecycler extends RecyclerView.Adapter<MessageRecycler.Messag
             chatCards = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.receiver_chat_card, parent, false);
         }
-
         return new MessagesHolder(chatCards);
     }
     @Override

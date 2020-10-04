@@ -8,6 +8,11 @@ import java.util.Date;
 import java.util.List;
 
 public class Blogpost extends postId {
+    // for
+    public  String re_post_desc;
+    List<String>re_image_url,re_post_image_thumb;
+    public Date re_timeStamp;
+
     public String user_id,description,re_postId;
     public Date timeStamp;
     List<String>image_url,post_image_thumb;
@@ -29,16 +34,55 @@ public class Blogpost extends postId {
     }
 
     public Blogpost(){
-
     }
 
-    public Blogpost(String user_id, String description, Date timeStamp,List<String> image_url, List<String> post_image_thumb,String re_postId) {
+    public Blogpost(String user_id, String description, Date timeStamp,List<String> image_url, List<String> post_image_thumb) {
         this.user_id = user_id;
-        this.re_postId = re_postId;
+
         this.description = description;
         this.image_url = image_url;
         this.post_image_thumb = post_image_thumb;
         this.timeStamp = timeStamp;
+    }
+
+    public Blogpost(String re_post_desc, List<String> re_image_url, List<String> re_post_image_thumb, Date re_timeStamp,String re_postId) {
+        this.re_post_desc = re_post_desc;
+        this.re_postId = re_postId;
+        this.re_image_url = re_image_url;
+        this.re_post_image_thumb = re_post_image_thumb;
+        this.re_timeStamp = re_timeStamp;
+    }
+
+    public String getRe_post_desc() {
+        return re_post_desc;
+    }
+
+    public void setRe_post_desc(String re_post_desc) {
+        this.re_post_desc = re_post_desc;
+    }
+
+    public List<String> getRe_image_url() {
+        return re_image_url;
+    }
+
+    public void setRe_image_url(List<String> re_image_url) {
+        this.re_image_url = re_image_url;
+    }
+
+    public List<String> getRe_post_image_thumb() {
+        return re_post_image_thumb;
+    }
+
+    public void setRe_post_image_thumb(List<String> re_post_image_thumb) {
+        this.re_post_image_thumb = re_post_image_thumb;
+    }
+
+    public Date getRe_timeStamp() {
+        return re_timeStamp;
+    }
+
+    public void setRe_timeStamp(Date re_timeStamp) {
+        this.re_timeStamp = re_timeStamp;
     }
 
     public String getRe_postId() {

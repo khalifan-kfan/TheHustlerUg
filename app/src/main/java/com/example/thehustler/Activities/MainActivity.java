@@ -83,17 +83,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
         add = findViewById(R.id.fab);
         if(auth.getCurrentUser() != null) {
-
             //fragments
             homeFragment = new Home_Fragment();
             notificationFragment = new Notification_Fragment();
             accountFragment = new Account_Fragment();
             chatsFragment = new ChatsFragment();
-
             initializeFragment();
 
             mainBottomNav = findViewById(R.id.mainBottomNav);
@@ -130,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent postIntent = new Intent(MainActivity.this, posting.class);
+                    postIntent.putExtra("WHICH","original");
                     startActivity(postIntent);
 
                 }

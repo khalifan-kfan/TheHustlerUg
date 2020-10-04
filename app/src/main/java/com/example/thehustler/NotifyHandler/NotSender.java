@@ -22,8 +22,6 @@ import retrofit2.Response;
 
 public class NotSender {
 
-
-
     public static void sendNotifications(final Context c, String usertoken, String title, String message) {
        ServiceAPI apiService = Client.getClient("https://fcm.googleapis.com/").create(ServiceAPI.class);
 
