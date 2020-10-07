@@ -63,8 +63,6 @@ public class ImageAdp  extends RecyclerView.Adapter<ImageAdp.Slider> {
              Glide.with(context).applyDefaultRequestOptions(placRO)
                      .load(s).thumbnail(Glide.with(context).load(s1))
                    .into(postIm);
-
-
             //postIm.setImageResource(item.getImage());
         }
     }

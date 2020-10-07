@@ -220,8 +220,8 @@ public class Account_Fragment extends Fragment {
         });
         if (auth.getCurrentUser() != null) {
 
-            Query Firstquery = firestore.collection("Posts")
-                    .whereEqualTo("user_id", currentID)
+            Query Firstquery = firestore.collection("Users")
+                    .document(currentID).collection("Posts")
             .orderBy("timeStamp", Query.Direction.DESCENDING).limit(4);
             Firstquery.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
@@ -236,17 +236,29 @@ public class Account_Fragment extends Fragment {
                             }
                             for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                                 if (doc.getType() == DocumentChange.Type.ADDED) {
-                                    String postID = doc.getDocument().getId();
-                                    Blogpost blogPost = doc.getDocument().toObject(Blogpost.class).withID(postID);
-                                    if (loadFirst) {
-                                        // usersList.add(users);
-                                        Postlist.add(blogPost);
-                                    } else {
-                                        // usersList.add(0, users);
-                                        Postlist.add(0, blogPost);
-                                    }
-                                    mypostsAdapter.notifyDataSetChanged();
-                                }
+                                    final String docID = doc.getDocument().getId();
+                                    final String postID = doc.getDocument().getString("post_id");
+                                    firestore.collection("Posts").document(postID).get()
+                                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                if(task.getResult().exists()) {
+                                                    Blogpost blogPost = task.getResult().toObject(Blogpost.class).withID(postID);
+                                                    if (loadFirst) {
+                                                        // usersList.add(users);
+                                                        Postlist.add(blogPost);
+                                                    } else {
+                                                        // usersList.add(0, users);
+                                                        Postlist.add(0, blogPost);
+                                                    }
+                                                    // userBlogList.add(blogPost);
+                                                    mypostsAdapter.notifyDataSetChanged();
+                                                }
+                                            }
+                                        }
+                                });
+                            }
                             }
                             loadFirst = false;
                         } else {
@@ -264,8 +276,8 @@ public class Account_Fragment extends Fragment {
 
     public void LoadmorePosts() {
         if (auth.getCurrentUser() != null) {
-            Query Nextquery =  firestore.collection("Posts")
-                    .whereEqualTo("user_id",currentID)
+            Query Nextquery =  firestore.collection("Users")
+                    .document(currentID).collection("Posts")
                     .orderBy("timeStamp", Query.Direction.DESCENDING)
                     .startAfter(lastVisible)
                     .limit(4);
@@ -279,12 +291,23 @@ public class Account_Fragment extends Fragment {
                         for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
                             if (doc.getType() == DocumentChange.Type.ADDED) {
-                                String postID = doc.getDocument().getId();
-                                final Blogpost blogpost = doc.getDocument().toObject(Blogpost.class).withID(postID);
-                                // String bloguser_id = doc.getDocument().getString("user_id");
-                                // usersList.add(users);
-                                Postlist.add(blogpost);
-                                mypostsAdapter.notifyDataSetChanged();
+                                final String docID = doc.getDocument().getId();
+                                final String postID = doc.getDocument().getString("post_id");
+                                firestore.collection("Posts").document(postID).get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if(task.isSuccessful()){
+                                                    if(task.getResult().exists()) {
+                                                        Blogpost blogPost = task.getResult().toObject(Blogpost.class).withID(postID);
+                                                        // usersList.add(users);
+                                                        Postlist.add(blogPost);
+                                                        // userBlogList.add(blogPost);
+                                                        mypostsAdapter.notifyDataSetChanged();
+                                                    }
+                                                }
+                                            }
+                                        });
                             }
                         }
                     }

@@ -7,8 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/myBlack"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
+
 
     <androidx.cardview.widget.CardView
         android:padding="4dp"
@@ -78,21 +78,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pageview" />
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardRepost"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/postdescribe">
-
-
-
-
-            </androidx.cardview.widget.CardView>
-
-
 
             <ImageView
                 android:id="@+id/likeuserz2"
@@ -181,6 +166,77 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/circularUser" />
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/repostCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+               android:padding="1dp"
+                android:layout_marginTop="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/postdescribe">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/const2"
+                    android:layout_width="match_parent"
+                    android:background="@color/myBlack"
+                    android:layout_height="match_parent">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/re_postface"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="4dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.05"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:src="@color/myBlack"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/repost_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/Name_"
+                        android:textColor="@color/mywhite"
+                        app:layout_constraintStart_toEndOf="@+id/re_postface"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/repost_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="28dp"
+                        android:text="post date"
+                        android:textColor="@color/mywhite"
+                        app:layout_constraintStart_toStartOf="@+id/repost_name"
+                        app:layout_constraintTop_toTopOf="@id/repost_name" />
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/pageview_repost"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_marginTop="2dp"
+                        android:padding="4dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/repost_date" />
+
+                    <TextView
+                        android:id="@+id/desc2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text=""
+                        android:textColor="@color/mywhite"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/pageview_repost" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
             <View
                 android:id="@+id/view3"
                 android:layout_width="match_parent"
@@ -189,7 +245,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardRepost" />
+                app:layout_constraintTop_toBottomOf="@+id/repostCard" />
 
             <View
                 android:id="@+id/view4"
@@ -233,5 +289,4 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

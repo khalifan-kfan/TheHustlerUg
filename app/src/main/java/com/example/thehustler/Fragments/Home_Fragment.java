@@ -120,9 +120,13 @@ public class Home_Fragment extends Fragment {
             for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
               if (doc.getType() == DocumentChange.Type.ADDED) {
                 String postID = doc.getDocument().getId();
-
+                String bloguser_id;
                 final Blogpost blogpost = doc.getDocument().toObject(Blogpost.class).withID(postID);
-                String bloguser_id = doc.getDocument().getString("user_id");
+                if(doc.getDocument().getString("re_postId")==null) {
+                  bloguser_id = doc.getDocument().getString("user_id");
+                }else {
+                  bloguser_id = doc.getDocument().getString("re_postId");
+                }
                 firestore.collection("Users").document(bloguser_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                   @Override
                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -180,10 +184,15 @@ public class Home_Fragment extends Fragment {
             for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
               if (doc.getType() == DocumentChange.Type.ADDED) {
-
+                String bloguser_id;
                 String postID = doc.getDocument().getId();
                 final Blogpost blogpost = doc.getDocument().toObject(Blogpost.class).withID(postID);
-                String bloguser_id = doc.getDocument().getString("user_id");
+                if(doc.getDocument().getString("re_postId")==null) {
+                  bloguser_id = doc.getDocument().getString("user_id");
+                }else {
+                  bloguser_id = doc.getDocument().getString("re_postId");
+                }
+
                 firestore.collection("Users").document(bloguser_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                   @Override
                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
