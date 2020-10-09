@@ -109,7 +109,7 @@
             android:layout_marginStart="21dp"
             android:layout_marginLeft="21dp"
             android:layout_marginTop="5dp"
-            android:src="@drawable/ic_n_Istar" />
+            android:src="@drawable/ic_star_note" />
 
         <TextView
             android:id="@+id/interests_"

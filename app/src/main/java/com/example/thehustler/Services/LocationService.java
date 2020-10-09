@@ -34,8 +34,8 @@ public class LocationService  extends IntentService {
 
         if(intent != null){
             String error="";
-            rs=intent.getParcelableExtra(finalss.RECEIVER);
-            Location location = intent.getParcelableExtra(finalss.LOCATION_DATA_EXTRA);
+            rs=intent.getParcelableExtra(Constants.RECEIVER);
+            Location location = intent.getParcelableExtra(Constants.LOCATION_DATA_EXTRA);
             if(location == null){
                 return;
             }
@@ -47,7 +47,7 @@ public class LocationService  extends IntentService {
                 error = e.getMessage();
             }
             if(addresses == null || addresses.isEmpty()){
-                deliverResultToReciever(finalss.FAILURE_RESULT,error,null);
+                deliverResultToReciever(Constants.FAILURE_RESULT,error,null);
             }else {
                 Address address = addresses.get(0);
                 ArrayList<String > adressssFragments = new ArrayList<>();
@@ -57,7 +57,7 @@ public class LocationService  extends IntentService {
                 adressssFragments.add(address.getCountryName());
                 adressssFragments.add(address.getLocality());
                 adressssFragments.add(address.getCountryCode());
-                deliverResultToReciever(finalss.SUCCESS_RESULT,null,adressssFragments);
+                deliverResultToReciever(Constants.SUCCESS_RESULT,null,adressssFragments);
 
             }
         }
@@ -65,8 +65,8 @@ public class LocationService  extends IntentService {
 
     private void deliverResultToReciever(int resultCode, String e,ArrayList<String> addressMessage){
         Bundle bundle = new Bundle();
-        bundle.putString(finalss.RESULT_ERROR, e);
-        bundle.putStringArrayList(finalss.RESULT_DATA_KEY,addressMessage);
+        bundle.putString(Constants.RESULT_ERROR, e);
+        bundle.putStringArrayList(Constants.RESULT_DATA_KEY,addressMessage);
         rs.send(resultCode,bundle);
     }
 }

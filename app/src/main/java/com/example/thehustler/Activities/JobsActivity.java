@@ -34,8 +34,10 @@ public class JobsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         //get account user id
         codeWord = intent.getStringExtra("CODEWORD");
-        id = intent.getStringExtra("ID");
-        Name = intent.getStringExtra("NAME");
+        if(intent.getStringExtra("ID") != null && intent.getStringExtra("NAME")!=null) {
+            id = intent.getStringExtra("ID");
+            Name = intent.getStringExtra("NAME");
+        }
 
         switch (codeWord){
             case "open":

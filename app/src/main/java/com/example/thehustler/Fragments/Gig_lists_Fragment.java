@@ -669,7 +669,7 @@ class OpenGigsAdapter extends RecyclerView.Adapter<OpenGigsAdapter.ViewHolder>{
                 if(documentSnapshot.exists()){
                     holder.star.setImageDrawable(context.getDrawable(R.drawable.ic_favestar));
                 }else{
-                    holder.star.setImageDrawable(context.getDrawable(R.drawable.ic_n_Istar));
+                    holder.star.setImageDrawable(context.getDrawable(R.drawable.ic_star_note));
                 }
             }
         });

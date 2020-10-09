@@ -79,6 +79,47 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+                switch (item.getItemId()){
+                    case R.id.edit_nav:
+                        Intent profile = new Intent(MainActivity.this,ProfileActivity2.class);
+                        startActivity(profile);
+                        return true;
+                    case R.id.MyJobs:
+                        //lists
+                        Intent postIntent = new Intent(MainActivity.this, JobsActivity.class);
+                        postIntent.putExtra("CODEWORD","main");
+                        startActivity(postIntent);
+                        return true;
+                    case R.id.List:
+                        Intent intent = new Intent(MainActivity.this, JobsActivity.class);
+                        intent.putExtra("CODEWORD","history");
+                        startActivity(intent);
+                        //history list
+                        return true;
+                    case R.id.reviews:
+                        Intent i = new Intent(MainActivity.this,Reviews.class);
+                        i.putExtra("UserId",CurrentUserId);
+                        startActivity(i);
+                        //reviews
+                        return true;
+                    case R.id.logout:
+                        logOut();
+                        return true;
+                    case R.id.settings:
+                        //real settings not yet
+                        break;
+                    case R.id.share:
+                        //link not yet
+                        break;
+                    case R.id.contact:
+                        //email not yet
+                        break;
+                    case R.id.donate:
+                        //donate not yet
+                        break;
+                    default:
+                        return false;
+                }
                 return true;
             }
         });

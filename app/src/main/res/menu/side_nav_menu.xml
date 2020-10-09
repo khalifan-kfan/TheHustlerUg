@@ -33,6 +33,9 @@
                 android:title="email us"
                 android:icon="@drawable/ic_msg"
                 />
+            <item android:id="@+id/donate"
+                android:title="Donate"
+                />
         </menu>
 
     </item>

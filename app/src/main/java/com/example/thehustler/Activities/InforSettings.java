@@ -4,14 +4,17 @@ package com.example.thehustler.Activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.app.IntentService;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,19 +37,17 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+
 import com.example.thehustler.R;
 import com.example.thehustler.Services.LocationService;
-import com.example.thehustler.Services.finalss;
+import com.example.thehustler.Services.Constants;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -241,30 +242,55 @@ public class InforSettings extends AppCompatActivity {
 
             return;
         }
-        LocationServices.getFusedLocationProviderClient(InforSettings.this)
-                .requestLocationUpdates(lq, new LocationCallback() {
+        final LocationManager manager = (LocationManager) getSystemService( this.LOCATION_SERVICE );
 
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        super.onLocationResult(locationResult);
-                        LocationServices.getFusedLocationProviderClient(InforSettings.this)
-                                .removeLocationUpdates(this);
-                        if(locationResult != null && locationResult.getLocations().size()>0){
-                          int LatestLocationIndex = locationResult.getLocations().size() - 1;
-                          double lat =locationResult.getLocations().get(LatestLocationIndex).getLatitude();
-                          double longi = locationResult.getLocations().get(LatestLocationIndex).getLongitude();
+        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
 
-                          Location location = new Location("providerN/A");
-                          location.setLongitude(longi);
-                          location.setLatitude(lat);
-                          fetchLontudeAddress(location);
-                        }else {
-                            savin.setVisibility(View.INVISIBLE);
+
+            LocationServices.getFusedLocationProviderClient(InforSettings.this)
+                    .requestLocationUpdates(lq, new LocationCallback() {
+                        @Override
+                        public void onLocationResult(LocationResult locationResult) {
+                            super.onLocationResult(locationResult);
+                            LocationServices.getFusedLocationProviderClient(InforSettings.this)
+                                    .removeLocationUpdates(this);
+                            if (locationResult != null && locationResult.getLocations().size() > 0) {
+                                int LatestLocationIndex = locationResult.getLocations().size() - 1;
+                                double lat = locationResult.getLocations().get(LatestLocationIndex).getLatitude();
+                                double longi = locationResult.getLocations().get(LatestLocationIndex).getLongitude();
+
+                                Location location = new Location("providerN/A");
+                                location.setLongitude(longi);
+                                location.setLatitude(lat);
+                                fetchLontudeAddress(location);
+                            } else {
+                                savin.setVisibility(View.INVISIBLE);
+                            }
+
                         }
+                    }, Looper.getMainLooper());
+        }else {
+          //  Toast.makeText(this,"turn loction on",Toast.LENGTH_SHORT).show();
+            buildAlertMessageNoGps();
+        }
 
+    }
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }
-                }, Looper.getMainLooper());
-
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void putthumb(final String dur) {
@@ -421,8 +447,8 @@ public class InforSettings extends AppCompatActivity {
     }
     private void  fetchLontudeAddress(Location location){
         Intent intent = new Intent(this, LocationService.class);
-        intent.putExtra(finalss.RECEIVER,resultReceiver);
-        intent.putExtra(finalss.LOCATION_DATA_EXTRA,location);
+        intent.putExtra(Constants.RECEIVER,resultReceiver);
+        intent.putExtra(Constants.LOCATION_DATA_EXTRA,location);
         startService(intent);
     }
 
@@ -437,7 +463,7 @@ public class InforSettings extends AppCompatActivity {
             super.onReceiveResult(resultCode, resultData);
             if(resultCode == 1){
                ArrayList<String> getlocality = new ArrayList<>();
-               getlocality = resultData.getStringArrayList(finalss.RESULT_DATA_KEY);
+               getlocality = resultData.getStringArrayList(Constants.RESULT_DATA_KEY);
                country.setText(getlocality.get(0));
               city.setText(getlocality.get(1));
               country_code = getlocality.get(2);
@@ -445,7 +471,7 @@ public class InforSettings extends AppCompatActivity {
               country.setEnabled(false);
               city.setEnabled(false);
             }else {
-                Toast.makeText(InforSettings.this,resultData.getString(finalss.RESULT_ERROR),Toast.LENGTH_SHORT).show();
+                Toast.makeText(InforSettings.this,resultData.getString(Constants.RESULT_ERROR),Toast.LENGTH_SHORT).show();
             }
             savin.setVisibility(View.INVISIBLE);
         }
