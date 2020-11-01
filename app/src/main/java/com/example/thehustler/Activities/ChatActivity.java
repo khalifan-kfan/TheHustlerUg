@@ -41,6 +41,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,13 +57,17 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView myRecyclerView;
     Toolbar toolbar;
     TextView mDisplayNameTV;
-    ImageView mProfileIV;
+    ImageView mProfileIV,select_image;
     EditText mMessageET;
     ProgressBar sendingProgress;
+
+    List<Uri> selectedphotos;
+    private List<String > duris;
 
     private String Myname;
     private String MyuserId;
     private String RecieverUId;
+    private static final int Pick = 333;
 
     //menu here
     // for jobs open,blocking,reporting,reviews
@@ -90,6 +96,7 @@ public class ChatActivity extends AppCompatActivity {
         mMessageET = findViewById(R.id.message_et);
         sendingProgress = findViewById(R.id.sending_progress);
         sendingProgress.setVisibility(View.INVISIBLE);
+        select_image = findViewById(R.id.photo);
         Intent i = getIntent();
         RecieverUId = i.getStringExtra("ReceiverUID");
 
@@ -118,20 +125,52 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 hideKeyboard(ChatActivity.this);
                 String text = mMessageET.getText().toString();
-                if(!TextUtils.isEmpty(text)){
+                if(!TextUtils.isEmpty(text) && selectedphotos.isEmpty()){
                     sendingProgress.setVisibility(View.VISIBLE);
-                    Messages message = new Messages(MyuserId, Myname, text);
+                    Messages message = new Messages(MyuserId, Myname, text,null,"text");
                     sendMessage(message);
+
                 }
             }
         });
+        select_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent select = new Intent(ChatActivity.this,PickImages.class);
+                startActivityForResult(select,Pick);
+            }
+        });
+
+    }
 
 
+
+    private void sendImages(final Messages mess){
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == Pick){
+            if(resultCode == RESULT_OK){
+                // get image url list, show an upload progress bar,upload in back ground,
+                // can be canceled,auto show after upload
+                selectedphotos= new ArrayList<>();
+                selectedphotos = data.getParcelableArrayListExtra("PHOTOS");
+                
+
+
+            }else if(resultCode == RESULT_CANCELED){
+                Toast.makeText(ChatActivity.this,"you didnt select " +
+                        "any picture",Toast.LENGTH_LONG).show();
+
+            }
+        }
 
     }
 
     private void sendMessage(final Messages message) {
-
 
         firestore.collection("Users/"+RecieverUId+"/Chats").document(MyuserId).collection("Messages")
                 .add(message)
@@ -271,15 +310,6 @@ public class ChatActivity extends AppCompatActivity {
                         Toast.makeText(ChatActivity.this, "Couldnt recover messages", Toast.LENGTH_SHORT).show();
                     } else {
                         List<Messages> messages = snapshots.toObjects(Messages.class);
-//                            ArrayList<MessageDTO> messages = new ArrayList<>();
-
-//                            for (DocumentChange dc : snapshots.getDocumentChanges()) {
-//                                if (dc.getType() == DocumentChange.Type.ADDED) {
-////
-//                                    messages.add(dc.getDocument().toObject(MessageDTO.class));
-//
-//                                }
-//                            }
 
                         adapter.setData(messages);
                         myRecyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
