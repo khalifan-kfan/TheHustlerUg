@@ -57,13 +57,18 @@ public class ImageAdp  extends RecyclerView.Adapter<ImageAdp.Slider> {
 
         }
         void setImage(String s, String s1){
-
             RequestOptions placRO = new RequestOptions();
             placRO.placeholder(R.drawable.ic_place);
-             Glide.with(context).applyDefaultRequestOptions(placRO)
-                     .load(s).thumbnail(Glide.with(context).load(s1))
-                   .into(postIm);
-            //postIm.setImageResource(item.getImage());
+           if(s1 != null) {
+               Glide.with(context).applyDefaultRequestOptions(placRO)
+                       .load(s).thumbnail(Glide.with(context).load(s1))
+                       .into(postIm);
+               //postIm.setImageResource(item.getImage());
+           } else {
+               Glide.with(context).applyDefaultRequestOptions(placRO)
+                       .load(s)
+                       .into(postIm);
+           }
         }
     }
 

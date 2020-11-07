@@ -13,4 +13,12 @@
         android:id="@+id/grid_image"
         android:layout_gravity="center"
         android:src="@drawable/rounded_rectangle"/>
-    </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/progbar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:background="@color/colorPrimary" />
+</FrameLayout>

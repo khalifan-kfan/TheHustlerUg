@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -25,6 +26,7 @@ import  com.example.thehustler.Adapter.MessageRecycler;
 import  com.example.thehustler.Model.Messages;
 import  com.example.thehustler.Model.Users;
 import com.example.thehustler.R;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,9 +42,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnPausedListener;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,12 +67,15 @@ public class ChatActivity extends AppCompatActivity {
     EditText mMessageET;
     ProgressBar sendingProgress;
 
+
     List<Uri> selectedphotos;
     private List<String > duris;
 
     private String Myname;
     private String MyuserId;
-    private String RecieverUId;
+    private String RecieverUId,cap;
+
+    private StorageReference storageReference;
     private static final int Pick = 333;
 
     //menu here
@@ -81,6 +90,7 @@ public class ChatActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.toolbarchat);
         setSupportActionBar(toolbar);
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         /*
         toolbar.setOnClickListener(new View.OnClickListener() {
@@ -143,9 +153,13 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-
-
     private void sendImages(final Messages mess){
+        mMessageET.setText(cap);
+        ArrayList<Messages> messages = new ArrayList<>();
+        messages.add(mess);
+        adapter.setData(messages);
+        myRecyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+        //start the upload
 
     }
 
@@ -158,9 +172,13 @@ public class ChatActivity extends AppCompatActivity {
                 // can be canceled,auto show after upload
                 selectedphotos= new ArrayList<>();
                 selectedphotos = data.getParcelableArrayListExtra("PHOTOS");
-                
-
-
+                ArrayList<String> stringuri = new ArrayList<>();
+                cap = data.getStringExtra("CAPTION");
+                for(Uri k:selectedphotos){
+                    stringuri.add(k.toString());
+                }
+                Messages message = new Messages(MyuserId, Myname, cap,stringuri,"image");
+                sendImages(message);
             }else if(resultCode == RESULT_CANCELED){
                 Toast.makeText(ChatActivity.this,"you didnt select " +
                         "any picture",Toast.LENGTH_LONG).show();
@@ -170,7 +188,7 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    private void sendMessage(final Messages message) {
+    public void sendMessage(final Messages message) {
 
         firestore.collection("Users/"+RecieverUId+"/Chats").document(MyuserId).collection("Messages")
                 .add(message)
@@ -310,7 +328,6 @@ public class ChatActivity extends AppCompatActivity {
                         Toast.makeText(ChatActivity.this, "Couldnt recover messages", Toast.LENGTH_SHORT).show();
                     } else {
                         List<Messages> messages = snapshots.toObjects(Messages.class);
-
                         adapter.setData(messages);
                         myRecyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
                     }
@@ -321,8 +338,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
 
     public static void hideKeyboard(Activity activity) {
@@ -339,3 +354,4 @@ public class ChatActivity extends AppCompatActivity {
 
 
     }
+

@@ -618,8 +618,8 @@ public class posting extends AppCompatActivity {
             });
         }
     }
-    public void setBlogimage(List<String> downloadUri, List<String> thumb_uri){
 
+    public void setBlogimage(List<String> downloadUri, List<String> thumb_uri){
 
         phots.setAdapter( new ImageAdp(downloadUri,thumb_uri,phots));
 
