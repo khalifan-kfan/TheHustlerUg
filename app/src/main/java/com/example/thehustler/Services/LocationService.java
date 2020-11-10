@@ -28,7 +28,7 @@ public class LocationService  extends IntentService {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
 

@@ -785,6 +785,7 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             repostCounter = v.findViewById(R.id.repostCount);
             description =v.findViewById(R.id.postdescribe);
             //post carried
+            photos1 = v.findViewById(R.id.pageview_repost);
             date1 = v.findViewById(R.id.repost_date);
             owner1name = v.findViewById(R.id.repost_name);
             cardowner1 = v.findViewById(R.id.repostCard);
@@ -820,7 +821,7 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 ));
                 phots.setPageTransformer(cpt);
             }else if(i==2){
-                photos1.setAdapter( new ImageAdp(image_uri,thumb_uri,phots));
+                photos1.setAdapter( new ImageAdp(image_uri,thumb_uri,photos1));
                 photos1.setClipToPadding(false);
                 photos1.setClipChildren(false);
                 photos1.setOffscreenPageLimit(3);
@@ -892,7 +893,7 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if(i>0)
                 repostCounter.setText(Integer.toString(i));
             else
-                repostCounter.setText(0);
+                repostCounter.setText("0");
 
         }
 

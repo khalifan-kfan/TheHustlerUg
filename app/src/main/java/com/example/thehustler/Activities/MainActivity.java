@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        super.onStart();
+        super.onStart();/*
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null){
             Tologin();
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-        }
+        }*/
 
 
     }

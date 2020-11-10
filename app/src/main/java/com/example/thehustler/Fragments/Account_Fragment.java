@@ -141,7 +141,7 @@ public class Account_Fragment extends Fragment {
                             int count = value.size();
                             gigCount.setText(Integer.toString(count));
                         }else{
-                            gigCount.setText(0);
+                            gigCount.setText("0");
                         }
                     }
                 });

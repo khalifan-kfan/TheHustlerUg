@@ -243,7 +243,7 @@ public class InforSettings extends AppCompatActivity {
 
         final LocationManager manager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
 
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)&& manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
 
             if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

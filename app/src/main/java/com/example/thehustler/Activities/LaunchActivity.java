@@ -44,11 +44,13 @@ public class LaunchActivity extends AppCompatActivity {
                     firestore.collection("Users").document(CurrentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
                             if(task.isSuccessful()){
                                 if(!task.getResult().exists()) {
-
                                     Intent inforIntent = new Intent(LaunchActivity.this, InforSettings.class);
+                                    startActivity(inforIntent);
+                                    finish();
+                                }else{
+                                    Intent inforIntent = new Intent(LaunchActivity.this, MainActivity.class);
                                     startActivity(inforIntent);
                                     finish();
                                 }
