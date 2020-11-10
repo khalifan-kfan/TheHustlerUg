@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -131,10 +132,11 @@ public class InforSettings extends AppCompatActivity {
         autoLocate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (ContextCompat.checkSelfPermission(
-                        getApplicationContext(), permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED  ) {
-                    ActivityCompat.requestPermissions(InforSettings.this, new String[]{permission.ACCESS_FINE_LOCATION}, CODE_PEMISSION_LOCATION);
+                        getApplicationContext(), permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                 && ContextCompat.checkSelfPermission(
+                        getApplicationContext(), permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(InforSettings.this, new String[]{permission.ACCESS_FINE_LOCATION,permission.ACCESS_COARSE_LOCATION}, CODE_PEMISSION_LOCATION);
                 } else {
                     getlocation();
                 }
@@ -204,7 +206,7 @@ public class InforSettings extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (ContextCompat.checkSelfPermission(InforSettings.this, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ) {
+                    if (ContextCompat.checkSelfPermission(InforSettings.this, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(InforSettings.this, new String[]{permission.READ_EXTERNAL_STORAGE}, 1);
 
                     } else {
@@ -231,6 +233,7 @@ public class InforSettings extends AppCompatActivity {
         }
     }
 
+
     private void getlocation() {
         savin.setVisibility(View.VISIBLE);
         LocationRequest lq = new LocationRequest();
@@ -238,15 +241,14 @@ public class InforSettings extends AppCompatActivity {
         lq.setFastestInterval(1000);
         lq.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+        final LocationManager manager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
 
-            return;
-        }
-        final LocationManager manager = (LocationManager) getSystemService( this.LOCATION_SERVICE );
-
-        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
 
+            if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
             LocationServices.getFusedLocationProviderClient(InforSettings.this)
                     .requestLocationUpdates(lq, new LocationCallback() {
                         @Override
@@ -405,7 +407,7 @@ public class InforSettings extends AppCompatActivity {
             return false;
         }else if(TextUtils.isEmpty(Number.getText().toString())||(Number.getText().toString().length())<9
         || country_code ==null){
-            Number.setHintTextColor(Integer.parseInt("#FF634f"));
+            Number.setTextColor(Integer.parseInt("#FF634f"));
             Toast.makeText(InforSettings.this, "enter a full phone number,and turn on location to get country code",
                     Toast.LENGTH_SHORT).show();
             return false;
