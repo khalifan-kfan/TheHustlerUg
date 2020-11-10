@@ -265,55 +265,59 @@ public class Gig_lists_Fragment extends Fragment {
         first.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+              if(error==null) {
+                  if (!value.isEmpty()) {
+                      if (firstload) {
+                          lastVisible = value.getDocuments().get(value.size() - 1);
+                          gigs_lists.clear();
+                          usersListl.clear();
+                      }
+                      for (DocumentChange doc : value.getDocumentChanges()) {
+                          if (doc.getType() == DocumentChange.Type.ADDED) {
+                              String gigID = doc.getDocument().getId();
 
-                if (!value.isEmpty()) {
-                    if (firstload) {
-                        lastVisible = value.getDocuments().get(value.size() - 1);
-                        gigs_lists.clear();
-                        usersListl.clear();
-                    }
-                    for (DocumentChange doc : value.getDocumentChanges()) {
-                        if (doc.getType() == DocumentChange.Type.ADDED) {
-                            String gigID = doc.getDocument().getId();
+                              final OpenGigs openGigs = doc.getDocument().toObject(OpenGigs.class).withID(gigID);
+                              String from_id = doc.getDocument().getString("from_id");
+                              String to_id = doc.getDocument().getString("to_id");
+                              String sendId;
+                              if (from_id.equals(myId)) {
+                                  sendId = to_id;
+                              } else {
+                                  sendId = from_id;
+                              }
+                              firestore.collection("Users").document(sendId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                  @Override
+                                  public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                      if (task.isSuccessful()) {
+                                          Users users = task.getResult().toObject(Users.class);
 
-                            final OpenGigs openGigs = doc.getDocument().toObject(OpenGigs.class).withID(gigID);
-                            String from_id = doc.getDocument().getString("from_id");
-                            String to_id =doc.getDocument().getString("to_id");
-                            String sendId;
-                            if(from_id.equals(myId)){
-                                sendId = to_id;
-                            }else {
-                                sendId = from_id;
-                            }
-                            firestore.collection("Users").document(sendId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        Users users = task.getResult().toObject(Users.class);
+                                          if (firstload) {
+                                              usersListl.add(users);
+                                              gigs_lists.add(openGigs);
 
-                                        if (firstload) {
-                                            usersListl.add(users);
-                                            gigs_lists.add(openGigs);
-
-                                        } else {
-                                            usersListl.add(0, users);
-                                            gigs_lists.add(0, openGigs);
-                                        }
-                                        adaptorR_Q.notifyDataSetChanged();
-                                    }
-                                }
-                            });
-                        }
-                    }
-                    firstload = false;
-                }else {
-                    Toast.makeText(getContext(), "No Activity", Toast.LENGTH_LONG).show();
-                }
+                                          } else {
+                                              usersListl.add(0, users);
+                                              gigs_lists.add(0, openGigs);
+                                          }
+                                          adaptorR_Q.notifyDataSetChanged();
+                                      }
+                                  }
+                              });
+                          }
+                      }
+                      firstload = false;
+                  } else {
+                      Toast.makeText(getContext(), "No Activity", Toast.LENGTH_LONG).show();
+                  }
+              }else {
+                  try {
+                      throw error;
+                  } catch (FirebaseFirestoreException e) {
+                      e.printStackTrace();
+                  }
+              }
             }
-
         });
-
-
     }
     private void getRequests(ViewGroup container) {
         final String currentStatus ="pending";
@@ -344,50 +348,58 @@ public class Gig_lists_Fragment extends Fragment {
       first.addSnapshotListener(new EventListener<QuerySnapshot>() {
           @Override
           public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+            if(error == null) {
+                if (!value.isEmpty()) {
+                    if (firstload) {
+                        lastVisible = value.getDocuments().get(value.size() - 1);
+                        gigs_lists.clear();
+                        usersListl.clear();
+                    }
+                    for (DocumentChange doc : value.getDocumentChanges()) {
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                            String gigID = doc.getDocument().getId();
 
-              if (!value.isEmpty()) {
-                  if (firstload) {
-                      lastVisible = value.getDocuments().get(value.size() - 1);
-                      gigs_lists.clear();
-                      usersListl.clear();
-                  }
-                  for (DocumentChange doc : value.getDocumentChanges()) {
-                      if (doc.getType() == DocumentChange.Type.ADDED) {
-                          String gigID = doc.getDocument().getId();
+                            final OpenGigs openGigs = doc.getDocument().toObject(OpenGigs.class).withID(gigID);
+                            String from_id = doc.getDocument().getString("from_id");
+                            String to_id = doc.getDocument().getString("to_id");
+                            String sendId;
+                            if (from_id.equals(myId)) {
+                                sendId = to_id;
+                            } else {
+                                sendId = from_id;
+                            }
+                            firestore.collection("Users").document(sendId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        Users users = task.getResult().toObject(Users.class);
 
-                          final OpenGigs openGigs = doc.getDocument().toObject(OpenGigs.class).withID(gigID);
-                          String from_id = doc.getDocument().getString("from_id");
-                          String to_id =doc.getDocument().getString("to_id");
-                          String sendId;
-                          if(from_id.equals(myId)){
-                              sendId = to_id;
-                          }else {
-                              sendId = from_id;
-                          }
-                          firestore.collection("Users").document(sendId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                              @Override
-                              public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                  if (task.isSuccessful()) {
-                                      Users users = task.getResult().toObject(Users.class);
+                                        if (firstload) {
+                                            usersListl.add(users);
+                                            gigs_lists.add(openGigs);
 
-                                      if (firstload) {
-                                          usersListl.add(users);
-                                          gigs_lists.add(openGigs);
+                                        } else {
+                                            usersListl.add(0, users);
+                                            gigs_lists.add(0, openGigs);
+                                        }
+                                        adaptorR_Q.notifyDataSetChanged();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    firstload = false;
+                } else {
+                    Toast.makeText(getContext(), "no Requests found", Toast.LENGTH_LONG).show();
+                }
+            }else {
+                try {
+                    throw error;
+                } catch (FirebaseFirestoreException e) {
+                    e.printStackTrace();
+                }
 
-                                      } else {
-                                          usersListl.add(0, users);
-                                          gigs_lists.add(0, openGigs);
-                                      }
-                                      adaptorR_Q.notifyDataSetChanged();
-                                  }
-                              }
-                          });
-                      }
-                  }
-                  firstload = false;
-              }else {
-                  Toast.makeText(getContext(), "no Requests found", Toast.LENGTH_LONG).show();
-              }
+            }
           }
 
       });

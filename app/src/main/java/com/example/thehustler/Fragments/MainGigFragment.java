@@ -29,16 +29,11 @@ public class MainGigFragment extends Fragment {
         // Required empty public constructor
     }
 
-
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,6 +86,7 @@ public class MainGigFragment extends Fragment {
                         transaction2.addToBackStack(null);
                         transaction2.commit();
                         //Toast.makeText(getContext(),"on going ",Toast.LENGTH_LONG).show();
+
                         break;
                     case 2:
                         Fragment newFrag3 =  Gig_lists_Fragment.newInstance("pending");

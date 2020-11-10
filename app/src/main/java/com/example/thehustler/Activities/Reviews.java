@@ -50,7 +50,6 @@ public class Reviews extends AppCompatActivity {
 
     private EditText review;
     private FloatingActionButton send;
-
     private TextView reviewie;
     private CircleImageView reviewie_face;
     private ProgressBar sendin;
@@ -76,7 +75,6 @@ public class Reviews extends AppCompatActivity {
         send = findViewById(R.id.send_btn);//send msg
         RecyclerView posted_reviews = findViewById(R.id.review_rv);//recycler view
         sendin.setVisibility(View.INVISIBLE);
-
         et= findViewById(R.id.et_cardView);
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();

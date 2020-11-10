@@ -98,7 +98,8 @@ public class JobsActivity extends AppCompatActivity {
         MainGigFragment mainGigFragment = new MainGigFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.Gigs_container, mainGigFragment);
-        fragmentTransaction.commitNow();
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     @Override
