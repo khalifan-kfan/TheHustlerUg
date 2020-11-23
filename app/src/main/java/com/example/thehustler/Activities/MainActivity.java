@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
-
+        CurrentUserId = auth.getCurrentUser().getUid();
         toolbar = findViewById(R.id.toolbar___);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Hustle");
