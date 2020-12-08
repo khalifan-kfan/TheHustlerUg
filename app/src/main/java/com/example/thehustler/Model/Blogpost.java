@@ -9,13 +9,13 @@ import java.util.List;
 
 public class Blogpost extends postId {
     // for
-    public  String re_post_desc;
+    private   String re_post_desc;
     List<String>re_image_url,re_post_image_thumb;
-    public Date re_timeStamp;
+    private Date re_timeStamp;
 
-    public String user_id,description,re_postId;
-    public Date timeStamp;
-    List<String>image_url,post_image_thumb;
+    private String user_id,description,re_postId;
+    private Date timeStamp;
+    private List<String>image_url,post_image_thumb;
 
     public List<String> getImage_url() {
         return image_url;

@@ -24,18 +24,20 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     private String postID;
      BottomSheetListner listner ;
     private static final String  POSITION ="postion";
-    private int position;
+    private int position,adp;
     private static final String  POSTID ="postId";
+    private static final String  ADAPTOR ="adaptor_number";
 
 
     public BottomSheetDialog(){
     }
 
-    public static BottomSheetDialog newInstance(String postId,int position) {
+    public static BottomSheetDialog newInstance(String postId,int position,int adaptor) {
         Bundle args = new Bundle();
         BottomSheetDialog fragment = new BottomSheetDialog();
         args.putString(POSTID,postId);
        args.putInt(POSITION,position);
+       args.putInt(ADAPTOR,adaptor);
         fragment.setArguments(args);
         return fragment;
     }
@@ -46,6 +48,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         if (getArguments() != null) {
            postID  = getArguments().getString(POSTID);
            position = getArguments().getInt(POSITION);
+           adp =getArguments().getInt(ADAPTOR);
         }
     }
 
@@ -59,14 +62,14 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listner.onButtonClicked(1,postID,position);
+                listner.onButtonClicked(1,postID,position,adp);
                 dismiss();
             }
         });
         just.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listner.onButtonClicked(2,postID,position);
+                listner.onButtonClicked(2,postID,position,adp);
                 dismiss();
             }
         });
@@ -74,7 +77,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     public interface  BottomSheetListner{
-        void onButtonClicked(int k,String  postID,int postion);
+        void onButtonClicked(int k,String  postID,int postion,int adaptor);
     }
 
     @Override

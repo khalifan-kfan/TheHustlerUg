@@ -19,6 +19,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.thehustler.Adapter.AnotherUserRecycler;
+import com.example.thehustler.Adapter.MypostsAdapter;
 import com.example.thehustler.Adapter.TrigRecyclerAdapter;
 import  com.example.thehustler.Fragments.Account_Fragment;
 import com.example.thehustler.Fragments.BottomSheetDialog;
@@ -310,7 +312,13 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
     }
 
     @Override
-    public void onButtonClicked(int k, String postID, int postion) {
-        TrigRecyclerAdapter.buttonclicked(k,postID,postion);
+    public void onButtonClicked(int k, String postID, int postion, int adaptor) {
+        if(adaptor==1) {
+            TrigRecyclerAdapter.buttonclicked(k, postID, postion);
+        }else if(adaptor==2){
+            MypostsAdapter.ButtonClicked(k,postID,postion);
+        }else if(adaptor==3){
+            AnotherUserRecycler.ButtonClicked(k,postID,postion);
+        }
     }
 }

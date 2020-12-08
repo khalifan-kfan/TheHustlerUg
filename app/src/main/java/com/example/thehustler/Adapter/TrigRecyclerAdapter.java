@@ -336,7 +336,7 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                    public void onClick(View v) {
                       // bottomSheetDialog = new BottomSheetDialog(context);
 
-                       BottomSheetDialog bottomSheetDialog = BottomSheetDialog.newInstance(post_Id, position);
+                       BottomSheetDialog bottomSheetDialog = BottomSheetDialog.newInstance(post_Id, position,1);
                       bottomSheetDialog.show(((MainActivity) context).getSupportFragmentManager(), "bottom Sheet");
                    }
                });
@@ -598,7 +598,7 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                holder2.repost.setOnClickListener(new View.OnClickListener() {
                    @Override
                    public void onClick(View v) {
-                       BottomSheetDialog bottomSheetDialog = BottomSheetDialog.newInstance(post_Id, position);
+                       BottomSheetDialog bottomSheetDialog = BottomSheetDialog.newInstance(post_Id, position,1);
                        bottomSheetDialog.show(((MainActivity) context).getSupportFragmentManager(), "bottom Sheet");
                    }
                });
@@ -1020,7 +1020,7 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if(count>0)
                 commentcounter.setText(Integer.toString(count));
             else
-                commentcounter.setText(0);
+                commentcounter.setText("0");
 
         }
 

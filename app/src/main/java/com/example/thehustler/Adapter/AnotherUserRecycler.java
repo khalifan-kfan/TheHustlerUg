@@ -62,13 +62,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.text.format.DateFormat.format;
 
-public class AnotherUserRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements  BottomSheetDialog.BottomSheetListner {
+public class AnotherUserRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public List<Blogpost> userBlogList;
-    private FirebaseAuth auth;
-    private FirebaseFirestore firestore;
+    public static List<Blogpost> userBlogList;
+    private static FirebaseAuth auth;
+    private static FirebaseFirestore firestore;
 
-    public Context context;
+    public static Context context;
     static int original = 1;
     static int re_post = 2;
 
@@ -269,7 +269,7 @@ public class AnotherUserRecycler extends RecyclerView.Adapter<RecyclerView.ViewH
                 holder1.repost.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        BottomSheetDialog bottomSheetDialog = BottomSheetDialog.newInstance(post_Id, position);
+                        BottomSheetDialog bottomSheetDialog = BottomSheetDialog.newInstance(post_Id, position,3);
                         bottomSheetDialog.show(((MainActivity) context).getSupportFragmentManager(), "bottom Sheet");
                     }
                 });
@@ -567,7 +567,7 @@ public class AnotherUserRecycler extends RecyclerView.Adapter<RecyclerView.ViewH
                 holder2.repost.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        BottomSheetDialog bottomSheetDialog = BottomSheetDialog.newInstance(post_Id, position);
+                        BottomSheetDialog bottomSheetDialog = BottomSheetDialog.newInstance(post_Id, position,3);
                         bottomSheetDialog.show(((MainActivity) context).getSupportFragmentManager(), "bottom Sheet");
                     }
                 });
@@ -604,8 +604,8 @@ public class AnotherUserRecycler extends RecyclerView.Adapter<RecyclerView.ViewH
         return userBlogList.size();
     }
 
-    @Override
-    public void onButtonClicked(int k, final String PostID, final int position) {
+    //@Override
+    public static void ButtonClicked(int k, final String PostID, final int position) {
         final String currentId = auth.getCurrentUser().getUid();
         //do somthing according to text
         if(k==1){//edit

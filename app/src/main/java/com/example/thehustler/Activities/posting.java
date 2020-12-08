@@ -151,7 +151,8 @@ public class posting extends AppCompatActivity {
                         blogpost = task.getResult().toObject(Blogpost.class).withID( task.getResult().getId());
                        description.setText(blogpost.getDescription());
                         SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss a, dd-MM-yy");
-                        String datesent = blogpost.getTimeStamp().toString();
+
+                        Date datesent = blogpost.getTimeStamp();
                         if(datesent != null) {
                             postdate.setText(format.format(datesent));
                         }else{
