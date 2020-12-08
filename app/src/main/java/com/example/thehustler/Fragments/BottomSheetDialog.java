@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.thehustler.Activities.MainActivity;
 import com.example.thehustler.Model.Users;
 import com.example.thehustler.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -21,15 +22,13 @@ import retrofit2.http.POST;
 
 public class BottomSheetDialog extends BottomSheetDialogFragment {
     private String postID;
-    private BottomSheetListner listner;
+     BottomSheetListner listner ;
     private static final String  POSITION ="postion";
     private int position;
     private static final String  POSTID ="postId";
 
 
     public BottomSheetDialog(){
-
-
     }
 
     public static BottomSheetDialog newInstance(String postId,int position) {
@@ -56,6 +55,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         View v =inflater.inflate(R.layout.bottom_sheet,container,false);
         TextView edit = v.findViewById(R.id.edit);
         TextView just = v.findViewById(R.id.easy);
+
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +83,8 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         try {
             listner = (BottomSheetListner) context;
         }catch (ClassCastException e){
-            throw new ClassCastException(context.toString()+"implement bottom listener");
+            throw new ClassCastException(context.toString()
+                    +"implement bottom listener");
         }
     }
 }

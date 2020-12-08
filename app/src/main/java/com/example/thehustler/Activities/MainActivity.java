@@ -19,7 +19,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.thehustler.Adapter.TrigRecyclerAdapter;
 import  com.example.thehustler.Fragments.Account_Fragment;
+import com.example.thehustler.Fragments.BottomSheetDialog;
 import  com.example.thehustler.Fragments.ChatsFragment;
 import  com.example.thehustler.Fragments.Home_Fragment;
 import  com.example.thehustler.Fragments.Notification_Fragment;
@@ -37,7 +39,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BottomSheetDialog.BottomSheetListner {
 
 
     private Toolbar toolbar;
@@ -305,5 +307,10 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentTransaction.commitNow();
 
+    }
+
+    @Override
+    public void onButtonClicked(int k, String postID, int postion) {
+        TrigRecyclerAdapter.buttonclicked(k,postID,postion);
     }
 }

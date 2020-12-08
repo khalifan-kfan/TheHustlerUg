@@ -24,7 +24,7 @@
         android:textSize="22sp"
         android:textColor="@color/mywhite"
         android:padding="4dp" />
-    <view
+    <View
         android:layout_width="300dp"
         android:layout_height="1dp"
         android:background="@color/mywhite"
@@ -38,4 +38,5 @@
         android:padding="4dp"
         android:textColor="@color/mywhite"
         />
+
 </LinearLayout>
