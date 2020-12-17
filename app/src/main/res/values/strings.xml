@@ -79,6 +79,7 @@
     <string name="re_post">RE-POST</string>
     <string name="just_re_post">Just re-post</string>
     <string name="with_edit">With Edit</string>
+    <string name="foget">Forgot my password?</string>
 
     <string-array name="main_gig_page">
         <item>Open Gigs</item>

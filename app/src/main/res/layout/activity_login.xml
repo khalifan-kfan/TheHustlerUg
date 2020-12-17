@@ -74,16 +74,16 @@
       android:layout_height="wrap_content"
       android:layout_marginStart="24dp"
       android:layout_marginLeft="24dp"
-      android:layout_marginTop="40dp"
+      android:layout_marginTop="20dp"
       android:layout_marginEnd="24dp"
       android:layout_marginRight="24dp"
       android:background="@android:color/holo_blue_bright"
-      android:backgroundTint="@color/myBlack"
       android:text="@string/button_login"
+      android:textColor="@color/mywhite"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.498"
+      app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/logPassword" />
+      app:layout_constraintTop_toBottomOf="@+id/forgotPassword" />
 
   <Button
       android:id="@+id/button2Create"
@@ -91,12 +91,13 @@
       android:layout_height="wrap_content"
       android:layout_marginStart="24dp"
       android:layout_marginLeft="24dp"
-      android:layout_marginTop="40dp"
+      android:layout_marginTop="20dp"
       android:layout_marginEnd="24dp"
       android:layout_marginRight="24dp"
       android:background="#2196F3"
       android:backgroundTint="@color/myBlack"
       android:text="@string/create_account"
+      android:textColor="@color/mywhite"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toStartOf="parent"
@@ -114,5 +115,17 @@
       app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/button2Create" />
+
+  <TextView
+      android:id="@+id/forgotPassword"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="128dp"
+      android:layout_marginLeft="128dp"
+      android:layout_marginTop="16dp"
+      android:text="@string/foget"
+      android:textColor="#F40909"
+      app:layout_constraintStart_toStartOf="@+id/logPassword"
+      app:layout_constraintTop_toBottomOf="@+id/logPassword" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

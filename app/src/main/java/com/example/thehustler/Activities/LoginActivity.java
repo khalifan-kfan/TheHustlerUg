@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordField;
     private Button mLoginBtn;
     private Button mCreateBtn;
+    private TextView forgetting;
 
     private ProgressBar mProgressBar;
 
@@ -63,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordField = findViewById(R.id.logPassword);
         mLoginBtn =  findViewById(R.id.buttonLogin);
         mCreateBtn = findViewById(R.id.button2Create);
+        forgetting = findViewById(R.id.forgotPassword);
 
         mProgressBar =  findViewById(R.id.progressBar_login);
 
@@ -104,6 +106,40 @@ public class LoginActivity extends AppCompatActivity {
                         });
 
                 }
+
+            }
+        });
+        forgetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText reset = new EditText(v.getContext());
+                final AlertDialog.Builder passwordReset = new AlertDialog.Builder(v.getContext());
+                passwordReset.setTitle("Reset Email");
+                passwordReset.setMessage("Enter the email you signed up with");
+                passwordReset.setView(reset);
+                passwordReset.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String emailadd = reset .getText().toString().trim();
+                        mAuth.sendPasswordResetEmail(emailadd).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                              if(task.isSuccessful()){
+                                  Toast.makeText(LoginActivity.this,"check email to reset",Toast.LENGTH_SHORT).show();
+                              }else{
+                                Toast.makeText(LoginActivity.this,"Reset email has not been sent,"+task.getException().getMessage(),Toast.LENGTH_LONG ).show();
+                              }
+                            }
+                        });
+                    }
+                });
+                passwordReset.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                passwordReset.create().show();
 
             }
         });
