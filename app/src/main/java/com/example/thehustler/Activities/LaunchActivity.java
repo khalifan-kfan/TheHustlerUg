@@ -37,6 +37,7 @@ public class LaunchActivity extends AppCompatActivity {
             @Override
             public void run() {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
                 if(user == null){
                     Tologin();
                 }else {

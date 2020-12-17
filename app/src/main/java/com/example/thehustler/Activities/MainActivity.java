@@ -218,19 +218,19 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
 
     @Override
     protected void onStart() {
-        super.onStart();/*
+        super.onStart();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null){
             Tologin();
         }else {
             CurrentUserId = auth.getCurrentUser().getUid();
-            firestore.collection("Users").document(CurrentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            firestore.collection("Users").document(CurrentUserId).get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
                     if(task.isSuccessful()){
                         if(!task.getResult().exists()) {
-
                             Intent inforIntent = new Intent(MainActivity.this, InforSettings.class);
                             startActivity(inforIntent);
                             finish();
@@ -241,9 +241,7 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
                     }
                 }
             });
-        }*/
-
-
+        }
     }
     private  void replaceFragment(Fragment newFragment,Fragment currentFragment){
 
