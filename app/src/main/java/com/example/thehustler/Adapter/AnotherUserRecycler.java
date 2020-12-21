@@ -6,12 +6,10 @@ import android.os.Build;
 import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,8 +36,6 @@ import com.example.thehustler.NotifyHandler.NotSender;
 import com.example.thehustler.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
@@ -384,8 +380,8 @@ public class AnotherUserRecycler extends RecyclerView.Adapter<RecyclerView.ViewH
                     holder2.ownerimage.setEnabled(false);
                 }
                 try {
-                    if (userBlogList.get(position).getRe_timeStamp()!= null) {
-                        long milliseconds = userBlogList.get(position).getRe_timeStamp().getTime();
+                    if (userBlogList.get(position).getTimeStamp()!= null) {
+                        long milliseconds = userBlogList.get(position).getTimeStamp().getTime();
                         String dateString = format("d/MM/yyyy", new Date(milliseconds)).toString();
                         holder2.setTime(dateString);
                     } else holder2.setTime("0/0/0");
@@ -396,8 +392,8 @@ public class AnotherUserRecycler extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss a, dd-MM-yy");
 
-                if(userBlogList.get(position).getTimeStamp() != null) {
-                    holder2.date1.setText(format.format(userBlogList.get(position).getTimeStamp()));
+                if(userBlogList.get(position).getRe_timeStamp() != null) {
+                    holder2.date1.setText(format.format(userBlogList.get(position).getRe_timeStamp()));
                 }else{
                     holder2.date1.setText(format.format(new Date()));
                 }
@@ -634,19 +630,19 @@ public class AnotherUserRecycler extends RecyclerView.Adapter<RecyclerView.ViewH
                                     postMapn.put("re_post_desc", null);
                                     postMapn.put("re_image_url", null);
                                     postMapn.put("re_post_image_thumb", null);
-                                    postMapn.put("re_timeStamp", FieldValue.serverTimestamp());
+                                    postMapn.put("re_timeStamp", userBlogList.get(position).getTimeStamp());
                                     if(userBlogList.get(position).getRe_postId()!=null) {
                                         postMapn.put("image_url", userBlogList.get(position).getRe_image_url());
                                         postMapn.put("post_image_thumb", userBlogList.get(position).getRe_post_image_thumb());
                                         postMapn.put("description", userBlogList.get(position).getRe_post_desc());
                                         postMapn.put("user_id", userBlogList.get(position).getRe_postId());
-                                        postMapn.put("timeStamp",userBlogList.get(position).getRe_timeStamp());
+                                        postMapn.put("timeStamp",FieldValue.serverTimestamp());
                                     }else {
                                         postMapn.put("image_url", userBlogList.get(position).getImage_url());
                                         postMapn.put("post_image_thumb", userBlogList.get(position).getPost_image_thumb());
                                         postMapn.put("description", userBlogList.get(position).getDescription());
                                         postMapn.put("user_id", posterId);
-                                        postMapn.put("timeStamp", userBlogList.get(position).getTimeStamp());
+                                        postMapn.put("timeStamp",  FieldValue.serverTimestamp());
                                     }
                                     //new time too
                                     firestore.collection("Posts").add(postMapn).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -815,7 +811,7 @@ public class AnotherUserRecycler extends RecyclerView.Adapter<RecyclerView.ViewH
             if(i>0)
                 repostCounter.setText(Integer.toString(i));
             else
-                repostCounter.setText(0);
+                repostCounter.setText("0");
         }
     }
     public class ViewHolder2 extends RecyclerView.ViewHolder{

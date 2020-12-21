@@ -219,7 +219,7 @@ public class AnotherUserAccount extends AppCompatActivity {
                     int count = value.size();
                     gigCount.setText(Integer.toString(count));
                 }else{
-                    gigCount.setText(0);
+                    gigCount.setText("0");
                 }
             }
         });
@@ -232,7 +232,7 @@ public class AnotherUserAccount extends AppCompatActivity {
                   ApprovalCounter.setText(Integer.toString(count));
 
                 }else{
-                  ApprovalCounter.setText(0);
+                  ApprovalCounter.setText("0");
                 }
 
             }

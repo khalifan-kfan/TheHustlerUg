@@ -1,17 +1,20 @@
 package com.example.thehustler.Model;
 
 import com.example.thehustler.classes.UserId;
+import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
 
 public class Comments extends UserId {
     private String answer, user_id;
+
+    @ServerTimestamp
     private Date timestamp;
 
-    public Comments(String answer, String user_id, Date timestamp) {
+    public Comments(String answer, String user_id) {
         this.answer = answer;
         this.user_id = user_id;
-        this.timestamp = timestamp;
+
     }
 
     public Comments() {

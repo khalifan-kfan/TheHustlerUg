@@ -2,11 +2,9 @@ package com.example.thehustler.Model;
 
 
 import com.example.thehustler.classes.UserId;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.ServerTimestamp;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
 
 public class OpenGigs extends UserId {
 
@@ -20,7 +18,7 @@ public class OpenGigs extends UserId {
 
 
     @ServerTimestamp
-    private  String  gig_date;
+    private Date gig_date;
 
     private String gig_image;
 
@@ -96,11 +94,12 @@ public class OpenGigs extends UserId {
     public void setStart_time(String start_time) {
         this.start_time = start_time;
     }
-    public String getGig_date() {
+
+    public Date getGig_date() {
         return gig_date;
     }
 
-    public void setGig_date(String gig_date) {
+    public void setGig_date(Date gig_date) {
         this.gig_date = gig_date;
     }
 

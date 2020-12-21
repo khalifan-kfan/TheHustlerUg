@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.thehustler.NotifyHandler.Token;
 import com.example.thehustler.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 
@@ -29,6 +30,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -153,6 +155,21 @@ public class LoginActivity extends AppCompatActivity {
         assert user != null;
         if (user.isEmailVerified())
         {
+          /*  mAuth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                @Override
+                public void onSuccess(GetTokenResult getTokenResult) {
+                   // sendToMain();
+                    //Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
+                    String token = getTokenResult.getToken();
+                    String cid = mAuth.getCurrentUser().getUid();
+                    Token tok = new Token(token);
+                    mFirestore.collection("Users")
+                            .document(cid)
+                            .collection("Tokens").document(cid)
+                            .set(tok);
+                }
+            });*/
+
             // user is verified, so you can finish this activity or send user to activity which you want.
             sendToMain();
             Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();

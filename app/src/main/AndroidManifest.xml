@@ -45,6 +45,9 @@
             android:name=".Activities.InforSettings"
             android:windowSoftInputMode="adjustPan" />
         <activity
+            android:name=".Activities.MainActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
             android:name=".Activities.posting"
             android:windowSoftInputMode="adjustPan" />
         <activity
@@ -53,11 +56,6 @@
         <activity
             android:name=".Activities.CreateActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".Activities.MainActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait">
-        </activity>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />

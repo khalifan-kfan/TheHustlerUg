@@ -601,7 +601,7 @@ class OpenGigsAdapter extends RecyclerView.Adapter<OpenGigsAdapter.ViewHolder>{
         myid = auth.getCurrentUser().getUid();
         String  gig_image = gigsList.get(position).getGig_image();
         final String from_id=gigsList.get(position).getFrom_id();
-        String  gig_date = gigsList.get(position).getGig_date();
+        Date gig_date = gigsList.get(position).getGig_date();
         String gig_desk = gigsList.get(position).getGig_description();
         final String gigId = gigsList.get(position).Userid;
 
@@ -742,7 +742,7 @@ class OpenGigsAdapter extends RecyclerView.Adapter<OpenGigsAdapter.ViewHolder>{
                     .into(user);
         }
 
-        public void setGig(String gig_desk, String gig_date, String gig_image) {
+        public void setGig(String gig_desk, Date gig_date, String gig_image) {
             description.setText(gig_desk);
             if( gig_date != null) {
                 post_date.setText(format.format(gig_date));

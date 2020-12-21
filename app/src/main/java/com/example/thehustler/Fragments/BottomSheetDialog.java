@@ -1,6 +1,5 @@
 package com.example.thehustler.Fragments;
 
-import android.accessibilityservice.AccessibilityService;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,14 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.thehustler.Activities.MainActivity;
-import com.example.thehustler.Model.Users;
 import com.example.thehustler.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-
-import java.util.List;
-
-import retrofit2.http.POST;
 
 public class BottomSheetDialog extends BottomSheetDialogFragment {
     private String postID;

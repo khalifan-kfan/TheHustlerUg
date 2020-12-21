@@ -30,6 +30,7 @@ import  com.example.thehustler.Fragments.Notification_Fragment;
 import com.example.thehustler.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -138,6 +139,11 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
             initializeFragment();
 
             mainBottomNav = findViewById(R.id.mainBottomNav);
+            BadgeDrawable badgeDrawable = mainBottomNav.getOrCreateBadge(R.menu.bottom_menu);
+            badgeDrawable.setVisible(false);
+
+
+
             mainBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

@@ -7,11 +7,14 @@
       android:enabled="true"
       android:icon="@drawable/ic_home"
       android:title="@string/Bottom_home_text"
-      app:showAsAction="always" />
+
+      app:showAsAction="always"/>
+
   <item
       android:id="@+id/notification_id"
       android:enabled="true"
       android:icon="@drawable/ic_notification"
+
       android:title="@string/Notification"
       app:showAsAction="always" />
   <item
@@ -24,6 +27,7 @@
       android:id="@+id/message_id"
       android:enabled="true"
       android:icon="@drawable/ic_msg"
+
       android:title="@string/cit"
       app:showAsAction="always" />
 </menu>

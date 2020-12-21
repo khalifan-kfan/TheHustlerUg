@@ -2,11 +2,8 @@ package com.example.thehustler.Fragments;
 
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 //import android.support.v4.app.Fragment;
-import android.text.BoringLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,13 +27,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.annotation.Nullable;
 
@@ -55,6 +50,7 @@ public class Home_Fragment extends Fragment {
 
   private  List<Users> usersList;
   private FirebaseAuth auth;
+  private long countposts;
 
   private Boolean loadFirst= true;
 
@@ -77,7 +73,7 @@ public class Home_Fragment extends Fragment {
     postsView = view.findViewById(R.id.posts__);
     postsView.setHasFixedSize(true);
 
-    trigRecyclerAdaptor = new TrigRecyclerAdapter(Postlist,usersList);
+    trigRecyclerAdaptor = new TrigRecyclerAdapter(Postlist);
     postsView.setLayoutManager(new LinearLayoutManager(container.getContext()));
     postsView.setAdapter(trigRecyclerAdaptor);
 
@@ -105,9 +101,10 @@ public class Home_Fragment extends Fragment {
         }
       });
 
-      Query Firstquery = firestore.collection("Posts").orderBy("timeStamp", Query.Direction.DESCENDING).limit(3);
+      Query Firstquery = firestore.collection("Posts")
+              .orderBy("timeStamp", Query.Direction.DESCENDING)
+              .limit(3);
       Firstquery.addSnapshotListener( new EventListener<QuerySnapshot>() {
-
         @Override
         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
@@ -122,7 +119,15 @@ public class Home_Fragment extends Fragment {
                 String postID = doc.getDocument().getId();
                 String bloguser_id;
                 final Blogpost blogpost = doc.getDocument().toObject(Blogpost.class).withID(postID);
-                if(doc.getDocument().getString("re_postId")==null) {
+                if (loadFirst) {
+                  Postlist.add(blogpost);
+                } else {
+                  Postlist.add(0, blogpost);
+                }
+
+                trigRecyclerAdaptor.notifyDataSetChanged();
+
+               /* if(doc.getDocument().getString("re_postId")==null) {
                   bloguser_id = doc.getDocument().getString("user_id");
                 }else {
                   bloguser_id = doc.getDocument().getString("re_postId");
@@ -145,7 +150,7 @@ public class Home_Fragment extends Fragment {
                     }
 
                   }
-                });
+                });*/
 
               }
             }
@@ -187,12 +192,13 @@ public class Home_Fragment extends Fragment {
                 String bloguser_id;
                 String postID = doc.getDocument().getId();
                 final Blogpost blogpost = doc.getDocument().toObject(Blogpost.class).withID(postID);
-                if(doc.getDocument().getString("re_postId")==null) {
+                Postlist.add(blogpost);
+                trigRecyclerAdaptor.notifyDataSetChanged();
+              /*  if(doc.getDocument().getString("re_postId")==null) {
                   bloguser_id = doc.getDocument().getString("user_id");
                 }else {
                   bloguser_id = doc.getDocument().getString("re_postId");
                 }
-
                 firestore.collection("Users").document(bloguser_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                   @Override
                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -201,13 +207,11 @@ public class Home_Fragment extends Fragment {
 
                       usersList.add(users);
                       Postlist.add(blogpost);
-
-
                       trigRecyclerAdaptor.notifyDataSetChanged();
                     }
 
                   }
-                });
+                });*/
               }
             }
           }

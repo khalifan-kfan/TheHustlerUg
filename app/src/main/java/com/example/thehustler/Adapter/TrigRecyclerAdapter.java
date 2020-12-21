@@ -4,15 +4,11 @@ package com.example.thehustler.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Parcelable;
-import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -69,7 +65,7 @@ import static android.text.format.DateFormat.format;
 public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     static List<Blogpost> Postlist;
-    List<Users> usersList;
+   // List<Users> usersList;
     public static Context context;
     private static FirebaseFirestore firestore;
     private static FirebaseAuth auth;
@@ -78,9 +74,9 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
 
-    public TrigRecyclerAdapter(List<Blogpost> Postlist, List<Users>usersList){
+    public TrigRecyclerAdapter(List<Blogpost> Postlist){
         this.Postlist = Postlist;
-        this.usersList = usersList;
+
     }
 
 
@@ -138,11 +134,27 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                    holder1.phots.setEnabled(false);
                    holder1.phots.setVisibility(View.GONE);
                }
-               final String user_id = Postlist.get(position).getUser_id();
-               final String name = usersList.get(position).getName().get(0);
-               String image = usersList.get(position).getImage();
-               String thumb = usersList.get(position).getThumb();
-               holder1.setOwner(name, image, thumb);
+               final String user_id;
+               if(Postlist.get(position).getRe_postId()==null){
+                   user_id = Postlist.get(position).getUser_id();
+               }else{
+                   user_id = Postlist.get(position).getRe_postId();
+               }
+               final Users[] user = new Users[1];
+               firestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                   @Override
+                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                       if (task.isSuccessful()) {
+                          user[0] = task.getResult().toObject(Users.class);
+                           String name = user[0].getName().get(0);
+                           String image =  user[0].getImage();
+                           String thumb =  user[0].getThumb();
+                           holder1.setOwner(name, image, thumb);
+                       }
+
+                   }
+               });
+
                if (user_id.equals(CurrentUser)) {
                    holder1.popbut.setEnabled(true);
                    holder1.popbut.setVisibility(View.VISIBLE);
@@ -344,7 +356,7 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                holder1.popbut.setOnClickListener(new View.OnClickListener() {
                    @Override
                    public void onClick(View v) {
-                       holder1.pop(post_Id, Postlist, usersList, position);
+                       holder1.pop(post_Id, Postlist, position);
                    }
                });
 
@@ -361,11 +373,12 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
            case 2: {
                final ViewHolder2 holder2 = (ViewHolder2) holder;
                 //if desc is not null otherwise view gone
+
                String desc_data = Postlist.get(position).getRe_post_desc();
                String desc2 = Postlist.get(position).getDescription();
                holder2.setdescriptiontext(desc2,desc_data);
                if(desc_data==null){
-                   holder2.description2.setVisibility(View.GONE);
+                   holder2.description.setVisibility(View.GONE);
                }
                final String CurrentUser = auth.getCurrentUser().getUid();
                final String post_Id = Postlist.get(position).postId;
@@ -399,14 +412,30 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                    holder2.photos1.setVisibility(View.GONE);
                }
 
-               final String user_id = Postlist.get(position).getUser_id();
 
-               final String name = usersList.get(position).getName().get(0);
-               String image = usersList.get(position).getImage();
-               String thumb = usersList.get(position).getThumb();
-               holder2.setOwner(name, image, thumb);
-               //set second user info with there id
-               holder2.seconduser(user_id);
+               final String user_id;
+               if(Postlist.get(position).getRe_postId()==null){
+                   user_id = Postlist.get(position).getUser_id();
+               }else{
+                   user_id = Postlist.get(position).getRe_postId();
+               }
+               final Users[] user = new Users[1];
+               firestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                   @Override
+                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                       if (task.isSuccessful()) {
+                           user[0] = task.getResult().toObject(Users.class);
+                           final String name = user[0].getName().get(0);
+                           String image =  user[0].getImage();
+                           String thumb =  user[0].getThumb();
+                           holder2.setOwner(name, image, thumb);
+
+                       }
+
+                   }
+               });
+
+               holder2.seconduser(Postlist.get(position).getUser_id());
 
                if(Postlist.get(position).getRe_postId().equals(CurrentUser)) {
                    holder2.popbut.setEnabled(true);
@@ -414,8 +443,8 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                    holder2.ownerimage.setEnabled(false);
                }
                try {
-                   if (Postlist.get(position).getRe_timeStamp()!= null) {
-                       long milliseconds = Postlist.get(position).getRe_timeStamp().getTime();
+                   if (Postlist.get(position).getTimeStamp()!= null) {
+                       long milliseconds = Postlist.get(position).getTimeStamp().getTime();
                        String dateString = format("d/MM/yyyy", new Date(milliseconds)).toString();
                        holder2.setTime(dateString);
                    } else holder2.setTime("0/0/0");
@@ -426,8 +455,8 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss a, dd-MM-yy");
 
-               if(Postlist.get(position).getTimeStamp() != null) {
-                   holder2.date1.setText(format.format(Postlist.get(position).getTimeStamp()));
+               if(Postlist.get(position).getRe_timeStamp() != null) {
+                   holder2.date1.setText(format.format(Postlist.get(position).getRe_timeStamp()));
                }else{
                  holder2.date1.setText(format.format(new Date()));
                }
@@ -606,7 +635,7 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                holder2.popbut.setOnClickListener(new View.OnClickListener() {
                    @Override
                    public void onClick(View v) {
-                       holder2.pop(post_Id, Postlist, usersList, position);
+                       holder2.pop(post_Id, Postlist, position);
                    }
                });
 
@@ -794,20 +823,20 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                     postMapn.put("re_post_desc", null);
                                     postMapn.put("re_image_url", null);
                                     postMapn.put("re_post_image_thumb", null);
-                                    postMapn.put("re_timeStamp", FieldValue.serverTimestamp());
+                                    postMapn.put("re_timeStamp", Postlist.get(position).getTimeStamp());
                                     if (Postlist.get(position).getRe_postId() != null) {
                                         postMapn.put("image_url", Postlist.get(position).getRe_image_url());
                                         postMapn.put("post_image_thumb", Postlist.get(position).getRe_post_image_thumb());
                                         postMapn.put("description", Postlist.get(position).getRe_post_desc());
                                         postMapn.put("user_id",Postlist.get(position).getRe_postId());
-                                        postMapn.put("timeStamp", Postlist.get(position).getRe_timeStamp());
+                                        postMapn.put("timeStamp", FieldValue.serverTimestamp());
                                     } else{
 
                                         postMapn.put("image_url", Postlist.get(position).getImage_url());
                                         postMapn.put("post_image_thumb", Postlist.get(position).getPost_image_thumb());
                                         postMapn.put("description", Postlist.get(position).getDescription());
                                         postMapn.put("user_id", posterId);
-                                        postMapn.put("timeStamp", Postlist.get(position).getTimeStamp());
+                                        postMapn.put("timeStamp",FieldValue.serverTimestamp() );
                                     }
                                     //new time too
                                     firestore.collection("Posts").add(postMapn).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -1032,7 +1061,7 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         }
 
-        public void pop(final String post_id, final List<Blogpost> postlist, final List<Users> usersList, final int position) {
+        public void pop(final String post_id, final List<Blogpost> postlist, final int position) {
 
             PopupMenu popupMenu = new PopupMenu(context,popbut);
             popupMenu.getMenuInflater().inflate(R.menu.popdown, popupMenu.getMenu());
@@ -1043,7 +1072,7 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         @Override
                         public void onSuccess(Void aVoid) {
                             postlist.remove(position);
-                            usersList.remove(position);
+
                             Toast.makeText(context, "deleteted....",Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -1151,7 +1180,7 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         }
 
-        public  void pop(final String post_id, final List<Blogpost> postlist, final List<Users> usersList, final int position){
+        public  void pop(final String post_id, final List<Blogpost> postlist,  final int position){
 
             PopupMenu popupMenu = new PopupMenu(context,popbut);
             popupMenu.getMenuInflater().inflate(R.menu.popdown, popupMenu.getMenu());
@@ -1163,7 +1192,6 @@ public class TrigRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         @Override
                         public void onSuccess(Void aVoid) {
                             postlist.remove(position);
-                            usersList.remove(position);
                             Toast.makeText(context, "deleteted....",Toast.LENGTH_SHORT).show();
                         }
                     });

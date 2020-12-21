@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -38,7 +36,6 @@ import com.example.thehustler.Model.Users;
 import com.example.thehustler.NotifyHandler.NotSender;
 import com.example.thehustler.R;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -324,7 +321,7 @@ public class MypostsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 String desc2 = userBlogList.get(position).getDescription();
                 holder2.setdescriptiontext(desc2,desc_data);
                 if(desc_data==null){
-                    holder2.description2.setVisibility(View.GONE);
+                    holder2.description.setVisibility(View.GONE);
                 }
                 final String CurrentUser = auth.getCurrentUser().getUid();
                 final String post_Id = userBlogList.get(position).postId;
@@ -390,8 +387,8 @@ public class MypostsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     holder2.ownerimage.setEnabled(false);
                 }
                 try {
-                    if (userBlogList.get(position).getRe_timeStamp()!= null) {
-                        long milliseconds = userBlogList.get(position).getRe_timeStamp().getTime();
+                    if (userBlogList.get(position).getTimeStamp()!= null) {
+                        long milliseconds = userBlogList.get(position).getTimeStamp().getTime();
                         String dateString = format("d/MM/yyyy", new Date(milliseconds)).toString();
                         holder2.setTime(dateString);
                     } else holder2.setTime("0/0/0");
@@ -402,12 +399,11 @@ public class MypostsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                 SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss a, dd-MM-yy");
 
-                if(userBlogList.get(position).getTimeStamp() != null) {
-                    holder2.date1.setText(format.format(userBlogList.get(position).getTimeStamp()));
+                if(userBlogList.get(position).getRe_timeStamp() != null) {
+                    holder2.date1.setText(format.format(userBlogList.get(position).getRe_timeStamp()));
                 }else{
                     holder2.date1.setText(format.format(new Date()));
                 }
-
 
                 //likes count
                 firestore.collection("Posts/"+post_Id+"/likes").addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -645,19 +641,19 @@ public class MypostsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     postMapn.put("re_post_desc", null);
                                     postMapn.put("re_image_url", null);
                                     postMapn.put("re_post_image_thumb", null);
-                                    postMapn.put("re_timeStamp", FieldValue.serverTimestamp());
+                                    postMapn.put("re_timeStamp",userBlogList.get(position).getTimeStamp() );
                                     if(userBlogList.get(position).getRe_postId()!=null) {
                                         postMapn.put("image_url", userBlogList.get(position).getRe_image_url());
                                         postMapn.put("post_image_thumb", userBlogList.get(position).getRe_post_image_thumb());
                                         postMapn.put("description", userBlogList.get(position).getRe_post_desc());
                                         postMapn.put("user_id", userBlogList.get(position).getRe_postId());
-                                        postMapn.put("timeStamp",userBlogList.get(position).getRe_timeStamp());
+                                        postMapn.put("timeStamp",FieldValue.serverTimestamp());
                                     }else {
                                         postMapn.put("image_url", userBlogList.get(position).getImage_url());
                                         postMapn.put("post_image_thumb", userBlogList.get(position).getPost_image_thumb());
                                         postMapn.put("description", userBlogList.get(position).getDescription());
                                         postMapn.put("user_id", posterId);
-                                        postMapn.put("timeStamp", userBlogList.get(position).getTimeStamp());
+                                        postMapn.put("timeStamp", FieldValue.serverTimestamp());
                                     }
                                     firestore.collection("Posts").add(postMapn).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                         @Override
@@ -793,7 +789,7 @@ public class MypostsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if(count>0)
                 repostCounter.setText(Integer.toString(count));
             else
-                repostCounter.setText(0);
+                repostCounter.setText("0");
         }
 
         public void setTime(String date){
@@ -869,6 +865,7 @@ public class MypostsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
             repostCounter = v.findViewById(R.id.repostCount);
             description =v.findViewById(R.id.postdescribe);
             //post carried
+            photos1 = v.findViewById(R.id.pageview_repost);
             date1 = v.findViewById(R.id.repost_date);
             owner1name = v.findViewById(R.id.repost_name);
             cardowner1 = v.findViewById(R.id.repostCard);
@@ -968,7 +965,7 @@ public class MypostsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if(count>0)
                 commentcounter.setText(Integer.toString(count));
             else
-                commentcounter.setText(0);
+                commentcounter.setText("0");
 
         }
 
@@ -976,7 +973,7 @@ public class MypostsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if(i>0)
                 repostCounter.setText(Integer.toString(i));
             else
-                repostCounter.setText(0);
+                repostCounter.setText("0");
 
         }
 

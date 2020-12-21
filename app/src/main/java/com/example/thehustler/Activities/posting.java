@@ -303,20 +303,20 @@ public class posting extends AppCompatActivity {
                            postMapn.put("re_post_desc",description);
                            postMapn.put("re_image_url",null);
                            postMapn.put("re_post_image_thumb",null);
-                           postMapn.put("re_timeStamp",FieldValue.serverTimestamp());
+                           postMapn.put("re_timeStamp",blogpost.getTimeStamp());
 
                            if(blogpost.getRe_postId()!=null) {
                                postMapn.put("image_url", null);
                                postMapn.put("post_image_thumb", null);
                                postMapn.put("description", blogpost.getRe_post_desc());
                                postMapn.put("user_id", blogpost.getRe_postId());
-                               postMapn.put("timeStamp", blogpost.getRe_timeStamp());
+                               postMapn.put("timeStamp",FieldValue.serverTimestamp());
                            }else {
                                postMapn.put("image_url", null);
                                postMapn.put("post_image_thumb", null);
                                postMapn.put("description", blogpost.getDescription());
                                postMapn.put("user_id", blogpost.getUser_id());
-                               postMapn.put("timeStamp", blogpost.getTimeStamp());
+                               postMapn.put("timeStamp",FieldValue.serverTimestamp() );
                            }
                             firestore.collection("Posts").add(postMapn).addOnCompleteListener(
                                     new OnCompleteListener<DocumentReference>() {
@@ -517,19 +517,19 @@ public class posting extends AppCompatActivity {
                                 postMap.put("re_post_desc",description);
                                 postMap.put("re_image_url",duris);
                                 postMap.put("re_post_image_thumb",thumbs);
-                                postMap.put("re_timeStamp",FieldValue.serverTimestamp());
+                                postMap.put("re_timeStamp",blogpost.getRe_timeStamp());
                                 if(blogpost.getRe_postId()!=null) {
                                     postMap.put("image_url", blogpost.getRe_image_url());
                                     postMap.put("post_image_thumb", blogpost.getRe_post_image_thumb());
                                     postMap.put("description", blogpost.getRe_post_desc());
                                     postMap.put("user_id", blogpost.getRe_postId());
-                                    postMap.put("timeStamp", blogpost.getRe_timeStamp());
+                                    postMap.put("timeStamp", FieldValue.serverTimestamp());
                                 }else {
                                     postMap.put("image_url", blogpost.getRe_image_url());
                                     postMap.put("post_image_thumb",blogpost.getRe_image_url());
                                     postMap.put("description", blogpost.getDescription());
                                     postMap.put("user_id", blogpost.getUser_id());
-                                    postMap.put("timeStamp", blogpost.getTimeStamp());
+                                    postMap.put("timeStamp", FieldValue.serverTimestamp());
                                 }
                                 firestore.collection("Posts").add(postMap).addOnCompleteListener(
                                         new OnCompleteListener<DocumentReference>() {
