@@ -305,6 +305,7 @@ public class AnotherUserAccount extends AppCompatActivity {
                                                                     mylikeMap.put("notId",CurrentUser);
                                                                     mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                                     mylikeMap.put("postId",null);
+                                                                    mylikeMap.put("mark","unseen");
                                                                     firestore.collection("Users/"+userId+"/NotificationBox").add(mylikeMap)
                                                                             .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                                                 @Override

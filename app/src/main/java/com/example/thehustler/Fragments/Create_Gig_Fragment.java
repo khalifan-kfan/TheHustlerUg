@@ -324,6 +324,7 @@ public class Create_Gig_Fragment extends Fragment {
                                                                             mylikeMap.put("notId", myId);
                                                                             mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                                             mylikeMap.put("postId", null);
+                                                                            mylikeMap.put("mark","unseen");
                                                                             firestore.collection("Users/" + userid + "/NotificationBox").add(mylikeMap)
                                                                                     .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                                                         @Override
@@ -418,6 +419,7 @@ public class Create_Gig_Fragment extends Fragment {
                                                     mylikeMap.put("notId", myId);
                                                     mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                     mylikeMap.put("postId", myId);
+                                                    mylikeMap.put("mark","unseen");
                                                     firestore.collection("Users/"+userid+"/NotificationBox")
                                                             .add(mylikeMap)
                                                             .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {

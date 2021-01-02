@@ -340,6 +340,7 @@ public class posting extends AppCompatActivity {
                                                                 mylikeMap.put("notId", blogpost.getUser_id());
                                                                 mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                                 mylikeMap.put("postId", blogpost.postId);
+                                                                mylikeMap.put("mark","unseen");
                                                                 firestore.collection("Users/"+blogpost.getUser_id()+"/NotificationBox").add(mylikeMap)
                                                                         .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                                             @Override
@@ -553,6 +554,7 @@ public class posting extends AppCompatActivity {
                                                                     mylikeMap.put("notId", blogpost.getUser_id());
                                                                     mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                                     mylikeMap.put("postId", blogpost.postId);
+                                                                    mylikeMap.put("mark","unseen");
                                                                     firestore.collection("Users/"+blogpost.getUser_id()+"/NotificationBox").add(mylikeMap)
                                                                             .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                                                 @Override

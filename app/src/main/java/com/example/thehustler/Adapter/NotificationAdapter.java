@@ -2,12 +2,16 @@ package com.example.thehustler.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -17,6 +21,8 @@ import com.example.thehustler.Activities.PostActivity;
 import com.example.thehustler.Model.Notify;
 import com.example.thehustler.Model.Users;
 import com.example.thehustler.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -55,15 +61,24 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
-        String CurrtId = auth.getCurrentUser().getUid();
+        final String CurrtId = auth.getCurrentUser().getUid();
 
         final String Postid= notifyList.get(position).getPostId();
         final String Uid = notifyList.get(position).getNotId();
         final String name = usersList.get(position).getName().get(0);
         String image = usersList.get(position).getImage();
         String thumb = usersList.get(position).getThumb();
+
+        final String mark = notifyList.get(position).getMark();
+        if(mark.equalsIgnoreCase("unseen")){
+            holder.mark.setBackgroundResource(R.drawable.ic_unmarked);
+            holder.lay.setBackgroundColor(Color.parseColor(String.valueOf(R.color.ligth)));
+        }else {
+            holder.mark.setEnabled(false);
+            holder.mark.setBackgroundResource(R.drawable.ic_marked);
+        }
        holder.setowner(image,thumb,name);
 
         Date time = notifyList.get(position).getTimestamp();
@@ -74,13 +89,68 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             @Override
             public void onClick(View v) {
                 if(Postid==null){
-                   toUser(Uid);
+                    if(mark.equalsIgnoreCase("unseen")) {
+                        firestore.collection("Users/" + CurrtId + "/NotificationBox")
+                                .document(notifyList.get(position).Userid).update("mark", "seen").addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    holder.mark.setBackgroundResource(R.drawable.ic_marked);
+                                    holder.lay.setBackgroundColor(Color.parseColor(String.valueOf(R.color.mywhite)));
+                                    toUser(Uid);
+                                } else {
+                                    Toast.makeText(context, "try again", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }else{
+                        toUser(Uid);
+                    }
                 }else{
-                    Intent comLik = new Intent(context, PostActivity.class);
-                    comLik.putExtra("UserId",Uid);
-                    comLik.putExtra("blogPostId",Postid);
-                    context.startActivity(comLik);
+                    if(mark.equalsIgnoreCase("unseen")) {
+                        firestore.collection("Users/" + CurrtId + "/NotificationBox")
+                                .document(notifyList.get(position).Userid).update("mark", "seen").addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    holder.mark.setBackgroundResource(R.drawable.ic_marked);
+                                    holder.lay.setBackgroundColor(Color.parseColor(String.valueOf(R.color.mywhite)));
+                                    Intent comLik = new Intent(context, PostActivity.class);
+                                    comLik.putExtra("UserId", Uid);
+                                    comLik.putExtra("blogPostId", Postid);
+                                    context.startActivity(comLik);
+                                } else {
+                                    Toast.makeText(context, "try again", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                    }else {
+                        Intent comLik = new Intent(context, PostActivity.class);
+                        comLik.putExtra("UserId", Uid);
+                        comLik.putExtra("blogPostId", Postid);
+                        context.startActivity(comLik);
+                    }
                 }
+            }
+        });
+        holder.mark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firestore.collection("Users/" + CurrtId + "/NotificationBox")
+                        .document(notifyList.get(position).Userid).update("mark", "seen").addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            holder.mark.setBackgroundResource(R.drawable.ic_marked);
+                            holder.mark.setEnabled(false);
+                            holder.lay.setBackgroundColor(Color.parseColor(String.valueOf(R.color.mywhite)));
+                        } else {
+                            Toast.makeText(context, "try again", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
             }
         });
         if(Uid.equals(CurrtId)) {
@@ -116,15 +186,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView infor,mname,mtime;
         private CircleImageView guyzImage;
+        private ImageView mark;
+        private ConstraintLayout lay;
         View v;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             v = itemView;
+            lay = v.findViewById(R.id.cons_not);
             infor = v.findViewById(R.id.infor);
             mname = v.findViewById(R.id.not_name);
             guyzImage = v.findViewById(R.id.not_image);
             mtime = v.findViewById(R.id.timeNot);
-
+            mark = v.findViewById(R.id.imageView5);
         }
         public void setowner(String image, String thumb, String name) {
            mname.setText(name);

@@ -34,7 +34,7 @@ public class NotSender {
                 if (response.code() == 200) {
                     if (response.body().success != 1) {
 
-                        Toast.makeText(c, "Failed ", Toast.LENGTH_LONG);
+                        Toast.makeText(c, "Failed ", Toast.LENGTH_LONG).show();
                     }
                 }
             }

@@ -181,6 +181,7 @@ public class Reviews extends AppCompatActivity {
                                     myansMap.put("notId", currentUID);
                                     myansMap.put("timestamp", FieldValue.serverTimestamp());
                                     myansMap.put("postId", null);
+                                    myansMap.put("mark","unseen");
                                     firestore.collection("Users/"+userId+"/NotificationBox")
 
                                             .add(myansMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {

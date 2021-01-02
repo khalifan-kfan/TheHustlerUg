@@ -2,6 +2,7 @@ package com.example.thehustler.Fragments;
 
 
 
+import android.content.Intent;
 import android.os.Bundle;
 //import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.thehustler.Activities.MainActivity;
@@ -19,6 +21,7 @@ import com.example.thehustler.Adapter.TrigRecyclerAdapter;
 import com.example.thehustler.Model.Blogpost;
 import com.example.thehustler.Model.Users;
 import com.example.thehustler.R;
+import com.example.thehustler.Services.BadgeUpdater;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,16 +34,19 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Nullable;
+
+
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class Home_Fragment extends Fragment {
-  private RecyclerView postsView;
+   RecyclerView postsView;
 
   private List<Blogpost> Postlist;
   private FirebaseFirestore firestore;
@@ -49,10 +55,12 @@ public class Home_Fragment extends Fragment {
   private DocumentSnapshot lastVisible;
 
   private  List<Users> usersList;
+  RecyclerView.SmoothScroller smoothScroller;
   private FirebaseAuth auth;
   private long countposts;
-
+  Date lastTym;
   private Boolean loadFirst= true;
+  private int check=0;
 
   public Home_Fragment() {
     // Required empty public constructor
@@ -72,16 +80,18 @@ public class Home_Fragment extends Fragment {
     Postlist = new ArrayList<>();
     postsView = view.findViewById(R.id.posts__);
     postsView.setHasFixedSize(true);
-
     trigRecyclerAdaptor = new TrigRecyclerAdapter(Postlist);
     postsView.setLayoutManager(new LinearLayoutManager(container.getContext()));
     postsView.setAdapter(trigRecyclerAdaptor);
 
-
     if (auth.getCurrentUser() != null) {
-
       firestore = FirebaseFirestore.getInstance();
 
+       smoothScroller = new LinearSmoothScroller(getContext()){
+        @Override protected int getVerticalSnapPreference(){
+          return LinearSmoothScroller.SNAP_TO_START;
+        }
+      };
 
       postsView.addOnScrollListener(new RecyclerView.OnScrollListener() {
         @Override
@@ -91,6 +101,15 @@ public class Home_Fragment extends Fragment {
           Boolean atBottom = !recyclerView.canScrollVertically(-1);
           if (atBottom) {
             LoadmorePosts();
+            //
+            if(check==3) {
+              check= 0;
+              Intent i = new Intent(getContext(), BadgeUpdater.class);
+              i.putExtra("WHICH","H");
+              getActivity().startService(i);
+            }else {
+              check += 1;
+            }
           }
           if (dy > 0 && MainActivity.mainBottomNav.isShown()) {
             MainActivity.mainBottomNav.setVisibility(View.GONE);
@@ -186,6 +205,7 @@ public class Home_Fragment extends Fragment {
             lastVisible = queryDocumentSnapshots.getDocuments()
                     .get(queryDocumentSnapshots.size() - 1);
 
+
             for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
               if (doc.getType() == DocumentChange.Type.ADDED) {
@@ -194,6 +214,7 @@ public class Home_Fragment extends Fragment {
                 final Blogpost blogpost = doc.getDocument().toObject(Blogpost.class).withID(postID);
                 Postlist.add(blogpost);
                 trigRecyclerAdaptor.notifyDataSetChanged();
+
               /*  if(doc.getDocument().getString("re_postId")==null) {
                   bloguser_id = doc.getDocument().getString("user_id");
                 }else {
@@ -219,5 +240,17 @@ public class Home_Fragment extends Fragment {
       });
       // registration.remove();
     }
+  }
+
+  public void backup() {
+    if (postsView != null) {
+      LinearLayoutManager layoutManager = (LinearLayoutManager) postsView.getLayoutManager();
+      smoothScroller.setTargetPosition(0);
+      layoutManager.startSmoothScroll(smoothScroller);
+       // layoutManager.scrollToPositionWithOffset(0,0);
+
+    }
+
+
   }
 }

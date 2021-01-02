@@ -1,12 +1,15 @@
 package com.example.thehustler.Model;
 
 import java.util.Date;
+
+import com.example.thehustler.classes.UserId;
 import com.google.firebase.firestore.ServerTimestamp;
 
-public class Notify  {
+public class Notify extends UserId {
     private String status;
     private String notId;
     private String postId;
+    private String mark;
 
 
     @ServerTimestamp
@@ -15,10 +18,19 @@ public class Notify  {
     public Notify() {
     }
 
-    public Notify(String status, String notId, String postId) {
+    public Notify(String status, String notId, String postId,String mark) {
         this.status = status;
         this.notId = notId;
         this.postId = postId;
+        this.mark = mark;
+    }
+
+    public String getMark() {
+        return mark;
+    }
+
+    public void setMark(String mark) {
+        this.mark = mark;
     }
 
     public String getPostId() {

@@ -1,10 +1,12 @@
 package com.example.thehustler.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -12,12 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.thehustler.Activities.MainActivity;
 import com.example.thehustler.Adapter.NotificationAdapter;
 import com.example.thehustler.Adapter.TrigRecyclerAdapter;
 import com.example.thehustler.Model.Blogpost;
 import com.example.thehustler.Model.Notify;
 import com.example.thehustler.Model.Users;
 import com.example.thehustler.R;
+import com.example.thehustler.Services.BadgeUpdater;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,11 +38,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Notification_Fragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class Notification_Fragment extends Fragment {
 
 
@@ -51,46 +51,21 @@ public class Notification_Fragment extends Fragment {
     private FirebaseAuth auth;
     private String CurrentUID;
     private Query Notifications;
+    private int counter = 0;
+    LinearSmoothScroller smoothScroller;
+    DocumentSnapshot lastVisible;
 
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public Notification_Fragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Notification_Fragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Notification_Fragment newInstance(String param1, String param2) {
-        Notification_Fragment fragment = new Notification_Fragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
@@ -112,19 +87,54 @@ public class Notification_Fragment extends Fragment {
 
         CurrentUID = auth.getCurrentUser().getUid();
 
+       smoothScroller = new LinearSmoothScroller(getContext()) {
+            @Override
+            protected int getVerticalSnapPreference() {
+                return LinearSmoothScroller.SNAP_TO_START;
+            }
+        };
+
+        NotificationView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                Boolean atBottom = !recyclerView.canScrollVertically(-1);
+                if (atBottom) {
+                    LoadmorePosts();
+                    //
+                  //  if(check==3) {
+                    //    check= 0;
+                      //  Intent i = new Intent(getContext(), BadgeUpdater.class);
+                        //i.putExtra("WHICH","H");
+                        //getActivity().startService(i);
+                   // }else {
+                //        check += 1;
+                    //}
+                }
+                if (dy > 0 && MainActivity.mainBottomNav.isShown()) {
+                    MainActivity.mainBottomNav.setVisibility(View.GONE);
+                } else if (dy < 0 ) {
+                    MainActivity.mainBottomNav.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
         Notifications = firestore.collection("Users/"+CurrentUID+"/NotificationBox")
-                .orderBy("timestamp", Query.Direction.DESCENDING);
+                .orderBy("timestamp", Query.Direction.DESCENDING).limit(7);
         Notifications.addSnapshotListener( new EventListener<QuerySnapshot>() {
 
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
                 if (!queryDocumentSnapshots.isEmpty()) {
-
+                    lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
                     for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                         if (doc.getType() == DocumentChange.Type.ADDED) {
                             String postID = doc.getDocument().getId();
-                            final Notify notify = doc.getDocument().toObject(Notify.class);
+                            String seen = doc.getDocument().getString("mark");
+
+                            final Notify notify = doc.getDocument().toObject(Notify.class).withID(postID);
                             final String notId = doc.getDocument().getString("notId");
                             firestore.collection("Users").document(notId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
@@ -138,8 +148,15 @@ public class Notification_Fragment extends Fragment {
 
                                 }
                             });
-
+                            if(seen.equalsIgnoreCase("unseen")){
+                                counter++;
+                            }
                         }
+                    }
+                    if(counter>0) {
+                        MainActivity m = new MainActivity();
+                        m.Updatebadge(counter, 2);
+                        //counter = 0;
                     }
 
 
@@ -151,6 +168,67 @@ public class Notification_Fragment extends Fragment {
         });
 
         return v;
+    }
+
+    private void LoadmorePosts() {
+        Notifications = firestore.collection("Users/"+CurrentUID+"/NotificationBox")
+                .orderBy("timestamp", Query.Direction.DESCENDING).startAfter(lastVisible).limit(7);
+        Notifications.addSnapshotListener( new EventListener<QuerySnapshot>() {
+
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                if (!queryDocumentSnapshots.isEmpty()) {
+
+                    lastVisible = queryDocumentSnapshots.getDocuments()
+                            .get(queryDocumentSnapshots.size() - 1);
+
+                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                            String postID = doc.getDocument().getId();
+                            String seen = doc.getDocument().getString("mark");
+
+                            final Notify notify = doc.getDocument().toObject(Notify.class).withID(postID);
+                            final String notId = doc.getDocument().getString("notId");
+                            firestore.collection("Users").document(notId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        Users users = task.getResult().toObject(Users.class);
+                                        usersList.add(users);
+                                        notifications_list.add(notify);
+                                        adapter.notifyDataSetChanged();
+                                    }
+
+                                }
+                            });
+                            if(seen.equalsIgnoreCase("unseen")){
+                                counter++;
+                            }
+                        }
+                    }
+                    if(counter>0) {
+                        MainActivity m = new MainActivity();
+                        m.Updatebadge(counter, 2);
+                       // counter = 0;
+                    }
+
+
+                }else {
+                    Toast.makeText(getContext(), "nothing here", Toast.LENGTH_LONG).show();
+                }
+            }
+
+        });
+    }
+    public void backup() {
+        if (NotificationView != null) {
+            LinearLayoutManager layoutManager = (LinearLayoutManager) NotificationView.getLayoutManager();
+            smoothScroller.setTargetPosition(0);
+            layoutManager.startSmoothScroll(smoothScroller);
+            // layoutManager.scrollToPositionWithOffset(0,0);
+
+        }
     }
 
 

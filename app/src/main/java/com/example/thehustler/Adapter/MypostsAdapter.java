@@ -215,6 +215,7 @@ public class MypostsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                             mylikeMap.put("notId", CurrentUser);
                                                             mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                             mylikeMap.put("postId", post_Id);
+                                                            mylikeMap.put("mark","unseen");
                                                             firestore.collection("Users/"+user_id+"/NotificationBox")
                                                                     .add(mylikeMap)
                                                                     .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -507,6 +508,7 @@ public class MypostsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                             mylikeMap.put("notId", CurrentUser);
                                                             mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                             mylikeMap.put("postId", post_Id);
+                                                            mylikeMap.put("mark","unseen");
                                                             firestore.collection("Users/" +userBlogList.get(position).getRe_postId() + "/NotificationBox").add(mylikeMap)
                                                                     .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                                         @Override
@@ -676,6 +678,7 @@ public class MypostsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                                 mylikeMap.put("notId", currentId);
                                                                 mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                                 mylikeMap.put("postId", PostID);
+                                                                mylikeMap.put("mark","unseen");
                                                                 firestore.collection("Users/" + posterId + "/NotificationBox").add(mylikeMap)
                                                                         .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                                             @Override

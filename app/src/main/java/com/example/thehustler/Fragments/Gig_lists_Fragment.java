@@ -635,6 +635,7 @@ class OpenGigsAdapter extends RecyclerView.Adapter<OpenGigsAdapter.ViewHolder>{
                                                     mylikeMap.put("notId", myid);
                                                     mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                                     mylikeMap.put("postId", from_id);
+                                                    mylikeMap.put("mark","unseen");
                                                     firestore.collection("Users/"+from_id+"/NotificationBox")
                                                             .add(mylikeMap)
                                                             .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -1058,6 +1059,7 @@ class OngoingAdaptor extends RecyclerView.Adapter<OngoingAdaptor.ViewHolder> {
                                             mylikeMap.put("notId", myid);
                                             mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                             mylikeMap.put("postId",null);
+                                            mylikeMap.put("mark","unseen");
                                             firestore.collection("Users/"+from_id+"/NotificationBox")
                                                     .add(mylikeMap)
                                                     .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -1150,6 +1152,7 @@ class OngoingAdaptor extends RecyclerView.Adapter<OngoingAdaptor.ViewHolder> {
                                         mylikeMap.put("notId", myid);
                                         mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                         mylikeMap.put("postId",null);
+                                        mylikeMap.put("mark","unseen");
                                         firestore.collection("Users/"+send_id+"/NotificationBox")
                                                 .add(mylikeMap)
                                                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -1357,6 +1360,7 @@ class RequestAdaptor extends RecyclerView.Adapter<RequestAdaptor.ViewHolder> {
                                    mylikeMap.put("notId", myid);
                                    mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                    mylikeMap.put("postId",null);
+                                   mylikeMap.put("mark","unseen");
                                    firestore.collection("Users/"+from_id+"/NotificationBox")
                                            .add(mylikeMap)
                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -1429,6 +1433,7 @@ class RequestAdaptor extends RecyclerView.Adapter<RequestAdaptor.ViewHolder> {
                                 mylikeMap.put("notId", myid);
                                 mylikeMap.put("timestamp", FieldValue.serverTimestamp());
                                 mylikeMap.put("postId",null);
+                                mylikeMap.put("mark","unseen");
                                 firestore.collection("Users/"+send_id+"/NotificationBox")
                                         .add(mylikeMap)
                                         .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {

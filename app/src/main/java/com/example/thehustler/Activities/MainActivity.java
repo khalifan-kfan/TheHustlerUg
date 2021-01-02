@@ -28,6 +28,7 @@ import  com.example.thehustler.Fragments.ChatsFragment;
 import  com.example.thehustler.Fragments.Home_Fragment;
 import  com.example.thehustler.Fragments.Notification_Fragment;
 import com.example.thehustler.R;
+import com.example.thehustler.Services.BadgeUpdater;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.badge.BadgeDrawable;
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
     private Home_Fragment homeFragment;
     private Notification_Fragment notificationFragment;
     private Account_Fragment accountFragment;
+    BadgeDrawable badgeDrawable;
+
     private ChatsFragment chatsFragment;
 
 
@@ -75,10 +78,12 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Hustle");
         drawerLayout = findViewById(R.id.drawer);
+        mainBottomNav = findViewById(R.id.mainBottomNav);
         ActionBarDrawerToggle adt = new ActionBarDrawerToggle(this,drawerLayout,toolbar,
         R.string.drawer_open,R.string.drawer_close);
         drawerLayout.addDrawerListener(adt);
         adt.syncState();
+
         NavigationView nv =findViewById(R.id.nav_view);
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -138,9 +143,6 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
             chatsFragment = new ChatsFragment();
             initializeFragment();
 
-            mainBottomNav = findViewById(R.id.mainBottomNav);
-            BadgeDrawable badgeDrawable = mainBottomNav.getOrCreateBadge(R.menu.bottom_menu);
-            badgeDrawable.setVisible(false);
 
 
 
@@ -151,7 +153,17 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
 
                     switch (menuItem.getItemId()) {
                         case R.id.home_id:
-                            replaceFragment(homeFragment,currentFragment);
+                            if(homeFragment==currentFragment) {
+                                Home_Fragment scroll = new Home_Fragment();
+                                if (badgeDrawable.isVisible()) {
+                                    badgeDrawable = mainBottomNav.getBadge(R.id.home_id);
+                                    badgeDrawable.setVisible(false);
+                                    badgeDrawable.clearNumber();
+                                }
+                                scroll.backup();
+                            }else {
+                                replaceFragment(homeFragment, currentFragment);
+                            }
                             return true;
                         case R.id.notification_id:
                             replaceFragment(notificationFragment,currentFragment);
@@ -323,6 +335,24 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
             MypostsAdapter.ButtonClicked(k,postID,postion);
         }else if(adaptor==3){
             AnotherUserRecycler.ButtonClicked(k,postID,postion);
+        }
+    }
+
+    public void Updatebadge(int size,int which) {
+
+        if (which == 1) {
+            badgeDrawable = mainBottomNav.getOrCreateBadge(R.id.home_id);
+            // badgeDrawable.isVisible();
+            badgeDrawable.setVisible(true);
+            badgeDrawable.setMaxCharacterCount(3);
+            badgeDrawable.setNumber(size);
+            // Intent i = new Intent(MainActivity.this, BadgeUpdater.class);
+            // stopService(i);
+        }else if(which == 2){
+            badgeDrawable = mainBottomNav.getOrCreateBadge(R.id.notification_id);
+            badgeDrawable.setVisible(true);
+            badgeDrawable.setMaxCharacterCount(3);
+            badgeDrawable.setNumber(size);
         }
     }
 }

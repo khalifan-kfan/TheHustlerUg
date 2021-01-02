@@ -91,6 +91,7 @@ public class ChatActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbarchat);
         setSupportActionBar(toolbar);
         storageReference = FirebaseStorage.getInstance().getReference();
+        selectedphotos= new ArrayList<>();
 
         /*
         toolbar.setOnClickListener(new View.OnClickListener() {
@@ -170,7 +171,7 @@ public class ChatActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK){
                 // get image url list, show an upload progress bar,upload in back ground,
                 // can be canceled,auto show after upload
-                selectedphotos= new ArrayList<>();
+
                 selectedphotos = data.getParcelableArrayListExtra("PHOTOS");
                 ArrayList<String> stringuri = new ArrayList<>();
                 cap = data.getStringExtra("CAPTION");
