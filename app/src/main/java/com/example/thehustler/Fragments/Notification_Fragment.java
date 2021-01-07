@@ -148,7 +148,7 @@ public class Notification_Fragment extends Fragment {
 
                                 }
                             });
-                            if(seen.equalsIgnoreCase("unseen")){
+                            if(seen !=null &&seen.equalsIgnoreCase("unseen")){
                                 counter++;
                             }
                         }
@@ -202,7 +202,8 @@ public class Notification_Fragment extends Fragment {
 
                                 }
                             });
-                            if(seen.equalsIgnoreCase("unseen")){
+
+                            if(seen !=null && seen.equalsIgnoreCase("unseen")){
                                 counter++;
                             }
                         }

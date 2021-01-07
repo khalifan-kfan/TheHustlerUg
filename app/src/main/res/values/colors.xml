@@ -6,5 +6,6 @@
     <color name="myBlack">#D7100F0F</color>
     <color name="mywhite">#ffffff</color>
     <color name="ligth">#A3BFF1</color>
+    <color name="ligthdark">#1A2437</color>
 
 </resources>

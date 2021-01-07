@@ -49,28 +49,48 @@ public class BadgeUpdater extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle bundle = intent.getExtras();
         String which = (String) bundle.get("WHICH");
-        if(which.equalsIgnoreCase("h")) {
+        long time = (long) bundle.get("MILI");
+        if(time == 0 ) {
+            if (which.equalsIgnoreCase("h")) {
+                Query Firstquery = firestore.collection("Posts")
+                        .whereGreaterThan("timeStamp", check_time)
+                        //.orderBy("timeStamp", Query.Direction.DESCENDING)
+                        .limit(9);
+                Firstquery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (value.isEmpty()) {
+                            stopSelf();
+                        } else {
+                            MainActivity m = new MainActivity();
+                            m.Updatebadge(value.size(), 1);
+                            stopSelf();
+                        }
+                    }
+                });
+            } else if (which.equalsIgnoreCase("n")) {
+
+            }
+        }else if(which.equalsIgnoreCase("s")){
+            Date date = new Date(time);
             Query Firstquery = firestore.collection("Posts")
-                    .whereGreaterThan("timeStamp", check_time)
+                    .whereGreaterThan("timeStamp", date)
                     //.orderBy("timeStamp", Query.Direction.DESCENDING)
-                    .limit(7);
+                    .limit(9);
             Firstquery.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                    if (value.isEmpty()) {
-                        stopSelf();
-                    } else {
+                    if (!value.isEmpty()) {
                         MainActivity m = new MainActivity();
-                        m.Updatebadge(value.size(),1);
-                        stopSelf();
+                        m.Updatebadge(value.size(), 1);
                     }
+                    stopSelf();
                 }
             });
-        }else if(which.equalsIgnoreCase("n")){
-
         }
         return super.onStartCommand(intent, flags, startId);
     }
+
 
     @Override
     public void onDestroy() {

@@ -42,9 +42,7 @@ import javax.annotation.Nullable;
 
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class Home_Fragment extends Fragment {
    RecyclerView postsView;
 

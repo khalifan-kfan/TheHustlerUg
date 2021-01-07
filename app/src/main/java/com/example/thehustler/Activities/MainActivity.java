@@ -3,6 +3,7 @@ package com.example.thehustler.Activities;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
     private Account_Fragment accountFragment;
     BadgeDrawable badgeDrawable;
 
+    long time;
     private ChatsFragment chatsFragment;
 
 
@@ -75,6 +77,10 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
         firestore = FirebaseFirestore.getInstance();
         CurrentUserId = auth.getCurrentUser().getUid();
         toolbar = findViewById(R.id.toolbar___);
+
+
+
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Hustle");
         drawerLayout = findViewById(R.id.drawer);
@@ -155,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
                         case R.id.home_id:
                             if(homeFragment==currentFragment) {
                                 Home_Fragment scroll = new Home_Fragment();
-                                if (badgeDrawable.isVisible()) {
+                                if (badgeDrawable.getNumber() != 0) {
                                     badgeDrawable = mainBottomNav.getBadge(R.id.home_id);
                                     badgeDrawable.setVisible(false);
                                     badgeDrawable.clearNumber();
@@ -338,7 +344,32 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
         }
     }
 
-    public void Updatebadge(int size,int which) {
+    private void  lastTime(){
+        SharedPreferences preferences = getSharedPreferences("PREFTZ",0);
+        SharedPreferences.Editor e = preferences.edit();
+        e.putLong("last_time",System.currentTimeMillis());
+        e.apply();
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        lastTime();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences p =getSharedPreferences("PREFTZ",0);
+        time = p.getLong("last_time",0);
+        Intent i = new Intent(this, BadgeUpdater.class);
+        i.putExtra("WHICH","S");
+        i.putExtra("MILI",time);
+        startService(i);
+
+    }
+
+    public void Updatebadge(int size, int which) {
 
         if (which == 1) {
             badgeDrawable = mainBottomNav.getOrCreateBadge(R.id.home_id);

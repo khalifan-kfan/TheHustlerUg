@@ -76,7 +76,7 @@ public class PickImages   extends AppCompatActivity implements Adapter.itemliste
                pickImagePErm(permsCHOOSE);
             }
         });
-        select.setOnClickListener(new View.OnClickListener() {
+        capture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pickImagePErm(permsCAM);

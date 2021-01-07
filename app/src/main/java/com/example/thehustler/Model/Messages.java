@@ -18,6 +18,8 @@ public class Messages {
     @ServerTimestamp
     private Date dateSent;
 
+    @ServerTimestamp
+    private Date seen;
 
     public Messages(){}
 
@@ -76,5 +78,13 @@ public class Messages {
 
     public void setDateSent(Date dateSent) {
         this.dateSent = dateSent;
+    }
+
+    public Date getSeen() {
+        return seen;
+    }
+
+    public void setSeen(Date seen) {
+        this.seen = seen;
     }
 }

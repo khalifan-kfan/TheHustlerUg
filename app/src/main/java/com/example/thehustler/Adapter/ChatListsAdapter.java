@@ -2,12 +2,14 @@ package com.example.thehustler.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,7 +21,10 @@ import com.example.thehustler.Model.Chats;
 import com.example.thehustler.Model.Users;
 import com.example.thehustler.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,7 +57,7 @@ public class ChatListsAdapter extends RecyclerView.Adapter<ChatListsAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
 
         final String CurrentUser = auth.getCurrentUser().getUid();
@@ -60,8 +65,23 @@ public class ChatListsAdapter extends RecyclerView.Adapter<ChatListsAdapter.View
 
         final  String ChatterId = chatsList.get(position).getChatterId();
        Date latest_time = chatsList.get(position).getLatest_update();
-       holder.data(latest_time);
 
+        firestore.collection("Users/"+CurrentUser+"/Chats")
+                .document(ChatterId).collection("Messages").whereGreaterThan("seen",latest_time)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if(!value.isEmpty()) {
+                            String vaj = String.valueOf(value.size());
+                            holder.badge.setVisibility(View.VISIBLE);
+                            holder.badge.setText(vaj);
+                            holder.section.setBackgroundColor(Color.parseColor(String.valueOf(R.color.ligthdark)));
+                        }
+                    }
+                });
+
+      // Date seen = chatsList.get(position).
+       holder.data(latest_time);
         String Image_uri = usersList.get(position).getImage();
         String Name =usersList.get(position).getName().get(0);
         String Name2 = usersList.get(position).getName().get(1);
@@ -98,12 +118,13 @@ public class ChatListsAdapter extends RecyclerView.Adapter<ChatListsAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         CircleImageView Chatterydp;
-        TextView ChatterName,new_date,name2;
+        TextView ChatterName,new_date,name2,badge;
         View v;
         ConstraintLayout section;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             v=itemView;
+            badge = v.findViewById(R.id.textView13);
             new_date = v.findViewById(R.id.new_date);
             Chatterydp = v.findViewById(R.id.chatterImage);
             ChatterName = v. findViewById(R.id.chat_name);
@@ -112,7 +133,6 @@ public class ChatListsAdapter extends RecyclerView.Adapter<ChatListsAdapter.View
         }
 
         public void setUser(String s, String name, String image_uri) {
-
            ChatterName.setText(s);
            name2.setText(name);
             RequestOptions placeholderOP = new RequestOptions();
@@ -120,7 +140,6 @@ public class ChatListsAdapter extends RecyclerView.Adapter<ChatListsAdapter.View
 
             Glide.with(context).applyDefaultRequestOptions(placeholderOP).load(image_uri)
                     .into(Chatterydp);
-
         }
 
         public void data(Date latest_time) {
@@ -129,7 +148,6 @@ public class ChatListsAdapter extends RecyclerView.Adapter<ChatListsAdapter.View
             }else{
                new_date.setText(format.format(new Date()));
             }
-
 
         }
     }
