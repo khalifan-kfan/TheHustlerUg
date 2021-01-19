@@ -1,5 +1,6 @@
 package com.example.thehustler.Fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -63,6 +64,8 @@ public class ChatsFragment extends Fragment {
 
 
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +90,6 @@ public class ChatsFragment extends Fragment {
         chatview.setAdapter(adapter);
 
         final String curtID = auth.getCurrentUser().getUid();
-
 
         Query IdQuery = firestore.collection("Users/"+curtID+"/Chats")
                 .orderBy("latest_update",Query.Direction.DESCENDING);

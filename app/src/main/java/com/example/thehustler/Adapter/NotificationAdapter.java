@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.thehustler.Activities.AnotherUserAccount;
+import com.example.thehustler.Activities.MainActivity;
 import com.example.thehustler.Activities.PostActivity;
 import com.example.thehustler.Model.Notify;
 import com.example.thehustler.Model.Users;
@@ -79,9 +80,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             holder.mark.setEnabled(false);
             holder.mark.setBackgroundResource(R.drawable.ic_marked);
         }
+
        holder.setowner(image,thumb,name);
 
         Date time = notifyList.get(position).getTimestamp();
+
         String Status = notifyList.get(position).getStatus();
         holder.setdate(time);
         holder.setmessage(Status);
@@ -103,6 +106,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 }
                             }
                         });
+                        MainActivity ac = new MainActivity();
+                        ac.notiBadge();
                     }else{
                         toUser(Uid);
                     }
@@ -115,6 +120,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 if (task.isSuccessful()) {
                                     holder.mark.setBackgroundResource(R.drawable.ic_marked);
                                     holder.lay.setBackgroundColor(Color.parseColor(String.valueOf(R.color.mywhite)));
+                                    MainActivity ac = new MainActivity();
+                                    ac.notiBadge();
                                     Intent comLik = new Intent(context, PostActivity.class);
                                     comLik.putExtra("UserId", Uid);
                                     comLik.putExtra("blogPostId", Postid);
@@ -124,6 +131,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 }
                             }
                         });
+
 
                     }else {
                         Intent comLik = new Intent(context, PostActivity.class);
@@ -137,6 +145,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.mark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MainActivity ac = new MainActivity();
                 firestore.collection("Users/" + CurrtId + "/NotificationBox")
                         .document(notifyList.get(position).Userid).update("mark", "seen").addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -150,7 +159,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         }
                     }
                 });
-
+                ac.notiBadge();
             }
         });
         if(Uid.equals(CurrtId)) {
@@ -220,8 +229,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 infor.setText("liked on your post");
             }else if(status.equals(status3)){
                 infor.setText("Approved you");
-            }else {
+            }else if (status.equals(status4)){
                 infor.setText("reviewed you");
+            }else {
+                infor.setText("Notification Alarm");
             }
         }
     }

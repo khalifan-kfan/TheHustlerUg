@@ -160,11 +160,11 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
                     switch (menuItem.getItemId()) {
                         case R.id.home_id:
                             if(homeFragment==currentFragment) {
+                                BadgeDrawable badgeDrawable1 = mainBottomNav.getBadge(R.id.home_id);
                                 Home_Fragment scroll = new Home_Fragment();
-                                if (badgeDrawable.getNumber() != 0) {
-                                    badgeDrawable = mainBottomNav.getBadge(R.id.home_id);
-                                    badgeDrawable.setVisible(false);
-                                    badgeDrawable.clearNumber();
+                                if ( badgeDrawable1 != null && badgeDrawable1.getNumber() != 0) {
+                                    badgeDrawable1.setVisible(false);
+                                    badgeDrawable1.clearNumber();
                                 }
                                 scroll.backup();
                             }else {
@@ -177,7 +177,13 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
                         case R.id.account_id:
                             replaceFragment(accountFragment,currentFragment);
                             return true;
+
                         case R.id.message_id:
+                            BadgeDrawable newone = mainBottomNav.getBadge(R.id.notification_id);
+                            if ( newone != null && newone.getNumber() != 0) {
+                                newone.setVisible(false);
+                                newone.clearNumber();
+                            }
                             replaceFragment(chatsFragment,currentFragment);
                             return true;
                         default:
@@ -270,12 +276,17 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
     private  void replaceFragment(Fragment newFragment,Fragment currentFragment){
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        if(newFragment == homeFragment){
+        if(currentFragment == chatsFragment && newFragment!=chatsFragment){
+            SharedPreferences preferences = getSharedPreferences("PERMSG",0);
+            SharedPreferences.Editor e = preferences.edit();
+            e.putLong("last_time",System.currentTimeMillis());
+            e.apply();
+        }
 
+        if(newFragment == homeFragment){
             fragmentTransaction.hide(accountFragment);
             fragmentTransaction.hide(notificationFragment);
             fragmentTransaction.hide(chatsFragment);
-
         }
 
         if(newFragment ==accountFragment){
@@ -285,6 +296,7 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
             fragmentTransaction.hide(chatsFragment);
         }
         if(newFragment==chatsFragment){
+
             fragmentTransaction.hide(homeFragment);
             fragmentTransaction.hide(notificationFragment);
             fragmentTransaction.hide(accountFragment);
@@ -362,28 +374,44 @@ public class MainActivity extends AppCompatActivity implements BottomSheetDialog
         super.onResume();
         SharedPreferences p =getSharedPreferences("PREFTZ",0);
         time = p.getLong("last_time",0);
+        SharedPreferences p2 =getSharedPreferences("PERMSG",0);
+        Long time_msg = p.getLong("last_time",0);
         Intent i = new Intent(this, BadgeUpdater.class);
         i.putExtra("WHICH","S");
         i.putExtra("MILI",time);
+        i.putExtra("MESSEGE",time_msg);
         startService(i);
 
     }
+    public void notiBadge(){
+        BadgeDrawable badgeDrawable = mainBottomNav.getOrCreateBadge(R.id.notification_id);
+        if (badgeDrawable != null && badgeDrawable.getNumber()>0){
+            int number = badgeDrawable.getNumber()-1;
+            badgeDrawable.setNumber(number);
+        }
+    }
+
 
     public void Updatebadge(int size, int which) {
 
         if (which == 1) {
-            badgeDrawable = mainBottomNav.getOrCreateBadge(R.id.home_id);
+            BadgeDrawable badgeDrawable1 = mainBottomNav.getOrCreateBadge(R.id.home_id);
             // badgeDrawable.isVisible();
-            badgeDrawable.setVisible(true);
-            badgeDrawable.setMaxCharacterCount(3);
-            badgeDrawable.setNumber(size);
+            badgeDrawable1.setVisible(true);
+            badgeDrawable1.setMaxCharacterCount(3);
+            badgeDrawable1.setNumber(size);
             // Intent i = new Intent(MainActivity.this, BadgeUpdater.class);
             // stopService(i);
         }else if(which == 2){
-            badgeDrawable = mainBottomNav.getOrCreateBadge(R.id.notification_id);
-            badgeDrawable.setVisible(true);
-            badgeDrawable.setMaxCharacterCount(3);
-            badgeDrawable.setNumber(size);
+            BadgeDrawable badgeDrawable2 = mainBottomNav.getOrCreateBadge(R.id.notification_id);
+            badgeDrawable2.setVisible(true);
+            badgeDrawable2.setMaxCharacterCount(3);
+            badgeDrawable2.setNumber(size);
+        } else if( which==3){
+            BadgeDrawable badgeDrawable3 = mainBottomNav.getOrCreateBadge(R.id.message_id);
+            badgeDrawable3.setVisible(true);
+            badgeDrawable3.setMaxCharacterCount(2);
+            badgeDrawable3.setNumber(size);
         }
     }
 }

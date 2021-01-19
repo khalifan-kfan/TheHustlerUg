@@ -110,7 +110,7 @@ public class PickImages   extends AppCompatActivity implements Adapter.itemliste
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             intent.setType("image/*");
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), 517);
-        }else {
+        }else if(i == 1){
             cameraz();
             //camera
         }
@@ -123,7 +123,7 @@ public class PickImages   extends AppCompatActivity implements Adapter.itemliste
         iui = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,iui);
-        startActivityForResult(cameraIntent, 554);
+        startActivityForResult(cameraIntent, 55);
     }
 
     public void pickImagePErm(int code) {
@@ -193,7 +193,7 @@ public class PickImages   extends AppCompatActivity implements Adapter.itemliste
 
         }
         // for camera
-        if(requestCode == 554 && resultCode==RESULT_OK){
+        if(requestCode == 55 && resultCode==RESULT_OK){
             //camera
             // Uri image = data.getData();
             photoUri.add(iui);
@@ -224,7 +224,6 @@ public class PickImages   extends AppCompatActivity implements Adapter.itemliste
         back.putExtra("CAPTION",cap);
         setResult(RESULT_OK,back);
         finish();
-
     }
 
     @Override

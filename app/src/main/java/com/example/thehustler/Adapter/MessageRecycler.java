@@ -59,7 +59,6 @@ public class MessageRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.currentUserId = currentUserId;
         messages = new ArrayList<>();
 
-
     }
 
     @NonNull
@@ -70,20 +69,25 @@ public class MessageRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if(viewType == MY_MESSAGE){
             chatCards = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.my_chat_card, parent, false);
+            return new MessagesHolder(chatCards);
         }else if(viewType== RECEIVED_MESSAGES){
             chatCards = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.receiver_chat_card, parent, false);
+            return new MessagesHolder(chatCards);
         }else if(viewType== RECEIVED_PHOTOS){
             chatCards = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.recieve_img, parent, false);
+            return new photoholder(chatCards);
         }else if(viewType== LOADING_PHOTOS){
             chatCards = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.loading_photos, parent, false);
+            return new Unloadedholder(chatCards);
         }else if(viewType== PHOTOS_SENT){
             chatCards = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.mychatimage, parent, false);
-        }
-        return new MessagesHolder(chatCards);
+            return new photoholder(chatCards);
+        }else return null;
+
     }
     @Override
     public int getItemViewType(int position) {
@@ -213,7 +217,7 @@ public class MessageRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
     }
-    public class Unloadedholder extends RecyclerView.ViewHolder {
+    public static class Unloadedholder extends RecyclerView.ViewHolder {
 
        RecyclerView photos;
         private  View v;
@@ -323,7 +327,7 @@ class unloadedAdapter extends RecyclerView.Adapter<unloadedAdapter.ViewHolder>  
                     }
                 });
 
-            }
+    }
 
 
     @Override

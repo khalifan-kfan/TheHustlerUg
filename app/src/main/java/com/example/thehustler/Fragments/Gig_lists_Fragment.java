@@ -70,6 +70,13 @@ public class Gig_lists_Fragment extends Fragment {
 
     private RecyclerView views;
 
+    private static final String pend="pending";
+    private static final String open_="open";
+    private static final String done_="done";
+    private static final String active="ongoing";
+
+
+
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
     private List<OpenGigs> gigs_lists;
@@ -117,31 +124,58 @@ public class Gig_lists_Fragment extends Fragment {
         myId = auth.getCurrentUser().getUid();
        bar = v.findViewById(R.id.progressBar);
 
+       // historyAdaptor = new HistoryAdaptor(gigs_lists,usersListl);
+        //ongoingAdaptor = new OngoingAdaptor(gigs_lists,usersListl);
+        //adaptorR_Q = new RequestAdaptor(gigs_lists,usersListl);
+        //adapterO_G = new OpenGigsAdapter(gigs_lists,usersListl);
+       // views.setLayoutManager(new LinearLayoutManager(container.getContext()));
 
+        //views.setAdapter(historyAdaptor);
+
+        views.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                Boolean atBottom = !recyclerView.canScrollVertically(-1);
+                if (atBottom) {
+                    if(Status.equals(open_)){
+                       moreOpenGigs();
+                    }else if(Status.equals(pend)){
+                        More(pend);
+                    }else if(Status.equals(active)){
+                        More(active);
+                    }else if(Status.equals(done_)){
+                        More(done_);
+                    }
+
+                }
+            }
+
+        });
+     //   views.setHasFixedSize(true);
         //Statuses,,,
-
         //open for open gig
         //pending for requests not yet accepted
         //ongoing for active gigs
         //done for history
 
         switch (Status){
-            case "open":
+            case open_:
                 firstload = true;
                 lastVisible = null;
                 getOpenGigs(container);
                 break;
-            case "pending":
+            case pend:
                 firstload = true;
                 lastVisible = null;
                 getRequests(container);
                 break;
-            case "ongoing":
+            case active:
                 firstload = true;
                 lastVisible = null;
                 getActive(container);
                 break;
-            case "done":
+            case done_:
                 firstload = true; lastVisible = null;
                 getHistory(container);
                 break;
@@ -154,25 +188,11 @@ public class Gig_lists_Fragment extends Fragment {
     }
 
     private void getHistory(ViewGroup container) {
-        final String currentStatus ="done";
+        final String currentStatus =done_;
         historyAdaptor = new HistoryAdaptor(gigs_lists,usersListl);
         views.setLayoutManager(new LinearLayoutManager(container.getContext()));
         views.setAdapter(historyAdaptor);
-
-        views.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                Boolean atBottom = !recyclerView.canScrollVertically(-1);
-                if (atBottom) {
-                    More(currentStatus);
-                }
-            }
-
-        });
         views.setHasFixedSize(true);
-
-
         Query first = firestore.collection("Users").document(myId)
                 .collection("Gigs")
                 .whereEqualTo("status",currentStatus)
@@ -239,22 +259,11 @@ public class Gig_lists_Fragment extends Fragment {
     }
 
     private void getActive(ViewGroup container) {
-        final String currentStatus ="ongoing";
+        final String currentStatus =active;
         ongoingAdaptor = new OngoingAdaptor(gigs_lists,usersListl);
         views.setLayoutManager(new LinearLayoutManager(container.getContext()));
         views.setAdapter(ongoingAdaptor);
 
-        views.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                Boolean atBottom = !recyclerView.canScrollVertically(-1);
-                if (atBottom) {
-                    More(currentStatus);
-                }
-            }
-
-        });
         views.setHasFixedSize(true);
         Query first = firestore.collection("Users").document(myId)
                 .collection("Gigs")
@@ -320,22 +329,11 @@ public class Gig_lists_Fragment extends Fragment {
         });
     }
     private void getRequests(ViewGroup container) {
-        final String currentStatus ="pending";
+        final String currentStatus =pend;
         adaptorR_Q = new RequestAdaptor(gigs_lists,usersListl);
         views.setLayoutManager(new LinearLayoutManager(container.getContext()));
         views.setAdapter(adaptorR_Q);
 
-        views.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                Boolean atBottom = !recyclerView.canScrollVertically(-1);
-                if (atBottom) {
-                   More(currentStatus);
-                }
-            }
-
-        });
         views.setHasFixedSize(true);
 
 
@@ -466,17 +464,7 @@ public class Gig_lists_Fragment extends Fragment {
         views.setLayoutManager(new LinearLayoutManager(container.getContext()));
         views.setAdapter(adapterO_G);
 
-        views.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                Boolean atBottom = !recyclerView.canScrollVertically(-1);
-                if (atBottom) {
-                    moreOpenGigs();
-                }
-            }
 
-        });
         views.setHasFixedSize(true);
 
 

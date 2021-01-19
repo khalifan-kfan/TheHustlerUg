@@ -23,7 +23,7 @@ public class BadgeUpdater extends Service {
     SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss a, dd-MM-yy");
     private FirebaseFirestore firestore;
     Boolean checking = false;
-
+    FirebaseAuth auth;
     public BadgeUpdater() {
     }
 
@@ -33,7 +33,7 @@ public class BadgeUpdater extends Service {
         check_time= new Date();
         firestore = FirebaseFirestore.getInstance();
         //format.format(new Date())
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
         MainActivity m;
 
     }
@@ -48,47 +48,69 @@ public class BadgeUpdater extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle bundle = intent.getExtras();
-        String which = (String) bundle.get("WHICH");
-        long time = (long) bundle.get("MILI");
-        if(time == 0 ) {
-            if (which.equalsIgnoreCase("h")) {
-                Query Firstquery = firestore.collection("Posts")
-                        .whereGreaterThan("timeStamp", check_time)
-                        //.orderBy("timeStamp", Query.Direction.DESCENDING)
-                        .limit(9);
-                Firstquery.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        if (value.isEmpty()) {
-                            stopSelf();
-                        } else {
-                            MainActivity m = new MainActivity();
-                            m.Updatebadge(value.size(), 1);
-                            stopSelf();
-                        }
-                    }
-                });
-            } else if (which.equalsIgnoreCase("n")) {
+       if (bundle != null) {
+           String which = (String) bundle.get("WHICH");
+           long time = (long) bundle.get("MILI");
+           long time_msg = (long) bundle.get("MESSEGE");
 
-            }
-        }else if(which.equalsIgnoreCase("s")){
-            Date date = new Date(time);
-            Query Firstquery = firestore.collection("Posts")
-                    .whereGreaterThan("timeStamp", date)
-                    //.orderBy("timeStamp", Query.Direction.DESCENDING)
-                    .limit(9);
-            Firstquery.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                    if (!value.isEmpty()) {
-                        MainActivity m = new MainActivity();
-                        m.Updatebadge(value.size(), 1);
-                    }
-                    stopSelf();
-                }
-            });
-        }
+           if (time == 0 && time_msg == 0) {
+               if (which.equalsIgnoreCase("h")) {
+                   Query Firstquery = firestore.collection("Posts")
+                           .whereGreaterThan("timeStamp", check_time)
+                           //.orderBy("timeStamp", Query.Direction.DESCENDING)
+                           .limit(9);
+                   Firstquery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                       @Override
+                       public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                           if (value.isEmpty()) {
+                               stopSelf();
+                           } else {
+                               MainActivity m = new MainActivity();
+                               m.Updatebadge(value.size(), 1);
+                               stopSelf();
+                           }
+                       }
+                   });
+               } else if (which.equalsIgnoreCase("n")) {
+
+               }
+           } else if (which.equalsIgnoreCase("s")) {
+               Date date = new Date(time);
+               Date d2 = new Date(time_msg);
+
+               final Query IdQuery = firestore.collection("Users/"+auth.getCurrentUser().getUid()+"/Chats")
+                       .whereGreaterThan("latest_update",d2).limit(9);
+               Query Firstquery = firestore.collection("Posts")
+                       .whereGreaterThan("timeStamp", date)
+                       .limit(9);
+               Firstquery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                   @Override
+                   public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                       if (!value.isEmpty()) {
+                           MainActivity m = new MainActivity();
+                           m.Updatebadge(value.size(), 1);
+                           message(IdQuery);
+                           stopSelf();
+                       }
+                   }
+               });
+
+           }
+       }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void message(Query idQuery) {
+        idQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (!value.isEmpty()) {
+                    MainActivity m = new MainActivity();
+                    m.Updatebadge(value.size(), 3);
+                }
+            }
+        });
+
     }
 
 
